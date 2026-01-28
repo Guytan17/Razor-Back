@@ -3,7 +3,7 @@ services:
     image: mariadb:latest
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: template
+      MYSQL_DATABASE: razorback
       MYSQL_USER: root
       MYSQL_PASSWORD: admin
     ports:
