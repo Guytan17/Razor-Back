@@ -1,0 +1,6 @@
+/* silence is golden */
+.menu-avatar {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+}
