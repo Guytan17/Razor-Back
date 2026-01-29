@@ -31,7 +31,7 @@
                         <a href="" class="btn btn-sm btn-primary ms-auto p-1 mx-1">
                             <i class="fas fa-file-circle-plus"></i> Importer un fichier CSV
                         </a>
-                        <a href="" class="btn btn-sm btn-primary p-1 mx-1">
+                        <a href="<?= base_url('/admin/member/form')?>" class="btn btn-sm btn-primary p-1 mx-1">
                             <i class="fas fa-user-plus"></i> Créer un membre
                         </a>
                     </div>

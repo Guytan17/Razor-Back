@@ -15,4 +15,12 @@ class Member extends AdminController
         $this->addBreadcrumb('Membres du club','');
         return $this->render('admin/member/index', $data);
     }
+
+    public function form () {
+        $data = [
+            'title' => 'Ajout d\'un membre'
+        ];
+        $this->addBreadcrumb('Liste des membres','/admin/member');
+        return $this->render('admin/member/form',$data);
+    }
 }

@@ -6,6 +6,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
     //Routes pour la gestion des membres
     $routes->group('member',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Member::index');
+        $routes->get('form', 'Member::form');
     });
 
     // Routes pour la gestion des utilisateurs (admin uniquement)
