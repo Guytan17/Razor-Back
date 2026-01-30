@@ -17,7 +17,7 @@ class RoleModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['name'];
+    protected $allowedFields    = ['name,slug'];
 
 
     // Validation
@@ -45,10 +45,9 @@ class RoleModel extends Model
             'searchable_fields' => [
                 'role.id',
                 'role.name',
-                'role.slug'
             ],
             'joins' => [],
-            'select' => 'role.id, role.name, role.slug',
+            'select' => 'role.id, role.name',
         ];
     }
 }
