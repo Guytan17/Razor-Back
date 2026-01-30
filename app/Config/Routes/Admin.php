@@ -12,6 +12,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
     //Routes pour la gestion des roles
     $routes->group('role',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Role::index');
+        $routes->post('save', 'Role::saveRole');
     });
 
     // Routes pour la gestion des utilisateurs (admin uniquement)
