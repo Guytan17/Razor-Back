@@ -93,7 +93,7 @@ abstract class BaseController extends Controller
         $siteName = setting('App.siteName') ?? $this->title_prefix;
 
         // Préparer les données globales
-        $datas['title'] = sprintf('%s : %s', $this->title, $siteName);
+        $datas['title'] = sprintf('%s : %s',$siteName,$datas['title'] ??  $this->title);
         $datas['menus'] = $this->loadMenu($this->isAdmin);
         $datas['breadcrumb'] = $this->breadcrumb;
         $datas['menu'] = $this->menu;

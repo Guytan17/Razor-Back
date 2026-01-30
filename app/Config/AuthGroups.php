@@ -49,11 +49,19 @@ class AuthGroups extends ShieldAuthGroups
             'title'       => 'Admin',
             'description' => 'Administrateur du site.',
         ],
+        'president' => [
+            'title'       => 'President',
+            'description' => 'President du club',
+        ],
         /*'developer' => [
             'title'       => 'Developer',
             'description' => 'Site programmers.',
         ],
         */
+        'coach' => [
+            'title'       => 'Coach',
+            'description' => 'Coach d\'au moins une équipe',
+        ],
         'user' => [
             'title'       => 'User',
             'description' => 'Utilisateur classique du site.',

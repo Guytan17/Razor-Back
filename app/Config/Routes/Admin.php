@@ -3,6 +3,12 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
     $routes->get('/', 'Dashboard::index');
     $routes->get('dashboard', 'Dashboard::index');
 
+    //Routes pour la gestion des membres
+    $routes->group('member',['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'Member::index');
+        $routes->get('form', 'Member::form');
+    });
+
     // Routes pour la gestion des utilisateurs (admin uniquement)
     $routes->group('users', ['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Users::index');
