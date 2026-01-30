@@ -23,6 +23,11 @@
         "title" : "Coachs",
         "url" : "/admin/member/coach",
         "icon" : "fas fa-person-chalkboard"
+      },
+      "roles" : {
+        "title" : "Rôles",
+        "url" : "/admin/role",
+        "icon" : "fas fa-address-card"
       }
     }
   },

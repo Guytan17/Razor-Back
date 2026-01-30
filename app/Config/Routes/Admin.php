@@ -9,6 +9,11 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->get('form', 'Member::form');
     });
 
+    //Routes pour la gestion des roles
+    $routes->group('role',['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'Role::index');
+    });
+
     // Routes pour la gestion des utilisateurs (admin uniquement)
     $routes->group('users', ['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Users::index');
