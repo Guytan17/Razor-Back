@@ -17,7 +17,7 @@ class RoleModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['name,slug'];
+    protected $allowedFields    = ['name','slug'];
 
 
     // Validation
