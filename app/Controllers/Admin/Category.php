@@ -43,4 +43,50 @@ class Category extends AdminController
             return redirect()->back()->withInput();
         }
     }
+
+    public function updateCategory ($id) {
+        try{
+            $dataCategory=[
+                'name'=>$this->request->getPost('name'),
+                'gender'=>$this->request->getPost('gender'),
+            ];
+            if ($this->cm->update($id,$dataCategory)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Catégorie modifiée avec succès'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $this->cm->errors(),
+                ]);
+            }
+        } catch(\Exception $e) {
+            return $this->response->setJSON([
+            'success' => false,
+            'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function deleteCategory ($id) {
+        try {
+            if($this->cm->delete($id)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'La catégorie a bien été supprimée'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $this->cm->errors(),
+                ]);
+            }
+        } catch(\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
 }

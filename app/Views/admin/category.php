@@ -22,8 +22,8 @@
                             <label class="form-label" for="gender">Genre de la catégorie</label>
                             <select class="form-select" name="gender" id="gender">
                                 <option value="mixed">Mixte</option>
-                                <option value="man">Masculine</option>
-                                <option value="woman">Féminine</option>
+                                <option value="man">Masculin</option>
+                                <option value="woman">Féminin</option>
                             </select>
                         </div>
                     </div>
@@ -58,6 +58,40 @@
             </div>
         </div>
     </div>
+    <!-- START : MODAL POUR LES MODIFICATIONS -->
+    <div class="modal" id="modalCategory" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modifier la category </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <label class="form-label" for="modalNameInput">Nom de la catégorie</label>
+                            <input class="form-control" id="modalNameInput" type="text">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label class="form-label" for="modalGenderSelect">Genre de la catégorie</label>
+                            <select class="form-select" name="modalGenderSelect" id="modalGenderSelect">
+                                <option value="mixed">Mixte</option>
+                                <option value="man">Masculin</option>
+                                <option value="woman">Féminin</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button onclick="saveCategory()" type="button" class="btn btn-primary">Sauvegarder</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END : MODAL POUR LES MODIFICATIONS -->
 </div>
 <script>
     var baseUrl = "<?=base_url();?>";
@@ -83,7 +117,7 @@
                     render: function (data, type, row) {
                         return `
                             <div class="btn-group" role="group">
-                                <button onclick="showModal(${row.id},'${row.name}')" class="btn btn-sm btn-warning" title="Modifier">
+                                <button onclick="showModal(${row.id},'${row.name}','${row.gender}')" class="btn btn-sm btn-warning" title="Modifier">
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button onclick="deleteCategory(${row.id})" class="btn btn-sm btn-danger" title="Supprimer">
@@ -110,8 +144,88 @@
         window.refreshTable = function () {
             table.ajax.reload(null, false); // false pour garder la pagination
         };
-
     });
+
+    const myModal = new bootstrap.Modal('#modalCategory');
+
+    function showModal(id,name,gender){
+        $('#modalNameInput').val(name);
+        $('#modalNameInput').data('id',id);
+        $('#modalGenderSelect').val(gender);
+        myModal.show();
+    }
+
+    function saveCategory () {
+        let name = $('#modalNameInput').val();
+        let gender = $('#modalGenderSelect').val();
+        let id = $('#modalNameInput').data('id');
+        $.ajax({
+            url: baseUrl + 'admin/category/update/'+id,
+            type:'POST',
+            data: {
+                name: name,
+                gender: gender
+            },
+            success: function(response) {
+                myModal.hide();
+                if(response.success){
+                    Swal.fire({
+                        title : 'Succès !',
+                        text: response.message,
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    //Actualiser la table
+                    refreshTable();
+                } else {
+                    Swal.fire({
+                        title: 'Erreur !',
+                        text: 'Une erreur est survenue',
+                        icon: 'error'
+                    });
+                }
+            }
+        })
+    }
+
+    function deleteCategory(id){
+        Swal.fire({
+            title: `Êtes-vous sûr ?`,
+            text: `Voulez-vous vraiment supprimer cette catégorie ?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#28a745",
+            cancelButtonColor: "#6c757d",
+            confirmButtonText: `Oui !`,
+            cancelButtonText: "Annuler",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '<?= base_url('/admin/category/delete/') ?>'+id,
+                    type: 'POST',
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Succès !',
+                                text: response.message,
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                            refreshTable();
+                        } else {
+                            Swal.fire({
+                                title: 'Erreur !',
+                                text: 'Une erreur est survenue',
+                                icon: 'error'
+                            });
+                        }
+                    }
+                })
+            }
+        });
+    }
 
 </script>
 
