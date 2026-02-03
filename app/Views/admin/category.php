@@ -6,16 +6,30 @@
     <div class="row">
         <div class="col-md-4 mb-3">
             <div class="card">
-                <?= form_open('/admin/role/insert') ?>
+                <?= form_open('/admin/category/insert') ?>
                 <div class="card-header">
-                    <span class="card-title h5"> Création d'un nouveau rôle</span>
+                    <span class="card-title h5"> Création d'une nouvelle catégorie</span>
                 </div>
                 <div class="card-body">
-                    <label class="form-label" for="name">Nom du rôle <span class="text-danger">*</span></label>
-                    <input class="form-control" type="text" name="name" id="name" required>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label class="form-label" for="name">Nom de la catégorie<span class="text-danger">*</span></label>
+                            <input class="form-control" type="text" name="name" id="name" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label class="form-label" for="gender">Genre de la catégorie</label>
+                            <select class="form-select" name="gender" id="gender">
+                                <option value="mixed">Mixte</option>
+                                <option value="man">Masculin</option>
+                                <option value="woman">Féminin</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-footer text-end">
-                    <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Créer le rôle</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Créer la catégorie</button>
                 </div>
                 <?= form_close() ?>
             </div>
@@ -23,16 +37,17 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <span class="card-title h5">Liste des rôles </span>
+                    <span class="card-title h5">Liste des catégories</span>
                 </div>
                 <div class="card-body">
-                    <table class="table table-striped" id="rolesTable">
+                    <table class="table table-striped" id="categoriesTable">
                         <thead >
                         <tr>
                             <th>Actions</th>
                             <th>ID</th>
-                            <th>Nom du rôle</th>
-                            <!-- <th>Nombre de membres ayant ce rôle</th>-->
+                            <th>Nom de la catégorie</th>
+                            <th>Genre de la catégorie</th>
+                            <!-- <th>Nombre de membres dans cette catégorie</th>-->
                         </tr>
                         </thead>
                         <tbody>
@@ -44,20 +59,34 @@
         </div>
     </div>
     <!-- START : MODAL POUR LES MODIFICATIONS -->
-    <div class="modal" id="modalRole" tabindex="-1">
+    <div class="modal" id="modalCategory" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Modifier le rôle </h5>
+                    <h5 class="modal-title">Modifier la category </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <label class="form-label" for="modalNameInput">Nom du rôle</label>
-                    <input class="form-control" id="modalNameInput" type="text">
+                    <div class="row">
+                        <div class="col">
+                            <label class="form-label" for="modalNameInput">Nom de la catégorie</label>
+                            <input class="form-control" id="modalNameInput" type="text">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label class="form-label" for="modalGenderSelect">Genre de la catégorie</label>
+                            <select class="form-select" name="modalGenderSelect" id="modalGenderSelect">
+                                <option value="mixed">Mixte</option>
+                                <option value="man">Masculin</option>
+                                <option value="woman">Féminin</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                    <button onclick="saveRole()" type="button" class="btn btn-primary">Sauvegarder</button>
+                    <button onclick="saveCategory()" type="button" class="btn btn-primary">Sauvegarder</button>
                 </div>
             </div>
         </div>
@@ -69,14 +98,14 @@
     var table;
 
     $(document).ready(function() {
-        table = $('#rolesTable').DataTable({
+        table = $('#categoriesTable').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
                 url: baseUrl + 'datatable/searchdatatable',
                 type: 'POST',
                 data: {
-                    model: 'RoleModel'
+                    model: 'CategoryModel'
                 }
             },
             columns: [
@@ -88,19 +117,30 @@
                     render: function (data, type, row) {
                         return `
                             <div class="btn-group" role="group">
-                                <button onclick="showModal(${row.id},'${row.name}')" class="btn btn-sm btn-warning" title="Modifier">
+                                <button onclick="showModal(${row.id},'${row.name}','${row.gender}')" class="btn btn-sm btn-warning" title="Modifier">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button onclick="deleteRole(${row.id})" class="btn btn-sm btn-danger" title="Supprimer">
+                                <button onclick="deleteCategory(${row.id})" class="btn btn-sm btn-danger" title="Supprimer">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>
                         `
-                        ;
+                            ;
                     }
                 },
                 {data: 'id'},
                 {data: 'name'},
+                {
+                    data: 'gender',
+                    render: function(data) {
+                        switch(data) {
+                            case 'man':return'Masculin';
+                            case 'woman':return'Féminin';
+                            case 'mixed':return'Mixte';
+                            default: return'-';
+                        }
+                    }
+                }
             ],
             language: {
                 url: baseUrl + 'assets/js/datatable/datatable-2.3.5-fr-FR.json',
@@ -114,25 +154,27 @@
         window.refreshTable = function () {
             table.ajax.reload(null, false); // false pour garder la pagination
         };
-
     });
 
-    const myModal = new bootstrap.Modal('#modalRole');
+    const myModal = new bootstrap.Modal('#modalCategory');
 
-    function showModal(id,name){
+    function showModal(id,name,gender){
         $('#modalNameInput').val(name);
         $('#modalNameInput').data('id',id);
+        $('#modalGenderSelect').val(gender);
         myModal.show();
     }
 
-    function saveRole () {
+    function saveCategory () {
         let name = $('#modalNameInput').val();
+        let gender = $('#modalGenderSelect').val();
         let id = $('#modalNameInput').data('id');
         $.ajax({
-            url: baseUrl + 'admin/role/update/'+id,
+            url: baseUrl + 'admin/category/update/'+id,
             type:'POST',
             data: {
-                name: name
+                name: name,
+                gender: gender
             },
             success: function(response) {
                 myModal.hide();
@@ -157,10 +199,10 @@
         })
     }
 
-    function deleteRole(id) {
+    function deleteCategory(id){
         Swal.fire({
             title: `Êtes-vous sûr ?`,
-            text: `Voulez-vous vraiment supprimer ce rôle ?`,
+            text: `Voulez-vous vraiment supprimer cette catégorie ?`,
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#28a745",
@@ -170,7 +212,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: '<?= base_url('/admin/role/delete/') ?>'+id,
+                    url: '<?= base_url('/admin/category/delete/') ?>'+id,
                     type: 'POST',
                     success: function(response) {
                         if (response.success) {
@@ -194,8 +236,7 @@
             }
         });
     }
-</script>
-<style>
 
-</style>
+</script>
+
 <?= $this->endSection() ?>

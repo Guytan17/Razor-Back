@@ -82,7 +82,6 @@ class Role extends AdminController
                     'message' => $this->rm->errors(),
                 ]);
             }
-
         } catch (\Exception $e) {
             return $this->response->setJSON([
                 'success' => false,
