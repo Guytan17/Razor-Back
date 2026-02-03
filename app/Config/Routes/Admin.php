@@ -17,6 +17,12 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('delete/(:num)', 'Role::deleteRole/$1'); //Suppression d'un rôle
     });
 
+    // Routes pour la gestion des catégories
+    $routes->group('category',['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'Category::index');
+        $routes->post('insert', 'Category::insertCategory');
+    });
+
     // Routes pour la gestion des utilisateurs (admin uniquement)
     $routes->group('users', ['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Users::index');

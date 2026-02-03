@@ -2,10 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\DataTableTrait;
+use App\Traits\SlugTrait;
 use CodeIgniter\Model;
 
 class CategoryModel extends Model
 {
+    use DataTableTrait;
+    use SlugTrait;
+
     protected $table            = 'category';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
@@ -18,7 +23,7 @@ class CategoryModel extends Model
     protected $validationRules      = [
         'name' => 'required|max_length[255]',
         'slug' => 'max_length[255]',
-        'gender' => 'required|in_list[0,1,2]',
+        'gender' => 'required|in_list[mixed,man,woman]',
     ];
     protected $validationMessages   = [
         'name' => [
@@ -30,9 +35,22 @@ class CategoryModel extends Model
         ],
         'gender' => [
             'required' => 'Le genre est obligatoire',
-            'in_list'=>'Le genre doit être 0(mixte),1(masculin) ou 2(féminin)'
+            'in_list'=>'Le genre doit être \'mixed\'(mixte),\'man\'(masculin) ou \'woman\'(féminin)'
         ]
     ];
     protected $beforeInsert   = ['generateUniqueSlugName'];
     protected $beforeUpdate   = ['generateUniqueSlugName'];
+
+    public function getDataTableConfig(): array
+    {
+        return [
+            'searchable_fields' => [
+                'category.id',
+                'category.name',
+                'category.gender'
+            ],
+            'joins' => [],
+            'select' => 'category.id, category.name,category.gender',
+        ];
+    }
 }
