@@ -57,7 +57,7 @@
 
     <!-- Datatable CDN -->
     <script src="<?= base_url('assets/js/datatable/datatables.min.js') ?>"></script>
-    <link rel="stylesheet" href="<?= base_url('assets/css/datatable.min.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/datatables.min.css') ?>">
     <script src="<?= base_url('assets/js/datatable/dataTables.bootstrap5.js') ?>"></script>
     <!-- SWEETALERT 2  -->
     <link href="<?= base_url('/assets/css/sweetalert2.min.css') ?>" rel="stylesheet">

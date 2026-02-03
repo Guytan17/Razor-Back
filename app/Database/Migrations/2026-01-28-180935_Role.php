@@ -18,6 +18,11 @@ class Role extends Migration
                 'type'=>'VARCHAR',
                 'constraint'=>'255',
             ],
+            'slug'=>[
+                'type'=>'VARCHAR',
+                'constraint'=>'255',
+                'unique'=>true,
+            ],
         ]);
         $this->forge->addKey('id',true);
         $this->forge->createTable('role',true);

@@ -42,6 +42,11 @@
         "url" : "/admin/users",
         "icon" : "fas fa-users"
       },
+      "roles" : {
+        "title" : "Rôles",
+        "url" : "/admin/role",
+        "icon" : "fas fa-address-card"
+      },
       "settings" : {
         "title" : "Réglages",
         "url" : "/admin/reglages",
