@@ -23,11 +23,6 @@
         "title" : "Coachs",
         "url" : "/admin/member/coach",
         "icon" : "fas fa-person-chalkboard"
-      },
-      "roles" : {
-        "title" : "Rôles",
-        "url" : "/admin/role",
-        "icon" : "fas fa-address-card"
       }
     }
   },
@@ -46,6 +41,11 @@
         "title" : "Utilisateurs",
         "url" : "/admin/users",
         "icon" : "fas fa-users"
+      },
+      "roles" : {
+        "title" : "Rôles",
+        "url" : "/admin/role",
+        "icon" : "fas fa-address-card"
       },
       "settings" : {
         "title" : "Réglages",
