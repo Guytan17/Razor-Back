@@ -4,14 +4,14 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-4 mb-3">
             <div class="card">
                 <?= form_open('/admin/role/insert') ?>
                 <div class="card-header">
                     <span class="card-title h5"> Création d'un nouveau rôle</span>
                 </div>
                 <div class="card-body">
-                    <label class="form-label" for="name">Nom du role</label>
+                    <label class="form-label" for="name">Nom du rôle <span class="text-danger">*</span></label>
                     <input class="form-control" type="text" name="name" id="name" required>
                 </div>
                 <div class="card-footer text-end">
@@ -183,7 +183,6 @@
                             });
                             refreshTable();
                         } else {
-                            console.log(response.message)
                             Swal.fire({
                                 title: 'Erreur !',
                                 text: 'Une erreur est survenue',
