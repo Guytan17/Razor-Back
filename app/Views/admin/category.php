@@ -130,7 +130,17 @@
                 },
                 {data: 'id'},
                 {data: 'name'},
-                {data: 'gender'}
+                {
+                    data: 'gender',
+                    render: function(data) {
+                        switch(data) {
+                            case 'man':return'Masculin';
+                            case 'woman':return'Féminin';
+                            case 'mixed':return'Mixte';
+                            default: return'-';
+                        }
+                    }
+                }
             ],
             language: {
                 url: baseUrl + 'assets/js/datatable/datatable-2.3.5-fr-FR.json',

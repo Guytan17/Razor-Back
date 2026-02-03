@@ -50,7 +50,11 @@ class CategoryModel extends Model
                 'category.gender'
             ],
             'joins' => [],
-            'select' => 'category.id, category.name,category.gender',
+            'select' => '
+                category.id, 
+                category.name,
+                category.gender'
+            ,
         ];
     }
 }
