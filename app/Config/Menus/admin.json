@@ -37,18 +37,23 @@
     "icon" : "fas fa-gear",
     "class" : "",
     "subs" : {
-      "users" : {
-        "title" : "Utilisateurs",
-        "url" : "/admin/users",
-        "icon" : "fas fa-users"
-      },
       "roles" : {
         "title" : "Rôles",
         "url" : "/admin/role",
         "icon" : "fas fa-address-card"
       },
+      "categories" : {
+        "title" : "Catégories",
+        "url" : "/admin/category",
+        "icon" : "fas fa-venus-mars"
+      },
+      "users" : {
+        "title" : "Utilisateurs",
+        "url" : "/admin/users",
+        "icon" : "fas fa-users"
+      },
       "settings" : {
-        "title" : "Réglages",
+        "title" : "Réglages du site",
         "url" : "/admin/reglages",
         "icon" : "fas fa-cog"
       }
