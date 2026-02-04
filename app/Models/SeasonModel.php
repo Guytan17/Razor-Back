@@ -35,4 +35,17 @@ class SeasonModel extends Model
             'valid_date' => 'La date de fin de saison doit être valide',
         ]
     ];
+
+    public function getDataTableConfig() : array {
+        return [
+            'searchable_fields' => [
+                'season.id',
+                'season.name',
+                'season.start_date',
+                'season.end_date'
+            ],
+            'joins' => [],
+            'select'=> 'season.id, season.name, season.start_date, season.end_date',
+        ];
+    }
 }
