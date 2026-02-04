@@ -47,6 +47,11 @@
         "url" : "/admin/category",
         "icon" : "fas fa-venus-mars"
       },
+      "season": {
+        "title": "Saisons",
+        "url": "/admin/season",
+        "icon": "fas fa-hourglass-half"
+      },
       "leagues" : {
         "title" : "Championnats",
         "url" : "/admin/league",

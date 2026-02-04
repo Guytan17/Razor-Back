@@ -25,6 +25,13 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('delete/(:num)', 'Category::deleteCategory/$1'); //suppression d'une catégorie
     });
 
+    //Routes pour la gestion des saisons
+    $routes->group('season',['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'Season::index');
+        $routes->post('insert', 'Season::insertSeason'); //Sauvegarde création
+        $routes->post('update/(:num)', 'Season::updateSeason/$1');//Sauvegarde édition
+    });
+
     //Routes pour la gestion des championnats
     $routes->group('league',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'League::index');
