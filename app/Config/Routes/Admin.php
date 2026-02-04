@@ -25,6 +25,11 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('delete/(:num)', 'Category::deleteCategory/$1'); //suppression d'une catégorie
     });
 
+    //Routes pour la gestion des championnats
+    $routes->group('league',['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'League::index');
+    });
+
     // Routes pour la gestion des utilisateurs (admin uniquement)
     $routes->group('users', ['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Users::index');
