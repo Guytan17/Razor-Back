@@ -20,8 +20,8 @@ class SeasonModel extends Model
     // Validation
     protected $validationRules      = [
         'name' => 'required|max_length[255]',
-        'start_date' => 'valid_date',
-        'end_date' => 'valid_date',
+        'start_date' => 'valid_date|permit_empty',
+        'end_date' => 'valid_date|permit_empty',
     ];
     protected $validationMessages   = [
         'name' => [

@@ -65,6 +65,38 @@
             <!-- END : ZONE INDEX -->
         </div>
     </div>
+    <!-- START : MODAL POUR LES MODIFICATIONS -->
+    <div class="modal" id="modalSeason" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modifier la saison </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label class="form-label" for="modalNameInput">Nom de la saison</label>
+                    <input class="form-control" id="modalNameInput" type="text">
+                    <div class="row">
+                        <div class="col">
+                            <label class="form-label" for="start_date">Date de début de saison</label>
+                            <input class="form-control" type="date" name="modalStartDateInput" id="modalStartDateInput">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label class="form-label" for="end_date">Date de fin de saison</label>
+                            <input class="form-control" type="date" name="modalEndDateInput" id="modalEndDateInput">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button onclick="saveSeason()" type="button" class="btn btn-primary">Sauvegarder</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END : MODAL POUR LES MODIFICATIONS -->
 </div>
 <script>
     var baseUrl = "<?=base_url();?>";
@@ -142,13 +174,69 @@
         window.refreshTable = function () {
             table.ajax.reload(null, false); // false pour garder la pagination
         };
+    })
 
+    //Définition de la modal
+    const myModal = new bootstrap.Modal('#modalSeason');
+
+    //Fonction pour ouvrir la modal avec les données préremplies
+    $(document).on('click','.btn-edit-season', function() {
+        const btn = $(this);
+
+        $('#modalNameInput').val(btn.data('name'));
+        $('#modalNameInput').data('id',btn.data('id'));
+        $('#modalStartDateInput').val(btn.data('start'));
+        $('#modalEndDateInput').val(btn.data('end'));
+
+        myModal.show();
+    });
+
+    //Fonction pour appeler la fonction de suppression
+    $(document).on('click','.btn-delete-season', function(){
+        deleteSeason($(this).data('id'));
     })
 
     function formatDateFr(dateStr) {
         if(!dateStr) return '';
         const [y,m, d] = dateStr.split('-');
         return `${d}/${m}/${y}`;
+    }
+
+    function saveSeason() {
+        let name = $('#modalNameInput').val();
+        let id = $('#modalNameInput').data('id');
+        let startDate = $('#modalStartDateInput').val() || null;
+        let endDate = $('#modalEndDateInput').val() || null;
+        $.ajax({
+            url: baseUrl + 'admin/season/update/'+id,
+            type:'POST',
+            data: {
+                name: name,
+                start_date: startDate,
+                end_date: endDate
+            },
+            success: function(response) {
+                myModal.hide();
+                if(response.success){
+                    Swal.fire({
+                        title : 'Succès !',
+                        text: response.message,
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    //Actualiser la table
+                    refreshTable();
+                } else {
+
+                    Swal.fire({
+                        title: 'Erreur !',
+                        text: 'Une erreur est survenue',
+                        icon: 'error'
+                    });
+                }
+            }
+        })
     }
 </script>
 <?= $this->endSection() ?>
