@@ -36,6 +36,11 @@ class SeasonModel extends Model
         ]
     ];
 
+    public function getAllSeasons() {
+        $this->select('season.*');
+        return $this->findAll();
+    }
+
     public function getDataTableConfig() : array {
         return [
             'searchable_fields' => [
