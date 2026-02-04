@@ -55,5 +55,29 @@ class LeagueModel extends Model
     protected $beforeInsert = ['generateUniqueSlugName'];
     protected $beforeUpdate = ['generateUniqueSlugName'];
 
-
+    public function getDataTableConfig(): array {
+        return [
+            'searchable_fields' =>
+                [
+                    'league.id',
+                    'league.name',
+                    'season',
+                    'category',
+                ],
+            'joins' =>
+            [
+                [
+                    'table' => 'season',
+                    'condition' => 'league.id_season = season.id',
+                    'type' => 'INNER'
+                ],
+                [
+                    'table' => 'category',
+                    'condition' => 'league.id_category = category.id',
+                    'type' => 'INNER'
+                ]
+            ],
+            'select' => 'league.id,league.name,season.name as season,category.name as category',
+        ];
+    }
 }
