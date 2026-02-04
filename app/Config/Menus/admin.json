@@ -47,6 +47,11 @@
         "url" : "/admin/category",
         "icon" : "fas fa-venus-mars"
       },
+      "leagues" : {
+        "title" : "Championnats",
+        "url" : "/admin/league",
+        "icon" : "fas fa-trophy"
+      },
       "users" : {
         "title" : "Utilisateurs",
         "url" : "/admin/users",
