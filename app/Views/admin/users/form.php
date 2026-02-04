@@ -46,12 +46,12 @@
                         <div class="col-md-6">
                             <label for="first_name" class="form-label">Prénom <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="first_name" name="first_name"
-                                   value="<?= old('first_name', $user->first_name ?? '') ?>" required>
+                                   value="<?= esc(old('first_name', $user->first_name ?? ''),'attr') ?>" required>
                         </div>
                         <div class="col-md-6">
                             <label for="last_name" class="form-label">Nom <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="last_name" name="last_name"
-                                   value="<?= old('last_name', $user->last_name ?? '') ?>" required>
+                                   value="<?= esc(old('last_name', $user->last_name ?? ''),'attr') ?>" required>
                         </div>
                     </div>
 
@@ -59,12 +59,12 @@
                         <div class="col-md-6">
                             <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
                             <input type="email" class="form-control" id="email" name="email"
-                                   value="<?= old('email', $user->email ?? '') ?>" required>
+                                   value="<?= esc(old('email', $user->email ?? ''),'attr') ?>" required>
                         </div>
                         <div class="col-md-6">
                             <label for="username" class="form-label">Nom d'utilisateur</label>
                             <input type="text" class="form-control" id="username" name="username"
-                                   value="<?= old('username', $user->username ?? '') ?>">
+                                   value="<?= esc(old('username', $user->username ?? ''),'attr') ?>">
                         </div>
                     </div>
 
@@ -82,7 +82,7 @@
                         <div class="col-md-6">
                             <label for="birthdate" class="form-label">Date de naissance</label>
                             <input type="date" class="form-control" id="birthdate" name="birthdate"
-                                   value="<?= old('birthdate', isset($user) && $user && $user->birthdate ? $user->birthdate->toDateString() : '') ?>">
+                                   value="<?= esc(old('birthdate', isset($user) && $user && $user->birthdate ? $user->birthdate->toDateString() : ''),'attr') ?>">
                         </div>
                     </div>
                 </div>
@@ -103,7 +103,7 @@
                     <div class="d-flex align-items-center gap-3 mb-2">
                         <img src="<?= $avatarUrl ?>" alt="Avatar" id="avatarPreview" class="rounded" style="width: 100px; height: 100px; object-fit: cover;">
                         <?php if ($hasAvatar): ?>
-                            <button type="button" class="btn btn-danger btn-sm" id="deleteAvatarBtn" onclick="deleteAvatar(<?= $user->id ?>)">
+                            <button type="button" class="btn btn-danger btn-sm" id="deleteAvatarBtn" onclick="deleteAvatar(<?=(int) $user->id ?>)">
                                 <i class="fas fa-trash"></i> Supprimer
                             </button>
                         <?php endif; ?>
@@ -126,7 +126,7 @@
                     <?php if (!empty($groups)): ?>
                         <?php foreach ($groups as $group): ?>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="groups[]" value="<?= esc($group['name']) ?>" id="group_<?= esc($group['name']) ?>"
+                                <input class="form-check-input" type="checkbox" name="groups[]" value="<?= esc($group['name'],'attr') ?>" id="group_<?= esc($group['name'],'attr') ?>"
                                         <?= in_array($group['name'], $userGroups) ? 'checked' : '' ?>>
                                 <label class="form-check-label" for="group_<?= esc($group['name']) ?>">
                                     <?= esc($group['title']) ?>
@@ -162,7 +162,7 @@
 <script>
 $(document).ready(function() {
     // Initialiser l'aperçu de l'avatar
-    initImagePreview('#avatar', '#avatarPreview', '<?= base_url('/assets/img/default.png') ?>', 2);
+    initImagePreview('#avatar', '#avatarPreview', '<?= esc(base_url('/assets/img/default.png'),'js') ?>', 2);
 });
 
 function deleteAvatar(userId) {
