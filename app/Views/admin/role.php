@@ -12,7 +12,7 @@
                 </div>
                 <div class="card-body">
                     <label class="form-label" for="name">Nom du rôle <span class="text-danger">*</span></label>
-                    <input class="form-control" type="text" name="name" id="name" required>
+                    <input class="form-control" type="text" name="name" id="name" value="<?=old('name')?>" required>
                 </div>
                 <div class="card-footer text-end">
                     <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Créer le rôle</button>
@@ -88,11 +88,17 @@
                     render: function (data, type, row) {
                         return `
                             <div class="btn-group" role="group">
-                                <button onclick="showModal(${row.id},'${row.name}')" class="btn btn-sm btn-warning" title="Modifier">
-                                    <i class="fas fa-edit"></i>
+                                <button
+                                    class="btn btn-sm btn-warning btn-edit-role"
+                                    title="Modifier"
+                                    data-id='${row.id}'
+                                    data-name='${escapeHtml(row.name)}'>
+                                        <i class="fas fa-edit"></i>
                                 </button>
-                                <button onclick="deleteRole(${row.id})" class="btn btn-sm btn-danger" title="Supprimer">
-                                    <i class="fas fa-trash-alt"></i>
+                                <button class="btn btn-sm btn-danger btn-delete-role"
+                                    title="Supprimer"
+                                    data-id="${row.id}">
+                                        <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>
                         `
@@ -117,13 +123,23 @@
 
     });
 
+    //Définition de la modal
     const myModal = new bootstrap.Modal('#modalRole');
 
-    function showModal(id,name){
-        $('#modalNameInput').val(name);
-        $('#modalNameInput').data('id',id);
+    //Fonction pour ouvrir la modal avec les données préremplies
+    $(document).on('click','.btn-edit-role', function() {
+        const btn = $(this);
+
+        $('#modalNameInput').val(btn.data('name'));
+        $('#modalNameInput').data('id',btn.data('id'));
+
         myModal.show();
-    }
+    });
+
+    //Fonction pour appeler la fonction de suppression
+    $(document).on('click','.btn-delete-role', function(){
+        deleteRole($(this).data('id'));
+    })
 
     function saveRole () {
         let name = $('#modalNameInput').val();
@@ -172,6 +188,13 @@
                 $.ajax({
                     url: '<?= base_url('/admin/role/delete/') ?>'+id,
                     type: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    data: {
+                        [csrfName]: csrfHash
+                    },
+                    dataType: 'json',
                     success: function(response) {
                         if (response.success) {
                             Swal.fire({

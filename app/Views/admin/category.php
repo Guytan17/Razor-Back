@@ -14,7 +14,7 @@
                     <div class="row mb-3">
                         <div class="col">
                             <label class="form-label" for="name">Nom de la catégorie<span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" name="name" id="name" required>
+                            <input class="form-control" type="text" name="name" id="name" value="<?=old('name')?>" required>
                         </div>
                     </div>
                     <div class="row">
@@ -117,11 +117,19 @@
                     render: function (data, type, row) {
                         return `
                             <div class="btn-group" role="group">
-                                <button onclick="showModal(${row.id},'${row.name}','${row.gender}')" class="btn btn-sm btn-warning" title="Modifier">
-                                    <i class="fas fa-edit"></i>
+                                <button
+                                    class="btn btn-sm btn-warning btn-edit-category"
+                                    title="Modifier"
+                                    data-id='${row.id}'
+                                    data-name ='${escapeHtml(row.name)}'
+                                    data-gender ='${escapeHtml(row.gender)}'>
+                                        <i class="fas fa-edit"></i>
                                 </button>
-                                <button onclick="deleteCategory(${row.id})" class="btn btn-sm btn-danger" title="Supprimer">
-                                    <i class="fas fa-trash-alt"></i>
+                                <button
+                                    class="btn btn-sm btn-danger btn-delete-category"
+                                    title="Supprimer"
+                                    data-id="${row.id}">
+                                        <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>
                         `
@@ -156,14 +164,24 @@
         };
     });
 
+    //Définition de la modal
     const myModal = new bootstrap.Modal('#modalCategory');
 
-    function showModal(id,name,gender){
-        $('#modalNameInput').val(name);
-        $('#modalNameInput').data('id',id);
-        $('#modalGenderSelect').val(gender);
+    //Fonction pour ouvrir la modal avec les données préremplies
+    $(document).on('click','.btn-edit-category', function() {
+        const btn = $(this);
+
+        $('#modalNameInput').val(btn.data('name'));
+        $('#modalNameInput').data('id',btn.data('id'));
+        $('#modalGenderSelect').val(btn.data('gender'));
+
         myModal.show();
-    }
+    });
+
+    //Fonction pour appeler la fonction de suppression
+    $(document).on('click','.btn-delete-category', function(){
+        deleteCategory($(this).data('id'));
+    })
 
     function saveCategory () {
         let name = $('#modalNameInput').val();
@@ -214,6 +232,13 @@
                 $.ajax({
                     url: '<?= base_url('/admin/category/delete/') ?>'+id,
                     type: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    data: {
+                        [csrfName]: csrfHash
+                    },
+                    dataType: 'json',
                     success: function(response) {
                         if (response.success) {
                             Swal.fire({
@@ -236,7 +261,6 @@
             }
         });
     }
-
 </script>
 
 <?= $this->endSection() ?>

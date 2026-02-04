@@ -44,6 +44,15 @@ $(document).ready(function() {
     });
 });
 
+//Fonction pour échapper et sécuriser les données php vers le js
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
 
 /**
  * Initialise un Select2 avec recherche AJAX générique
