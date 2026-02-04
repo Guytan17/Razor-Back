@@ -75,4 +75,25 @@ class Season extends AdminController
             ]);
         }
     }
+
+    public function deleteSeason($id) {
+        try {
+            if($this->sm->delete($id)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'La saison a bien été supprimée'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $this->sm->errors(),
+                ]);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
 }

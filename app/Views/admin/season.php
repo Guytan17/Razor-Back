@@ -208,18 +208,18 @@
         let startDate = $('#modalStartDateInput').val() || null;
         let endDate = $('#modalEndDateInput').val() || null;
         $.ajax({
-            url: baseUrl + 'admin/season/update/'+id,
-            type:'POST',
+            url: baseUrl + 'admin/season/update/' + id,
+            type: 'POST',
             data: {
                 name: name,
                 start_date: startDate,
                 end_date: endDate
             },
-            success: function(response) {
+            success: function (response) {
                 myModal.hide();
-                if(response.success){
+                if (response.success) {
                     Swal.fire({
-                        title : 'Succès !',
+                        title: 'Succès !',
                         text: response.message,
                         icon: 'success',
                         timer: 2000,
@@ -237,6 +237,51 @@
                 }
             }
         })
+    }
+
+    function deleteSeason(id) {
+        Swal.fire({
+            title: `Êtes-vous sûr ?`,
+            text: `Voulez-vous vraiment supprimer cette saison ?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#28a745",
+            cancelButtonColor: "#6c757d",
+            confirmButtonText: `Oui !`,
+            cancelButtonText: "Annuler",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '<?= base_url('/admin/season/delete/') ?>'+id,
+                    type: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    data: {
+                        [csrfName]: csrfHash
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Succès !',
+                                text: response.message,
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                            refreshTable();
+                        } else {
+                            Swal.fire({
+                                title: 'Erreur !',
+                                text: 'Une erreur est survenue',
+                                icon: 'error'
+                            });
+                        }
+                    }
+                })
+            }
+        });
     }
 </script>
 <?= $this->endSection() ?>
