@@ -28,6 +28,8 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
     //Routes pour la gestion des championnats
     $routes->group('league',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'League::index');
+        $routes->post('insert', 'League::insertLeague'); //Sauvegarde création
+        $routes->post('update/(:num)', 'League::updateLeague/$1'); //Sauvegarde édition
     });
 
     // Routes pour la gestion des utilisateurs (admin uniquement)
