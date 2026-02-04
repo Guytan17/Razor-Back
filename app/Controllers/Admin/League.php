@@ -54,4 +54,33 @@ class League extends AdminController
             return redirect()->back()->withInput();
         }
     }
+
+    public function updateLeague ($id) {
+        try{
+            // Récupération des données
+            $dataLeague=[
+                'name'=>$this->request->getPost('name'),
+                'id_season'=>$this->request->getPost('id_season'),
+                'id_category'=>$this->request->getPost('id_category'),
+
+            ];
+
+            if($this->lm->update($id,$dataLeague)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Championnat modifié avec succès',
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $this->lm->errors(),
+                ]);
+            }
+        } catch(\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
 }

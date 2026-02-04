@@ -61,8 +61,10 @@ class LeagueModel extends Model
                 [
                     'league.id',
                     'league.name',
-                    'season',
-                    'category',
+                    'league.id_season',
+                    'league.id_category',
+                    'season_name',
+                    'category_name',
                 ],
             'joins' =>
             [
@@ -77,7 +79,7 @@ class LeagueModel extends Model
                     'type' => 'INNER'
                 ]
             ],
-            'select' => 'league.id,league.name,season.name as season,category.name as category',
+            'select' => 'league.id,league.name,league.id_season,league.id_category,season.name as season_name,category.name as category_name',
         ];
     }
 }

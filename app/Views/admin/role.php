@@ -5,6 +5,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-4 mb-3">
+            <!-- START : ZONE CREATION -->
             <div class="card">
                 <?= form_open('/admin/role/insert') ?>
                 <div class="card-header">
@@ -19,8 +20,10 @@
                 </div>
                 <?= form_close() ?>
             </div>
+            <!-- END : ZONE CREATION -->
         </div>
         <div class="col-md-8">
+            <!-- START : ZONE INDEX -->
             <div class="card">
                 <div class="card-header">
                     <span class="card-title h5">Liste des rôles </span>
@@ -41,23 +44,24 @@
                     </table>
                 </div>
             </div>
+            <!-- END : ZONE INDEX-->
         </div>
     </div>
     <!-- START : MODAL POUR LES MODIFICATIONS -->
-    <div class="modal" id="modalRole" tabindex="-1">
+    <div class="modal" id="modalLeague" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Modifier le rôle </h5>
+                    <h5 class="modal-title">Modifier le championnat</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <label class="form-label" for="modalNameInput">Nom du rôle</label>
+                    <label class="form-label" for="modalNameInput">Nom du championnat</label>
                     <input class="form-control" id="modalNameInput" type="text">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                    <button onclick="saveRole()" type="button" class="btn btn-primary">Sauvegarder</button>
+                    <button onclick="saveLeague()" type="button" class="btn btn-primary">Sauvegarder</button>
                 </div>
             </div>
         </div>

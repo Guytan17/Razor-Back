@@ -70,7 +70,7 @@
         </div>
     </div>
     <!-- START : MODAL POUR LES MODIFICATIONS -->
-    <div class="modal" id="modalRole" tabindex="-1">
+    <div class="modal" id="modalLeague" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -80,10 +80,30 @@
                 <div class="modal-body">
                     <label class="form-label" for="modalNameInput">Nom du rôle</label>
                     <input class="form-control" id="modalNameInput" type="text">
+                    <div class="row">
+                        <div class="col">
+                            <label class="form-label" for="id_season">Saison</label>
+                            <select class="form-select" name="modalSelectIdSeason" id="modalSelectIdSeason">
+                                <?php foreach($seasons as $season) { ?>
+                                    <option value="<?= $season['id'] ?>"> <?= $season['name']?></option>
+                                <?php }?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label class="form-label" for="id_category">Catégorie</label>
+                            <select class="form-select" name="modalSelectIdCategory" id="modalSelectIdCategory">
+                                <?php foreach($categories as $category) { ?>
+                                    <option value="<?= $category['id'] ?>"> <?= $category['name']?></option>
+                                <?php }?>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                    <button onclick="saveRole()" type="button" class="btn btn-primary">Sauvegarder</button>
+                    <button onclick="saveLeague()" type="button" class="btn btn-primary">Sauvegarder</button>
                 </div>
             </div>
         </div>
@@ -115,13 +135,15 @@
                         return `
                             <div class="btn-group" role="group">
                                 <button
-                                    class="btn btn-sm btn-warning btn-edit-role"
+                                    class="btn btn-sm btn-warning btn-edit-league"
                                     title="Modifier"
                                     data-id='${row.id}'
-                                    data-name='${escapeHtml(row.name)}'>
+                                    data-name='${escapeHtml(row.name)}'
+                                    data-season-id='${row.id_season}'
+                                    data-category-id='${row.id_category}'>
                                         <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn-sm btn-danger btn-delete-role"
+                                <button class="btn btn-sm btn-danger btn-delete-league"
                                     title="Supprimer"
                                     data-id="${row.id}">
                                         <i class="fas fa-trash-alt"></i>
@@ -133,8 +155,8 @@
                 },
                 {data: 'id'},
                 {data: 'name'},
-                {data: 'season'},
-                {data: 'category'}
+                {data: 'season_name'},
+                {data: 'category_name'}
             ],
             language: {
                 url: baseUrl + 'assets/js/datatable/datatable-2.3.5-fr-FR.json',
@@ -148,7 +170,65 @@
         window.refreshTable = function () {
             table.ajax.reload(null, false); // false pour garder la pagination
         };
-
     });
+
+    //Définition de la modal
+    const myModal = new bootstrap.Modal('#modalLeague');
+
+    //Fonction pour ouvrir la modal avec les données préremplies
+    $(document).on('click','.btn-edit-league', function() {
+        const btn = $(this);
+        const seasonId = btn.data('season-id');
+        const categoryId = btn.data('category-id');
+
+        $('#modalNameInput').val(btn.data('name'));
+        $('#modalNameInput').data('id',btn.data('id'));
+        $('#modalSelectIdSeason').val(String(seasonId));
+        $('#modalSelectIdCategory').val(String(categoryId));
+
+        myModal.show();
+    });
+
+    //Fonction pour appeler la fonction de suppression
+    $(document).on('click','.btn-delete-league', function(){
+        deleteLeague($(this).data('id'));
+    })
+
+    function saveLeague () {
+        let name = $('#modalNameInput').val();
+        let id = $('#modalNameInput').data('id');
+        let seasonId = $('#modalSelectIdSeason').val();
+        let categoryId = $('#modalSelectIdCategory').val();
+
+        $.ajax({
+            url: baseUrl + 'admin/league/update/'+id,
+            type:'POST',
+            data: {
+                name: name,
+                id_season: seasonId,
+                id_category: categoryId
+            },
+            success: function(response) {
+                myModal.hide();
+                if(response.success){
+                    Swal.fire({
+                        title : 'Succès !',
+                        text: response.message,
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    //Actualiser la table
+                    refreshTable();
+                } else {
+                    Swal.fire({
+                        title: 'Erreur !',
+                        text: 'Une erreur est survenue',
+                        icon: 'error'
+                    });
+                }
+            }
+        })
+    }
 </script>
 <?php $this->endSection(); ?>
