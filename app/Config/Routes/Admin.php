@@ -9,6 +9,11 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->get('form', 'Member::form');
     });
 
+    $routes->group('license-code', ['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'LicenseCode::index');
+        $routes->post('insert', 'LicenseCode::insertLicenseCode'); // Sauvegarde création
+    });
+
     //Routes pour la gestion des roles
     $routes->group('role',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Role::index');
