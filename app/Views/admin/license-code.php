@@ -54,6 +54,32 @@
             <!-- END : ZONE INDEX-->
         </div>
     </div>
+    <!-- START : MODAL POUR LES MODIFICATIONS -->
+    <div class="modal" id="modalLicenseCode" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modifier le code licence</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label class="form-label" for="modalCodeInput">Code</label>
+                    <input class="form-control" id="modalCodeInput" type="text">
+                    <div class="row mt-2">
+                        <div class="col">
+                            <label class="form-label" for="modalExplanationInput">Explication du code <span class="text-danger">*</span></label>
+                            <input class="form-control" type="text" name="modalExplanationInput" id="modalExplanationInput" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button onclick="saveLicenseCode()" type="button" class="btn btn-primary">Sauvegarder</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END : MODAL POUR LES MODIFICATIONS -->
 </div>
 <script>
     var baseUrl = "<?=base_url();?>";
@@ -112,7 +138,59 @@
         window.refreshTable = function () {
             table.ajax.reload(null, false); // false pour garder la pagination
         };
-
     });
+
+    //Définition de la modal
+    const myModal = new bootstrap.Modal('#modalLicenseCode');
+
+    //Fonction pour ouvrir la modal avec les données préremplies
+    $(document).on('click','.btn-edit-licence-code', function() {
+        const btn = $(this);
+
+        $('#modalCodeInput').val(btn.data('code'));
+        $('#modalCodeInput').data('id',btn.data('id'));
+        $('#modalExplanationInput').val(btn.data('explanation'));
+
+        myModal.show();
+    });
+
+    function saveLicenseCode () {
+        let code = $('#modalCodeInput').val();
+        let id = $('#modalCodeInput').data('id');
+        let explanation = $('#modalExplanationInput').val();
+        $.ajax({
+            url: baseUrl + 'admin/license-code/update/'+id,
+            type:'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            data: {
+                code: code,
+                explanation: explanation,
+                [csrfName]: csrfHash
+            },
+            dataType: 'json',
+            success: function(response) {
+                if(response.success){
+                    myModal.hide();
+                    Swal.fire({
+                        title : 'Succès !',
+                        text: response.message,
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    //Actualiser la table
+                    refreshTable();
+                } else {
+                    Swal.fire({
+                        title: 'Erreur !',
+                        html: getAjaxErrorMessage(response),
+                        icon: 'error'
+                    });
+                }
+            }
+        })
+    }
 </script>
 <?php $this->endSection() ;?>

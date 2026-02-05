@@ -42,4 +42,31 @@ class LicenseCode extends AdminController
             return redirect()->back()->withInput();
         }
     }
+
+    public function updateLicenseCode($id) {
+        try{
+            // Récupération des données
+            $dataLicenseCode = [
+                'code' => $this->request->getPost('code'),
+                'explanation' => $this->request->getPost('explanation'),
+            ];
+
+            if($this->lcm->update($id,$dataLicenseCode)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Code licence modifié avec succès',
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $this->lcm->errors(),
+                ]);
+            }
+        } catch(\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
 }
