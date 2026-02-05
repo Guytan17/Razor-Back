@@ -26,6 +26,10 @@
     });
 })();
 
+// définition variables
+var baseUrl = "<?= base_url(); ?>";
+var table;
+
 $(document).ready(function() {
     const $toggleSidebar = $('#toggle-sidebar');
 

@@ -100,7 +100,6 @@
 </div>
 <script>
     var baseUrl = "<?=base_url();?>";
-    var table;
 
     $(document).ready(function() {
         table = $('#seasonsTable').DataTable({

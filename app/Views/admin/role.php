@@ -48,7 +48,7 @@
         </div>
     </div>
     <!-- START : MODAL POUR LES MODIFICATIONS -->
-    <div class="modal" id="modalLeague" tabindex="-1">
+    <div class="modal" id="modalRole" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -61,7 +61,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                    <button onclick="saveLeague()" type="button" class="btn btn-primary">Sauvegarder</button>
+                    <button onclick="saveRole()" type="button" class="btn btn-primary">Sauvegarder</button>
                 </div>
             </div>
         </div>
@@ -70,7 +70,6 @@
 </div>
 <script>
     var baseUrl = "<?=base_url();?>";
-    var table;
 
     $(document).ready(function() {
         table = $('#rolesTable').DataTable({
