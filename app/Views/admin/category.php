@@ -194,10 +194,15 @@
         $.ajax({
             url: baseUrl + 'admin/category/update/'+id,
             type:'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
             data: {
                 name: name,
-                gender: gender
+                gender: gender,
+                [csrfName]: csrfHash
             },
+            dataType: 'json',
             success: function(response) {
                 myModal.hide();
                 if(response.success){

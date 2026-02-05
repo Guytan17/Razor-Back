@@ -151,9 +151,14 @@
         $.ajax({
             url: baseUrl + 'admin/role/update/'+id,
             type:'POST',
-            data: {
-                name: name
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
             },
+            data: {
+                name: name,
+                [csrfName]: csrfHash
+            },
+            dataType: 'json',
             success: function(response) {
                 myModal.hide();
                 if(response.success){

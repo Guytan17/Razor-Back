@@ -155,10 +155,11 @@
                 {
                     data: 'end_date',
                     render: function(data,type) {
-                        if(type ==='display' || type ==='filter'){
-                            return formatDateFr(data,type)
+                        if(type ==='sort'){
+                            return data //On laisse les données brutes pour le tri pour que ça reste chronologique et pas alphabétique
+                        } else {
+                            return formatDateFr(data)
                         }
-                        return data
                     }
                 },
             ],
@@ -210,11 +211,16 @@
         $.ajax({
             url: baseUrl + 'admin/season/update/' + id,
             type: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
             data: {
                 name: name,
                 start_date: startDate,
-                end_date: endDate
+                end_date: endDate,
+                [csrfName]: csrfHash
             },
+            dataType: 'json',
             success: function (response) {
                 myModal.hide();
                 if (response.success) {
