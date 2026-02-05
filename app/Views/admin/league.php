@@ -132,6 +132,26 @@
                     orderable: false,
                     width: '150px',
                     render: function (data, type, row) {
+                        const isActive = row.deleted_at===null;
+                        const toggleButton = isActive
+                        ?
+                            `
+                                <button
+                                    class="btn btn-sm btn-success btn-toggleActive-league"
+                                    title="Désactiver"
+                                    data-id="${row.id}">
+                                        <i class="fas fa-toggle-on"></i>
+                                </button>
+                            `
+                        :
+                            `
+                            <button
+                                    class="btn btn-sm btn-danger btn-toggleActive-league"
+                                    title="Activer"
+                                    data-id="${row.id}">
+                                        <i class="fas fa-toggle-off"></i>
+                                </button>
+                            `
                         return `
                             <div class="btn-group" role="group">
                                 <button
@@ -143,14 +163,10 @@
                                     data-category-id='${row.id_category}'>
                                         <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn-sm btn-danger btn-delete-league"
-                                    title="Supprimer"
-                                    data-id="${row.id}">
-                                        <i class="fas fa-trash-alt"></i>
-                                </button>
+                               ${toggleButton}
                             </div>
                         `
-                            ;
+                        ;
                     }
                 },
                 {data: 'id'},
@@ -189,9 +205,9 @@
         myModal.show();
     });
 
-    //Fonction pour appeler la fonction de suppression
-    $(document).on('click','.btn-delete-league', function(){
-        deleteLeague($(this).data('id'));
+    //Fonction pour appeler la fonction de désactivation/activation
+    $(document).on('click','.btn-toggleActive-league', function(){
+       toggleActive($(this).data('id'));
     })
 
     function saveLeague () {
@@ -229,6 +245,53 @@
                 }
             }
         })
+    }
+
+    function toggleActive(leagueId) {
+        $.ajax({
+            url: '<?= base_url('admin/league/switch-active/') ?>' + leagueId,
+            type: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            data: {
+                [csrfName]: csrfHash
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    // Recharger le DataTable pour voir le changement
+                    $('#leaguesTable').DataTable().ajax.reload(null, false);
+
+                    // Notification toast
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: response.message,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Erreur !',
+                        text: response.message,
+                        icon: 'error',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    title: 'Erreur !',
+                    text: 'Une erreur est survenue.',
+                    icon: 'error',
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
     }
 </script>
 <?php $this->endSection(); ?>

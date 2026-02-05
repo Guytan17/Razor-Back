@@ -42,7 +42,7 @@ class League extends AdminController
                 'id_category' => $this->request->getPost('id_category'),
             ];
             if ($this->lm->insert($dataLeague)) {
-                return $this->success('Championnat créé avec succès');
+                $this->success('Championnat créé avec succès');
             } else {
                 foreach ($this->lm->errors() as $error) {
                     $this->error($error);
@@ -81,6 +81,40 @@ class League extends AdminController
                 'success' => false,
                 'message' => $e->getMessage(),
             ]);
+        }
+    }
+
+    public function switchActiveLeague($idLeague){
+
+        $league = $this->lm->withDeleted()->find($idLeague);
+        //Test pour savoir si le championnat existe
+
+        if(!$league) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Championnat introuvable'
+            ]);
+        }
+        // Si le championnat est actif, on le désactive
+        if(empty($league['deleted_at'])) {
+            $this->lm->delete($idLeague);
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Championnat désactivé',
+            ]);
+        } else {
+            //S'il est inactif, on le réactive
+            if($this->lm->reactiveLeague($idLeague)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Championnat activé',
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Erreur lors de l\'activation',
+                ]);
+            }
         }
     }
 }

@@ -65,6 +65,7 @@ class LeagueModel extends Model
                     'league.id_category',
                     'season_name',
                     'category_name',
+
                 ],
             'joins' =>
             [
@@ -79,7 +80,13 @@ class LeagueModel extends Model
                     'type' => 'INNER'
                 ]
             ],
-            'select' => 'league.id,league.name,league.id_season,league.id_category,season.name as season_name,category.name as category_name',
+            'select' => 'league.id,league.name,league.id_season,league.id_category,season.name as season_name,category.name as category_name,league.deleted_at',
         ];
+    }
+
+    public function reactiveLeague($id) : bool{
+        return $this->builder()
+            ->where('id', $id)
+            ->update(['deleted_at' => null, 'updated_at' => date('Y-m-d H:i:s')]);
     }
 }

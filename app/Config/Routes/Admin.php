@@ -38,7 +38,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->get('/', 'League::index');
         $routes->post('insert', 'League::insertLeague'); //Sauvegarde création
         $routes->post('update/(:num)', 'League::updateLeague/$1'); //Sauvegarde édition
-        $routes->post('delete/(:num)', 'League::deleteLeague/$1'); //Suppression d'un championnat
+        $routes->post('switch-active/(:num)', 'League::switchActiveLeague/$1'); //Activation/désactivation d'un championnat
     });
 
     // Routes pour la gestion des utilisateurs (admin uniquement)
