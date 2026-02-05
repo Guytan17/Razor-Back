@@ -52,11 +52,11 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Modifier le championnat</h5>
+                    <h5 class="modal-title">Modifier le rôle</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <label class="form-label" for="modalNameInput">Nom du championnat</label>
+                    <label class="form-label" for="modalNameInput">Nom du rôle <span class="text-danger">*</span></label>
                     <input class="form-control" id="modalNameInput" type="text">
                 </div>
                 <div class="modal-footer">
@@ -159,8 +159,8 @@
             },
             dataType: 'json',
             success: function(response) {
-                myModal.hide();
                 if(response.success){
+                    myModal.hide();
                     Swal.fire({
                         title : 'Succès !',
                         text: response.message,
@@ -173,7 +173,7 @@
                 } else {
                     Swal.fire({
                         title: 'Erreur !',
-                        text: 'Une erreur est survenue',
+                        html: getAjaxErrorMessage(response),
                         icon: 'error'
                     });
                 }

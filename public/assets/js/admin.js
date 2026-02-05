@@ -30,6 +30,14 @@
 var baseUrl = "<?= base_url(); ?>";
 var table;
 
+// Fonction pour messages d'erreurs ajax avec SweetAlert
+function getAjaxErrorMessage(response) {
+    if (typeof response.message === 'object') {
+        return Object.values(response.message).join('<br>');
+    }
+    return response.message ?? 'Erreur inconnue';
+}
+
 $(document).ready(function() {
     const $toggleSidebar = $('#toggle-sidebar');
 

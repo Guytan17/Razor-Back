@@ -74,7 +74,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <label class="form-label" for="modalNameInput">Nom de la saison</label>
+                    <label class="form-label" for="modalNameInput">Nom de la saison <span class="text-danger">*</span></label>
                     <input class="form-control" id="modalNameInput" type="text">
                     <div class="row">
                         <div class="col">
@@ -221,8 +221,8 @@
             },
             dataType: 'json',
             success: function (response) {
-                myModal.hide();
                 if (response.success) {
+                    myModal.hide();
                     Swal.fire({
                         title: 'Succès !',
                         text: response.message,
@@ -233,10 +233,9 @@
                     //Actualiser la table
                     refreshTable();
                 } else {
-
                     Swal.fire({
                         title: 'Erreur !',
-                        text: 'Une erreur est survenue',
+                        html: getAjaxErrorMessage(response),
                         icon: 'error'
                     });
                 }

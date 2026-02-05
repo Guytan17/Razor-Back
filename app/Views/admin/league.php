@@ -74,15 +74,15 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Modifier le rôle </h5>
+                    <h5 class="modal-title">Modifier le championnat</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <label class="form-label" for="modalNameInput">Nom du rôle</label>
+                    <label class="form-label" for="modalNameInput">Nom du championnat <span class="text-danger">*</span></label>
                     <input class="form-control" id="modalNameInput" type="text">
                     <div class="row">
                         <div class="col">
-                            <label class="form-label" for="id_season">Saison</label>
+                            <label class="form-label" for="id_season">Saison <span class="text-danger">*</span></label>
                             <select class="form-select" name="modalSelectIdSeason" id="modalSelectIdSeason">
                                 <?php foreach($seasons as $season) { ?>
                                     <option value="<?= $season['id'] ?>"> <?= $season['name']?></option>
@@ -92,7 +92,7 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <label class="form-label" for="id_category">Catégorie</label>
+                            <label class="form-label" for="id_category">Catégorie <span class="text-danger">*</span></label>
                             <select class="form-select" name="modalSelectIdCategory" id="modalSelectIdCategory">
                                 <?php foreach($categories as $category) { ?>
                                     <option value="<?= $category['id'] ?>"> <?= $category['name']?></option>
@@ -229,8 +229,8 @@
             },
             dataType: 'json',
             success: function(response) {
-                myModal.hide();
                 if(response.success){
+                    myModal.hide();
                     Swal.fire({
                         title : 'Succès !',
                         text: response.message,
@@ -243,7 +243,7 @@
                 } else {
                     Swal.fire({
                         title: 'Erreur !',
-                        text: 'Une erreur est survenue',
+                        html: getAjaxErrorMessage(response),
                         icon: 'error'
                     });
                 }
