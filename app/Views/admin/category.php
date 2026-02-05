@@ -67,19 +67,19 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Modifier la category </h5>
+                    <h5 class="modal-title">Modifier la categorie</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col">
-                            <label class="form-label" for="modalNameInput">Nom de la catégorie</label>
+                            <label class="form-label" for="modalNameInput">Nom de la catégorie <span class="text-danger">*</span></label>
                             <input class="form-control" id="modalNameInput" type="text">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
-                            <label class="form-label" for="modalGenderSelect">Genre de la catégorie</label>
+                            <label class="form-label" for="modalGenderSelect">Genre de la catégorie <span class="text-danger">*</span></label>
                             <select class="form-select" name="modalGenderSelect" id="modalGenderSelect">
                                 <option value="mixed">Mixte</option>
                                 <option value="man">Masculin</option>
@@ -99,7 +99,6 @@
 </div>
 <script>
     var baseUrl = "<?=base_url();?>";
-    var table;
 
     $(document).ready(function() {
         table = $('#categoriesTable').DataTable({
@@ -204,8 +203,8 @@
             },
             dataType: 'json',
             success: function(response) {
-                myModal.hide();
                 if(response.success){
+                    myModal.hide();
                     Swal.fire({
                         title : 'Succès !',
                         text: response.message,
@@ -218,7 +217,7 @@
                 } else {
                     Swal.fire({
                         title: 'Erreur !',
-                        text: 'Une erreur est survenue',
+                        html: getAjaxErrorMessage(response),
                         icon: 'error'
                     });
                 }

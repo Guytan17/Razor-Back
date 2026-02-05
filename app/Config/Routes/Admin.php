@@ -9,6 +9,13 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->get('form', 'Member::form');
     });
 
+    $routes->group('license-code', ['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'LicenseCode::index');
+        $routes->post('insert', 'LicenseCode::insertLicenseCode'); // Sauvegarde création
+        $routes->post('update/(:num)', 'LicenseCode::updateLicenseCode/$1');//Sauvegarde édition
+        $routes->post('delete/(:num)', 'LicenseCode::deleteLicenseCode/$1');//Suppression d'un rôle
+    });
+
     //Routes pour la gestion des roles
     $routes->group('role',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Role::index');

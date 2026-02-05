@@ -48,20 +48,20 @@
         </div>
     </div>
     <!-- START : MODAL POUR LES MODIFICATIONS -->
-    <div class="modal" id="modalLeague" tabindex="-1">
+    <div class="modal" id="modalRole" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Modifier le championnat</h5>
+                    <h5 class="modal-title">Modifier le rôle</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <label class="form-label" for="modalNameInput">Nom du championnat</label>
+                    <label class="form-label" for="modalNameInput">Nom du rôle <span class="text-danger">*</span></label>
                     <input class="form-control" id="modalNameInput" type="text">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                    <button onclick="saveLeague()" type="button" class="btn btn-primary">Sauvegarder</button>
+                    <button onclick="saveRole()" type="button" class="btn btn-primary">Sauvegarder</button>
                 </div>
             </div>
         </div>
@@ -70,7 +70,6 @@
 </div>
 <script>
     var baseUrl = "<?=base_url();?>";
-    var table;
 
     $(document).ready(function() {
         table = $('#rolesTable').DataTable({
@@ -160,8 +159,8 @@
             },
             dataType: 'json',
             success: function(response) {
-                myModal.hide();
                 if(response.success){
+                    myModal.hide();
                     Swal.fire({
                         title : 'Succès !',
                         text: response.message,
@@ -174,7 +173,7 @@
                 } else {
                     Swal.fire({
                         title: 'Erreur !',
-                        text: 'Une erreur est survenue',
+                        html: getAjaxErrorMessage(response),
                         icon: 'error'
                     });
                 }

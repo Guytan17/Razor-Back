@@ -42,6 +42,11 @@
         "url" : "/admin/role",
         "icon" : "fas fa-address-card"
       },
+      "licenses codes": {
+        "title" : "Codes licences",
+        "url" : "/admin/license-code",
+        "icon" : "fas fa-square-binary"
+      },
       "categories" : {
         "title" : "Catégories",
         "url" : "/admin/category",
