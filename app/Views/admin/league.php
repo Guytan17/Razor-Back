@@ -219,11 +219,16 @@
         $.ajax({
             url: baseUrl + 'admin/league/update/'+id,
             type:'POST',
+            headers : {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
             data: {
                 name: name,
                 id_season: seasonId,
-                id_category: categoryId
+                id_category: categoryId,
+                [csrfName]: csrfHash
             },
+            dataType: 'json',
             success: function(response) {
                 myModal.hide();
                 if(response.success){
