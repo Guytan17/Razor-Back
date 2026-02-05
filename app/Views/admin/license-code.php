@@ -112,7 +112,7 @@
                                     data-explanation='${escapeHtml(row.explanation)}'>
                                         <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn-sm btn-danger btn-delete-licence-code"
+                                <button class="btn btn-sm btn-danger btn-delete-license-code"
                                     title="Supprimer"
                                     data-id="${row.id}">
                                         <i class="fas fa-trash-alt"></i>
@@ -154,6 +154,11 @@
         myModal.show();
     });
 
+    //Fonction pour appeler la fonction de suppression
+    $(document).on('click','.btn-delete-license-code', function(){
+        deleteLicenseCode($(this).data('id'));
+    })
+
     function saveLicenseCode () {
         let code = $('#modalCodeInput').val();
         let id = $('#modalCodeInput').data('id');
@@ -191,6 +196,51 @@
                 }
             }
         })
+    }
+
+    function deleteLicenseCode(id) {
+        Swal.fire({
+            title: `Êtes-vous sûr ?`,
+            text: `Voulez-vous vraiment supprimer ce code licence ?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#28a745",
+            cancelButtonColor: "#6c757d",
+            confirmButtonText: `Oui !`,
+            cancelButtonText: "Annuler",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '<?= base_url('/admin/license-code/delete/') ?>'+id,
+                    type: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    data: {
+                        [csrfName]: csrfHash
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Succès !',
+                                text: response.message,
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                            refreshTable();
+                        } else {
+                            Swal.fire({
+                                title: 'Erreur !',
+                                text: 'Une erreur est survenue',
+                                icon: 'error'
+                            });
+                        }
+                    }
+                })
+            }
+        });
     }
 </script>
 <?php $this->endSection() ;?>

@@ -69,4 +69,25 @@ class LicenseCode extends AdminController
             ]);
         }
     }
+
+    public function deleteLicenseCode($id) {
+        try {
+            if($this->lcm->delete($id)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Le code license a bien été supprimé'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $this->lcm->errors(),
+                ]);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
 }
