@@ -41,6 +41,11 @@ class CategoryModel extends Model
     protected $beforeInsert   = ['generateUniqueSlugName'];
     protected $beforeUpdate   = ['generateUniqueSlugName'];
 
+    public function getAllCategories(){
+        $this->select('category.*');
+        return $this->findAll();
+    }
+
     public function getDataTableConfig(): array
     {
         return [

@@ -5,6 +5,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-4 mb-3">
+            <!-- START : ZONE CREATION -->
             <div class="card">
                 <?= form_open('/admin/category/insert') ?>
                 <div class="card-header">
@@ -33,8 +34,10 @@
                 </div>
                 <?= form_close() ?>
             </div>
+            <!-- END : ZONE CREATION -->
         </div>
         <div class="col-md-8">
+            <!-- START : ZONE INDEX -->
             <div class="card">
                 <div class="card-header">
                     <span class="card-title h5">Liste des catégories</span>
@@ -56,6 +59,7 @@
                     </table>
                 </div>
             </div>
+            <!-- END : ZONE INDEX -->
         </div>
     </div>
     <!-- START : MODAL POUR LES MODIFICATIONS -->

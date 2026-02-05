@@ -55,5 +55,38 @@ class LeagueModel extends Model
     protected $beforeInsert = ['generateUniqueSlugName'];
     protected $beforeUpdate = ['generateUniqueSlugName'];
 
+    public function getDataTableConfig(): array {
+        return [
+            'searchable_fields' =>
+                [
+                    'league.id',
+                    'league.name',
+                    'league.id_season',
+                    'league.id_category',
+                    'season_name',
+                    'category_name',
 
+                ],
+            'joins' =>
+            [
+                [
+                    'table' => 'season',
+                    'condition' => 'league.id_season = season.id',
+                    'type' => 'INNER'
+                ],
+                [
+                    'table' => 'category',
+                    'condition' => 'league.id_category = category.id',
+                    'type' => 'INNER'
+                ]
+            ],
+            'select' => 'league.id,league.name,league.id_season,league.id_category,season.name as season_name,category.name as category_name,league.deleted_at',
+        ];
+    }
+
+    public function reactiveLeague($id) : bool{
+        return $this->builder()
+            ->where('id', $id)
+            ->update(['deleted_at' => null, 'updated_at' => date('Y-m-d H:i:s')]);
+    }
 }
