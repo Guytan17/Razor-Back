@@ -37,7 +37,6 @@
                                 <?php endforeach ; ?>
                             </select>
                         </div>
-                        </div>
                     </div>
                     <!-- END : ZONE AVEC INFOS GÉNÉRALES DU MEMBRE -->
                     <!-- START : ZONE POUR AJOUTER UN CONTACT -->

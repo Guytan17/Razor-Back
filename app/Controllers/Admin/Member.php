@@ -49,6 +49,9 @@ class Member extends AdminController
                 'last_name' => $this->request->getPost('last_name'),
                 'date_of_birth' => $this->request->getPost('date_of_birth'),
                 'id_role' => $this->request->getPost('role'),
+                'id_license_code' => $this->request->getPost('license_code'),
+                'license_statut' => $this->request->getPost('license_statut'),
+                'balance' => $this->request->getPost('balance'),
             ];
 
             // Récupération des données de contact
