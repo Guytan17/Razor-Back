@@ -7,6 +7,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
     $routes->group('member',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Member::index');
         $routes->get('form', 'Member::form');
+        $routes->post('save', 'Member::save');
     });
 
     $routes->group('license-code', ['filter' => 'group:admin'], function($routes) {

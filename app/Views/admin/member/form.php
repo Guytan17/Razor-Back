@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 
-<?php echo form_open('') ?>
+<?php echo form_open('admin/member/save') ?>
 
 <div class="container-fluid">
     <div class="row mb-3">
@@ -15,28 +15,28 @@
                 <div class="card-body">
                     <!-- START : ZONE AVEC INFOS GÉNÉRALES DU MEMBRE -->
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="m-2">
-                                <label class="form-label" for="last_name">Nom <span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" name="last_name" id="last_name">
-                            </div>
-                            <div class="m-2">
-                                <label class="form-label" for="birthdate">Date de naissance <span class="text-danger">*</span></label>
-                                <input class="form-control" type="date" name="birthdate" id="birthdate">
-                            </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="last_name">Nom <span class="text-danger">*</span></label>
+                            <input class="form-control" type="text" name="last_name" id="last_name">
                         </div>
-                        <div class="col-md-6">
-                            <div class="m-2">
-                                <label class="form-label" for="first_name">Prénom <span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" name="first_name" id="first_name">
-                            </div>
-
-                            <div class="m-2">
-                                <label class="form-label" for="role">Rôle <span class="text-danger">*</span></label>
-                                <select class="form-select" name="role" id="role">
-
-                                </select>
-                            </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="first_name">Prénom <span class="text-danger">*</span></label>
+                            <input class="form-control" type="text" name="first_name" id="first_name">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="date_of_birth">Date de naissance <span class="text-danger">*</span></label>
+                            <input class="form-control" type="date" name="date_of_birth" id="date_of_birth">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="role">Rôle <span class="text-danger">*</span></label>
+                            <select class="form-select" name="role" id="role">
+                                <?php foreach($roles as $role): ?>
+                                    <option value=<?= $role['id'] ?>><?= $role['name'] ?></option>
+                                <?php endforeach ; ?>
+                            </select>
+                        </div>
                         </div>
                     </div>
                     <!-- END : ZONE AVEC INFOS GÉNÉRALES DU MEMBRE -->
@@ -64,7 +64,11 @@
                             </div>
                             <div class="col mx-2">
                                 <label class="form-label" for="license_code">Code licence</label>
-                                <input class="form-control" type="text" name="license_code" id="license_code">
+                                <select class="form-select" name="license_code" id="license_code">
+                                    <?php foreach($license_codes as $license_code): ?>
+                                        <option value=<?=$license_code['id']?>><?=$license_code['code']?> - <?= $license_code['explanation']?></option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-6 hstack">
@@ -159,7 +163,7 @@
                 <!-- END : STATS DU JOUEUR -->
                 <!-- END : ZONE INFOS BASKET -->
                 <div class="card-footer text-end">
-                    <span class="btn btn-sm btn-primary mx-2"><i class="fas fa-save"></i> Valider</span>
+                    <button type="submit" class="btn btn-sm btn-primary mx-2"><i class="fas fa-save"></i> Valider</button>
                 </div>
             </div>
         </div>

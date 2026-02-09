@@ -12,7 +12,7 @@ class Member extends Entity
         'first_name' => 'string',
         'last_name'  => 'string',
         'slug'       => 'string',
-        'date_of_birth' => 'date',
+        'date_of_birth' => 'datetime',
         'license_number' => 'string',
         'id_license_code' => 'integer',
         'license_status' => 'integer',
