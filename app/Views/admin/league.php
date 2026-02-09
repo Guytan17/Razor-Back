@@ -121,7 +121,7 @@
                 url: baseUrl + 'datatable/searchdatatable',
                 type: 'POST',
                 data: {
-                    model: 'leagueModel'
+                    model: 'LeagueModel'
                 }
             },
             columns: [

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\DataTableTrait;
 use App\Traits\SlugTrait;
 use CodeIgniter\Model;
 use App\Entities\Member;
@@ -9,6 +10,8 @@ use App\Entities\Member;
 class MemberModel extends Model
 {
     use SlugTrait ;
+    use DataTableTrait;
+
     protected $table            = 'member';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
@@ -67,4 +70,40 @@ class MemberModel extends Model
     // Callbacks
     protected $beforeInsert   = ['generateUniqueSlugName'];
     protected $beforeUpdate   = ['generateUniqueSlugName'];
-  }
+
+    public function getDataTableConfig(): array
+    {
+        return [
+            'searchable_fields' => [
+                'member.id',
+                'last_name',
+                'first_name',
+                'license_number',
+                'id_license_code',
+                'id_role'
+            ],
+            'joins' => [
+                [
+                    'table' => 'role',
+                    'condition' => 'member.id_role = role.id',
+                    'type' => 'inner'
+                ],
+                [
+                    'table' => 'license_code',
+                    'condition' => 'member.id_license_code = license_code.id',
+                    'type' => 'inner'
+                ]
+            ],
+            'select' => '
+            member.id,
+            member.last_name,
+            member.first_name,
+            member.license_number,
+            member.id_license_code,
+            member.id_role,
+            role.name as role_name,
+            license_code.code as license_code,
+            '
+        ];
+    }
+}

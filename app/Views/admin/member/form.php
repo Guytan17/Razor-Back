@@ -31,7 +31,7 @@
                         </div>
                         <div class="col-md-6 mb-2">
                             <label class="form-label" for="role">Rôle <span class="text-danger">*</span></label>
-                            <select class="form-select" name="role" id="role">
+                            <select class="form-select" name="role" id="role" required>
                                 <?php foreach($roles as $role): ?>
                                     <option value=<?= $role['id'] ?>><?= $role['name'] ?></option>
                                 <?php endforeach ; ?>
@@ -63,7 +63,7 @@
                             </div>
                             <div class="col mx-2">
                                 <label class="form-label" for="license_code">Code licence</label>
-                                <select class="form-select" name="license_code" id="license_code">
+                                <select class="form-select" name="license_code" id="license_code" required>
                                     <?php foreach($license_codes as $license_code): ?>
                                         <option value=<?=$license_code['id']?>><?=$license_code['code']?> - <?= $license_code['explanation']?></option>
                                     <?php endforeach; ?>
