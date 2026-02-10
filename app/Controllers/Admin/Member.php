@@ -29,15 +29,25 @@ class Member extends AdminController
         return $this->render('admin/member/index', $data);
     }
 
-    public function form () {
-        $roles = $this->rm->getAllRoles();
-        $license_codes = $this->lcm->getAllLicenseCodes();
+    public function form ($id=null) {
+        $this->addBreadcrumb('Liste des membres','/admin/member');
+        $roles = $this->rm->findAll();
+        $license_codes = $this->lcm->findAll();
+        if($id != null) {
+            $title = 'Ajouter un membre';
+            $this->addBreadcrumb('Modifier un membre');
+            //Récupération des données pour l'édition
+            $member = $this->mm->withDeleted()->find($id);
+        } else {
+            $title = 'Modifier un membre';
+            $this->addBreadcrumb('Ajouter un membre');
+        }
         $data = [
-            'title' => 'Ajout d\'un membre',
+            'title' => $title,
             'roles' => $roles,
             'license_codes' => $license_codes,
+            'member' => $member??null,
         ];
-        $this->addBreadcrumb('Liste des membres','/admin/member');
         return $this->render('admin/member/form',$data);
     }
 

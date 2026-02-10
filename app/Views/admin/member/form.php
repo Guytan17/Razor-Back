@@ -17,23 +17,23 @@
                     <div class="row">
                         <div class="col-md-6 mb-2">
                             <label class="form-label" for="last_name">Nom <span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" name="last_name" id="last_name">
+                            <input class="form-control" type="text" name="last_name" id="last_name" value="<?= esc($member->last_name ?? '') ?>" required>
                         </div>
                         <div class="col-md-6 mb-2">
                             <label class="form-label" for="first_name">Prénom <span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" name="first_name" id="first_name">
+                            <input class="form-control" type="text" name="first_name" id="first_name" value="<?= esc($member->first_name ?? '') ?>" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-2">
                             <label class="form-label" for="date_of_birth">Date de naissance <span class="text-danger">*</span></label>
-                            <input class="form-control" type="date" name="date_of_birth" id="date_of_birth">
+                            <input class="form-control" type="date" name="date_of_birth" id="date_of_birth" value="<?= esc($member->date_of_birth->toDateString() ?? '') ?>" required>
                         </div>
                         <div class="col-md-6 mb-2">
                             <label class="form-label" for="role">Rôle <span class="text-danger">*</span></label>
                             <select class="form-select" name="role" id="role" required>
                                 <?php foreach($roles as $role): ?>
-                                    <option value=<?= $role['id'] ?>><?= $role['name'] ?></option>
+                                    <option value=<?= esc($role['id']) ?> <?= isset($member) && $role['id'] == $member->id_role ? 'selected' : '' ?>><?= esc($role['name']) ?></option>
                                 <?php endforeach ; ?>
                             </select>
                         </div>
@@ -65,7 +65,10 @@
                                 <label class="form-label" for="license_code">Code licence</label>
                                 <select class="form-select" name="license_code" id="license_code" required>
                                     <?php foreach($license_codes as $license_code): ?>
-                                        <option value=<?=$license_code['id']?>><?=$license_code['code']?> - <?= $license_code['explanation']?></option>
+                                        <option value=<?=esc($license_code['id'])?> <?= isset($member) && $license_code['id'] == $member->id_license_code ? 'selected' : '' ?>><?=esc($license_code['code'])
+                                            ?> -
+                                            <?=
+                                            esc($license_code['explanation']) ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -81,7 +84,7 @@
                             </div>
                             <div class="col m-2">
                                 <label class="form-label" for="license_number">Numéro de licence</label>
-                                <input class="form-control" type="text" name="license_number" id="license_number">
+                                <input class="form-control" type="text" name="license_number" id="license_number" value="<?= esc($member->license_number ?? '') ?>">
                             </div>
                         </div>
                     </div>

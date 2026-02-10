@@ -100,17 +100,9 @@
                                 `
                     return `
                                 <div class="btn-group" role="group">
-                                    <button
-                                        class="btn btn-sm btn-warning btn-edit-member"
-                                        title="Modifier"
-                                        data-id='${row.id}'
-                                        data-last_name="${escapeHtml(row.last_name)}"
-                                        data-first_name='${escapeHtml(row.first_name)}'
-                                        data-id-role='${row.id_role}'
-                                        data-license_number='${escapeHtml(row.license_number)}'
-                                        data-license_code = '${escapeHtml(row.license_code)}'>
-                                            <i class="fas fa-edit"></i>
-                                    </button>
+                                    <a  href="${baseUrl}/admin/member/form/${row.id}" class="btn btn-sm btn-warning btn-edit-member" title="Modifier">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
                                    ${toggleButton}
                                 </div>
                             `
