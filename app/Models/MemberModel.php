@@ -80,7 +80,8 @@ class MemberModel extends Model
                 'first_name',
                 'license_number',
                 'id_license_code',
-                'id_role'
+                'id_role',
+                'member.deleted_at'
             ],
             'joins' => [
                 [
@@ -101,9 +102,16 @@ class MemberModel extends Model
             member.license_number,
             member.id_license_code,
             member.id_role,
+            member.deleted_at,
             role.name as role_name,
             license_code.code as license_code,
             '
         ];
+    }
+
+    public function reactiveMember($id) : bool{
+        return $this->builder()
+            ->where('id', $id)
+            ->update(['deleted_at' => null, 'updated_at' => date('Y-m-d H:i:s')]);
     }
 }

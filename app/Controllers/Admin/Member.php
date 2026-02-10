@@ -76,4 +76,41 @@ class Member extends AdminController
             return redirect()->back()->withInput();
         }
     }
+
+    public function switchActiveMember($idMember){
+
+        $member = $this->mm->withDeleted()->find($idMember);
+
+        //Test pour savoir si l'artiste existe
+        if(!$member) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Membre introuvable'
+            ]);
+        }
+
+        // Si l'artiste est actif, on le désactive
+        if(empty($member->deleted_at)) {
+            $this->mm->delete($idMember);
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Membre désactivé',
+                'status' => 'inactive'
+            ]);
+        } else {
+            //S'il est inactif, on le réactive
+            if($this->mm->reactiveMember($idMember)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Membre activé',
+                    'status' => 'active'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Erreur lors de l\'activation',
+                ]);
+            }
+        }
+    }
 }
