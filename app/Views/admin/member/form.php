@@ -2,16 +2,16 @@
 
 <?= $this->section('content') ?>
 
-<?php echo form_open('/admin/member/save' . (isset($member) && $member ? '/' . $member->id : '')) ?>
+<?php echo form_open('/admin/member/save' . (isset($member) && $member ? '/' . $member->id : '')); ?>
 
 <div class="container-fluid">
     <div class="row mb-3">
         <div class="col">
             <div class="card">
-                <!-- START : ZONE INFOS -->
                 <div class="card-header text-center">
                     <span class="card-title h3">Création d'un membre</span>
                 </div>
+                <!-- START : ZONE INFOS -->
                 <div class="card-body">
                     <!-- START : ZONE AVEC INFOS GÉNÉRALES DU MEMBRE -->
                     <div class="row">
@@ -97,7 +97,7 @@
                     <div class="col-md-6 mb-3">
                         <div class="card zone-team">
                             <div class="card-header text-center">
-                                <span class="card-title"><span class="fw-bold h4">Équipes</span> <span class="fw-semibold h5">(joueur)</span></span>
+                                <span class="card-title"><span class="fw-bold h5">Équipes</span> <span class="fw-semibold h6">(joueur)</span></span>
                             </div>
                             <div class="card-body">
 
@@ -109,7 +109,7 @@
                     <div class="col-md-6">
                         <div class="card zone-team">
                             <div class="card-header text-center">
-                                <span class="card-title"><span class="fw-bold h4">Équipes</span> <span class="fw-semibold h5">(coach)</span></span>
+                                <span class="card-title"><span class="fw-bold h5">Équipes</span> <span class="fw-semibold h6">(coach)</span></span>
                             </div>
                             <div class="card-body">
 

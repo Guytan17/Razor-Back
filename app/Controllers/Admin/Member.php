@@ -34,14 +34,13 @@ class Member extends AdminController
         $roles = $this->rm->findAll();
         $license_codes = $this->lcm->findAll();
         if($id != null) {
-            $title = 'Ajouter un membre';
+            $title = 'Modifier un membre';
             $this->addBreadcrumb('Modifier un membre');
             //Récupération des données pour l'édition
             $member = $this->mm->withDeleted()->find($id);
         } else {
-            $title = 'Modifier un membre';
+            $title = 'Ajouter un membre';
             $this->addBreadcrumb('Ajouter un membre');
-            $member = $this->mm->withDeleted()->find($id);
         }
         $data = [
             'title' => $title,
@@ -100,8 +99,6 @@ class Member extends AdminController
             if($newMember) {
                 $member->id = $this->mm->getInsertID();
             }
-
-
 
             // Gestion des messages de validation
             if($newMember){
