@@ -68,8 +68,8 @@ class MemberModel extends Model
         ]
     ];
     // Callbacks
-    protected $beforeInsert   = ['generateUniqueSlugName'];
-    protected $beforeUpdate   = ['generateUniqueSlugName'];
+    protected $beforeInsert   = ['prepareName','generateUniqueSlugName'];
+    protected $beforeUpdate   = ['prepareName','generateUniqueSlugName'];
 
     public function getDataTableConfig(): array
     {
@@ -107,6 +107,13 @@ class MemberModel extends Model
             license_code.code as license_code,
             '
         ];
+    }
+
+    protected function prepareName(array $data) {
+        if(isset($data['data']['last_name'],$data['data']['first_name'])) {
+            $data['data']['name'] = trim($data['data']['last_name'].$data['data']['first_name']);
+        }
+        return $data;
     }
 
     public function reactiveMember($id) : bool{

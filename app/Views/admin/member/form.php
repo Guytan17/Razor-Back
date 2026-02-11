@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 
-<?php echo form_open('admin/member/save') ?>
+<?php echo form_open('/admin/member/save') ?>
 
 <div class="container-fluid">
     <div class="row mb-3">
@@ -27,7 +27,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-2">
                             <label class="form-label" for="date_of_birth">Date de naissance <span class="text-danger">*</span></label>
-                            <input class="form-control" type="date" name="date_of_birth" id="date_of_birth" value="<?= esc($member->date_of_birth->toDateString() ?? '') ?>" required>
+                            <input class="form-control" type="date" name="date_of_birth" id="date_of_birth" value="<?= esc($member?->date_of_birth?->toDateString() ?? '') ?>" required>
                         </div>
                         <div class="col-md-6 mb-2">
                             <label class="form-label" for="role">Rôle <span class="text-danger">*</span></label>

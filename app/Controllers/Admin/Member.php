@@ -51,10 +51,11 @@ class Member extends AdminController
         return $this->render('admin/member/form',$data);
     }
 
-    public function save(){
+    public function saveMember($id=null){
         try {
             //Récupération des données principales
             $dataMember = [
+                'id' => $id,
                 'first_name' => $this->request->getPost('first_name'),
                 'last_name' => $this->request->getPost('last_name'),
                 'date_of_birth' => $this->request->getPost('date_of_birth'),
@@ -69,15 +70,45 @@ class Member extends AdminController
 
             ];
 
+            //Gérer Équipes (coach et joueurs)
+
+
+            //préparation de la variable pour savoir si c'est une création
+            $newMember = empty($dataMember['id']);
+
             //Création de l'objet member
-            $member = new \App\Entities\Member();
+            $member = $newMember ? new \App\Entities\Member() : $this->mm->withDeleted()->find($id);
+
+
+            //Si je n'ai pas de personnage et que je ne suis pas en mode création
+            if(!$member && !$newMember) {
+                $this->error('Membre introuvable');
+                return $this->redirect('/admin/member');
+            }
 
             //Remplissage du membre (hydrate)
             $member->fill($dataMember);
 
             //Enregistrement en BDD
-            if($this->mm->save($member)){
+            if(!$this->mm->save($member)){
+                $this->error(implode('<br>',$this->mm->errors()));
+                return $this->redirect('/admin/member');
+            }
+
+            //On récupère l'ID si c'est une création pour les tables d'asso
+            if($newMember) {
+                $member->id = $this->mm->getInsertID();
+            }
+
+            // Gestion du rôles
+
+            // Gestion du code licence
+
+            // Gestion des messages de validation
+            if($newMember){
                 $this->success('Membre créé avec succès');
+            } else {
+                $this->success('Membre modifié avec succès');
             }
 
             return $this->redirect('admin/member');
