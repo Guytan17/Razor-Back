@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 
-<?php echo form_open('/admin/member/save') ?>
+<?php echo form_open('/admin/member/save' . (isset($member) && $member ? '/' . $member->id : '')) ?>
 
 <div class="container-fluid">
     <div class="row mb-3">

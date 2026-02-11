@@ -41,6 +41,7 @@ class Member extends AdminController
         } else {
             $title = 'Modifier un membre';
             $this->addBreadcrumb('Ajouter un membre');
+            $member = $this->mm->withDeleted()->find($id);
         }
         $data = [
             'title' => $title,
@@ -100,9 +101,7 @@ class Member extends AdminController
                 $member->id = $this->mm->getInsertID();
             }
 
-            // Gestion du rôles
 
-            // Gestion du code licence
 
             // Gestion des messages de validation
             if($newMember){
