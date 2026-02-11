@@ -42,8 +42,9 @@
                     <thead>
                     <tr>
                         <th>Actions</th>
-                        <th>ID club</th>
+                        <th>ID</th>
                         <th>Nom</th>
+                        <th>Code FBI</th>
                         <th>Couleurs</th>
 <!--                        <th>Nombre d'équipes</th>-->
                     </tr>
@@ -58,7 +59,7 @@
     <!-- END : ZONE INDEX DES CLUBS -->
 </div>
 <script>
-    const baseUrl = "<?= base_url();?>" ;
+    var baseUrl = "<?= base_url();?>" ;
 
     $(document).ready(function() {
         table = $('#clubsTable').DataTable({
@@ -75,7 +76,7 @@
                 data: null,
                 defaultContent: '',
                 orderable: false,
-                width: '150px',
+                width: '100px',
                 render: function (data, type, row) {
                     const isActive = row.deleted_at === null;
                     const toggleButton = isActive
@@ -110,6 +111,7 @@
                 },
                 {data : 'id'},
                 {data : 'name'},
+                {data: 'code'},
                 {data : 'colors'},
 
             ],

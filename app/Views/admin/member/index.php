@@ -76,7 +76,7 @@
                 data: null,
                 defaultContent: '',
                 orderable: false,
-                width: '150px',
+                width: '100px',
                 render: function (data, type, row) {
                     const isActive = row.deleted_at === null;
                     const toggleButton = isActive

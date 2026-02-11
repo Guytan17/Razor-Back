@@ -56,6 +56,29 @@ class ClubModel extends Model
 
     ];
 
-    protected $beforeInsert   = [];
-    protected $beforeUpdate   = [];
+    protected $beforeInsert   = ['generateUniqueSlugName'];
+    protected $beforeUpdate   = ['generateUniqueSlugName'];
+
+    public function getDataTableConfig(): array
+    {
+        return [
+            'searchable_fields' => [
+                'id',
+                'code',
+                'name',
+                'slug',
+                'color_1',
+                'color_2',
+            ],
+            'joins' => [],
+            'select' => [
+                'id,
+                name,
+                code,
+                CONCAT(color_1," - ",color_2) AS colors
+                '
+            ]
+        ];
+    }
+
 }

@@ -117,7 +117,7 @@
                     data: null,
                     defaultContent: '',
                     orderable: false,
-                    width: '150px',
+                    width: '100px',
                     render: function (data, type, row) {
                         return `
                             <div class="btn-group" role="group">
