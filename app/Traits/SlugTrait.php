@@ -65,7 +65,7 @@ trait SlugTrait
         $slug = $base_slug;
 
         // Compte combien d'enregistrements ont déjà cette valeur (hors l'édition en cours)
-        $this->where($field, $fieldValue);
+        $this->where('slug', $slug);
         if ($id) {
             $this->where('id !=', $id);
         }
@@ -91,6 +91,7 @@ trait SlugTrait
             $this->setEntityValue($data, 'slug', $slug);
         } else {
             $data['data']['slug'] = $slug;
+            unset($data['data']['name']);
         }
 
         return $data;

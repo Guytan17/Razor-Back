@@ -6,9 +6,14 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
     //Routes pour la gestion des membres
     $routes->group('member',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Member::index');
-        $routes->get('form', 'Member::form');
+        $routes->get('form', 'Member::form'); // accès formulaire de création
+        $routes->get('form/(:num)', 'Member::form/$1'); //accès formulaire d'édition
+        $routes->post('save', 'Member::saveMember'); // sauvegarde création
+        $routes->post('save/(:num)', 'Member::saveMember/$1'); // sauvegarde édition
+        $routes->post('switch-active/(:num)', 'Member::switchActiveMember/$1'); //(dés)activation membres
     });
 
+    //Routes pour la gestion des codes licences
     $routes->group('license-code', ['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'LicenseCode::index');
         $routes->post('insert', 'LicenseCode::insertLicenseCode'); // Sauvegarde création

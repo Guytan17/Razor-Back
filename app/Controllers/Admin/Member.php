@@ -3,10 +3,23 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Models\MemberModel;
+use App\Models\RoleModel;
+use App\Models\LicenseCodeModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Member extends AdminController
 {
+
+    protected $mm;
+    protected $rm;
+    protected $lcm;
+
+    public function __construct(){
+        $this->mm = new MemberModel();
+        $this->rm = new RoleModel();
+        $this->lcm = new LicenseCodeModel();
+    }
     public function index()
     {
         $data = [
@@ -16,11 +29,128 @@ class Member extends AdminController
         return $this->render('admin/member/index', $data);
     }
 
-    public function form () {
-        $data = [
-            'title' => 'Ajout d\'un membre'
-        ];
+    public function form ($id=null) {
         $this->addBreadcrumb('Liste des membres','/admin/member');
+        $roles = $this->rm->findAll();
+        $license_codes = $this->lcm->findAll();
+        if($id != null) {
+            $title = 'Ajouter un membre';
+            $this->addBreadcrumb('Modifier un membre');
+            //Récupération des données pour l'édition
+            $member = $this->mm->withDeleted()->find($id);
+        } else {
+            $title = 'Modifier un membre';
+            $this->addBreadcrumb('Ajouter un membre');
+            $member = $this->mm->withDeleted()->find($id);
+        }
+        $data = [
+            'title' => $title,
+            'roles' => $roles,
+            'license_codes' => $license_codes,
+            'member' => $member??null,
+        ];
         return $this->render('admin/member/form',$data);
+    }
+
+    public function saveMember($id=null){
+        try {
+            //Récupération des données principales
+            $dataMember = [
+                'id' => $id,
+                'first_name' => $this->request->getPost('first_name'),
+                'last_name' => $this->request->getPost('last_name'),
+                'date_of_birth' => $this->request->getPost('date_of_birth'),
+                'id_role' => $this->request->getPost('role'),
+                'id_license_code' => $this->request->getPost('license_code'),
+                'license_statut' => $this->request->getPost('license_statut'),
+                'balance' => $this->request->getPost('balance'),
+            ];
+
+            // Récupération des données de contact
+            $dataContact = [
+
+            ];
+
+            //Gérer Équipes (coach et joueurs)
+
+
+            //préparation de la variable pour savoir si c'est une création
+            $newMember = empty($dataMember['id']);
+
+            //Création de l'objet member
+            $member = $newMember ? new \App\Entities\Member() : $this->mm->withDeleted()->find($id);
+
+
+            //Si je n'ai pas de personnage et que je ne suis pas en mode création
+            if(!$member && !$newMember) {
+                $this->error('Membre introuvable');
+                return $this->redirect('/admin/member');
+            }
+
+            //Remplissage du membre (hydrate)
+            $member->fill($dataMember);
+
+            //Enregistrement en BDD
+            if(!$this->mm->save($member)){
+                $this->error(implode('<br>',$this->mm->errors()));
+                return $this->redirect('/admin/member');
+            }
+
+            //On récupère l'ID si c'est une création pour les tables d'asso
+            if($newMember) {
+                $member->id = $this->mm->getInsertID();
+            }
+
+
+
+            // Gestion des messages de validation
+            if($newMember){
+                $this->success('Membre créé avec succès');
+            } else {
+                $this->success('Membre modifié avec succès');
+            }
+
+            return $this->redirect('admin/member');
+        } catch (\Exception $e) {
+            $this->error($e->getMessage());
+            return redirect()->back()->withInput();
+        }
+    }
+
+    public function switchActiveMember($idMember){
+
+        $member = $this->mm->withDeleted()->find($idMember);
+
+        //Test pour savoir si l'artiste existe
+        if(!$member) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Membre introuvable'
+            ]);
+        }
+
+        // Si l'artiste est actif, on le désactive
+        if(empty($member->deleted_at)) {
+            $this->mm->delete($idMember);
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Membre désactivé',
+                'status' => 'inactive'
+            ]);
+        } else {
+            //S'il est inactif, on le réactive
+            if($this->mm->reactiveMember($idMember)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Membre activé',
+                    'status' => 'active'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Erreur lors de l\'activation',
+                ]);
+            }
+        }
     }
 }

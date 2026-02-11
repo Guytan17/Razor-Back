@@ -43,4 +43,9 @@ class LicenseCodeModel extends Model
             'select' => 'license_code.id,license_code.code,license_code.explanation',
         ];
     }
+
+    public function getAllLicenseCodes():array {
+        $this->select('license_code.id,license_code.code,license_code.explanation');
+        return $this->findAll();
+    }
 }

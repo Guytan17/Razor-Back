@@ -50,4 +50,9 @@ class RoleModel extends Model
             'select' => 'role.id, role.name',
         ];
     }
+
+    public function getAllRoles(): array {
+        $this->select('role.id,role.name');
+        return $this->findAll();
+    }
 }

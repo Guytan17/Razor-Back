@@ -37,26 +37,150 @@
                     </div>
                 </div>
             <div class="card-body">
-                <table class="table table-sm table-striped">
+                <table class="table table-sm table-striped" id="membersTable">
                     <thead>
                     <tr>
                         <th>Actions</th>
+                        <th>ID membre</th>
                         <th>Nom</th>
                         <th>Prénom</th>
-                        <th>rôle</th>
+                        <th>Rôle</th>
                         <th>Numéro de licence</th>
                         <th>Code licence</th>
                     </tr>
                     </thead>
                     <tbody>
-
+                    <!-- Chargé en Ajax -->
                     </tbody>
                 </table>
-            </div>
             </div>
         </div>
     </div>
 <!-- END : ZONE INDEX DES MEMBRES -->
 </div>
+<script>
+    var baseUrl = "<?= base_url();?>"
+
+    $(document).ready(function() {
+        table = $('#membersTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: baseUrl + 'datatable/searchdatatable',
+                type: 'POST',
+                data: {
+                    model: 'MemberModel'
+                },
+            },
+            columns: [{
+                data: null,
+                defaultContent: '',
+                orderable: false,
+                width: '150px',
+                render: function (data, type, row) {
+                    const isActive = row.deleted_at === null;
+                    const toggleButton = isActive
+                        ?
+                        `
+                                    <button
+                                        class="btn btn-sm btn-success btn-toggleActive-member"
+                                        title="Désactiver"
+                                        data-id="${row.id}">
+                                            <i class="fas fa-toggle-on"></i>
+                                    </button>
+                                `
+                        :
+                        `
+                                <button
+                                        class="btn btn-sm btn-danger btn-toggleActive-member"
+                                        title="Activer"
+                                        data-id="${row.id}">
+                                            <i class="fas fa-toggle-off"></i>
+                                    </button>
+                                `
+                    return `
+                                <div class="btn-group" role="group">
+                                    <a  href="${baseUrl}/admin/member/form/${row.id}" class="btn btn-sm btn-warning btn-edit-member" title="Modifier">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                   ${toggleButton}
+                                </div>
+                            `
+                        ;
+                    }
+                },
+                {data:'id'},
+                {data:'last_name'},
+                {data:'first_name'},
+                {data:'role_name'},
+                {data:'license_number'},
+                {data:'license_code'},
+            ],
+            language: {
+                url: baseUrl + 'assets/js/datatable/datatable-2.3.5-fr-FR.json',
+            },
+            order: [[1, 'desc']], // Tri par ID décroissant par défaut
+            pageLength: 25,
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Tous"]]
+        });
+        // Fonction pour actualiser la table
+        window.refreshTable = function () {
+            table.ajax.reload(null, false); // false pour garder la pagination
+        };
+    });
+
+    //Fonction pour appeler la fonction de désactivation/activation
+    $(document).on('click','.btn-toggleActive-member', function(){
+        toggleActive($(this).data('id'));
+    })
+
+    function toggleActive(memberId) {
+        // Effectuer la requête AJAX
+        $.ajax({
+            url: '<?= base_url('admin/member/switch-active/') ?>' + memberId,
+            type: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            data: {
+                [csrfName]: csrfHash
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    // Recharger le DataTable pour voir le changement
+                    $('#membersTable').DataTable().ajax.reload(null, false);
+
+                    // Notification toast
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: response.message,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Erreur !',
+                        text: response.message,
+                        icon: 'error',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    title: 'Erreur !',
+                    text: 'Une erreur est survenue.',
+                    icon: 'error',
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    }
+</script>
 
 <?= $this->endSection() ?>
