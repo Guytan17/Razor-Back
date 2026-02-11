@@ -13,6 +13,13 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('switch-active/(:num)', 'Member::switchActiveMember/$1'); //(dés)activation membres
     });
 
+    //Routes pour la gestion des clubs
+    $routes->group('club',['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'Club::index');
+        $routes->get('form', 'Club::form'); //accès au formulaire de création
+        $routes->get('form/(:num)', 'Club::form/$1'); // accès au formulaire d'édition
+    });
+
     //Routes pour la gestion des codes licences
     $routes->group('license-code', ['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'LicenseCode::index');
