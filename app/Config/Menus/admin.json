@@ -31,6 +31,11 @@
     "url" : "/admin/team",
     "icon" : "fas fa-users-rectangle"
   },
+  "clubs" : {
+    "title" : "Clubs",
+    "url" : "/admin/club",
+    "icon" : "fas fa-people-roof"
+  },
   "administration" : {
     "title" : "Administration",
     "url" : "/",
