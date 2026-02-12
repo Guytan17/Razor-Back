@@ -80,7 +80,7 @@ class Member extends AdminController
             $member = $newMember ? new \App\Entities\Member() : $this->mm->withDeleted()->find($id);
 
 
-            //Si je n'ai pas de personnage et que je ne suis pas en mode création
+            //Si je n'ai pas de membre et que je ne suis pas en mode création
             if(!$member && !$newMember) {
                 $this->error('Membre introuvable');
                 return $this->redirect('/admin/member');

@@ -31,7 +31,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label" for="id_season">Saison</label>
                             <select class="form-select" name="id_season" id="id_season">
@@ -41,7 +41,7 @@
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label" for="id_category">Club</label>
+                            <label class="form-label" for="id_category">Catégorie</label>
                             <select class="form-select" name="id_category" id="id_category">
                                 <?php foreach ($categories as $category) : ?>
                                     <option value="<?= $category['id'] ?>"><?= $category['name']?></option>
@@ -50,6 +50,67 @@
                         </div>
                     </div>
                     <!-- END : INFOS DE L'ÉQUIPE -->
+                    <!-- START : ZONE POUR AJOUTER UN CONTACT -->
+                    <div class="mb-3">
+                        <span class="btn btn-sm btn-secondary">
+                            <i class="fas fa-plus"></i> Ajouter un contact
+                        </span>
+                    </div>
+                    <div class="row">
+                        <div class="">
+
+                        </div>
+                    </div>
+                    <!-- END : ZONE POUR AJOUTER UN CONTACT -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <!-- START : COACHS -->
+                            <div class="card mb-3">
+                                <div class="card-header text-center">
+                                    <span class="card-title h5">Coachs</span>
+                                </div>
+                                <div class="card-body">
+
+                                </div>
+                            </div>
+                            <!-- END : COACHS -->
+                            <!-- START : JOUEURS -->
+                            <div class="card mb-3">
+                                <div class="card-header text-center">
+                                    <span class="card-title h5">Joueurs</span>
+                                </div>
+                                <div class="card-body">
+
+                                </div>
+                            </div>
+                            <!-- END : JOUEURS -->
+                        </div>
+                        <div class="col-md-6">
+                            <!-- START : CHAMPIONNATS ET COUPES -->
+                            <div class="card mb-3">
+                                <div class="card-header text-center">
+                                    <span class="card-title h5">Championnats et coupes</span>
+                                </div>
+                                <div class="card-body">
+
+                                </div>
+                            </div>
+                            <!-- END : CHAMPIONNATS ET COUPES -->
+                            <!-- START : MATCHS -->
+                            <div class="card mb-3">
+                                <div class="card-header text-center">
+                                    <span class="card-title h5">Matchs</span>
+                                </div>
+                                <div class="card-body">
+
+                                </div>
+                            </div>
+                            <!-- END : MATCHS -->
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-end">
+                    <button type="submit" class="btn btn-sm btn-primary mx-2"><i class="fas fa-save"></i> Valider</button>
                 </div>
             </div>
         </div>
