@@ -23,6 +23,16 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('switch-active/(:num)', 'Club::switchActiveClub/$1');
     });
 
+    //Routes pour la gestion des équipes
+    $routes->group('team',['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'Team::index');
+        $routes->get('form', 'Team::form'); //accès au formulaire de création
+        $routes->get('form/(:num)', 'Team::form/$1'); // accès au formulaire d'édition
+        $routes->post('save', 'Team::saveTeam'); // sauvegarde création
+        $routes->post('save/(:num)', 'Team::saveTeam/$1'); //sauvegarde édition
+        $routes->post('switch-active/(:num)', 'Team::switchActiveTeam/$1');
+    });
+
     //Routes pour la gestion des codes licences
     $routes->group('license-code', ['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'LicenseCode::index');
