@@ -28,35 +28,35 @@
             <div class="card">
                 <div class="card-header hstack text-center">
                     <div class="card-title h3">Listes des membres du club</div>
-                        <a href="" class="btn btn-sm btn-primary ms-auto p-1 mx-1">
-                            <i class="fas fa-file-circle-plus"></i> Importer un fichier CSV
-                        </a>
-                        <a href="<?= base_url('/admin/member/form')?>" class="btn btn-sm btn-primary p-1 mx-1">
-                            <i class="fas fa-user-plus"></i> Créer un membre
-                        </a>
-                    </div>
+                    <a href="" class="btn btn-sm btn-primary ms-auto p-1 mx-1">
+                        <i class="fas fa-file-circle-plus"></i> Importer un fichier CSV
+                    </a>
+                    <a href="<?= base_url('/admin/member/form')?>" class="btn btn-sm btn-primary p-1 mx-1">
+                        <i class="fas fa-plus"></i> Créer un membre
+                    </a>
                 </div>
-            <div class="card-body">
-                <table class="table table-sm table-striped" id="membersTable">
-                    <thead>
-                    <tr>
-                        <th>Actions</th>
-                        <th>ID membre</th>
-                        <th>Nom</th>
-                        <th>Prénom</th>
-                        <th>Rôle</th>
-                        <th>Numéro de licence</th>
-                        <th>Code licence</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <!-- Chargé en Ajax -->
-                    </tbody>
-                </table>
+                <div class="card-body">
+                    <table class="table table-sm table-striped" id="membersTable">
+                        <thead>
+                        <tr>
+                            <th>Actions</th>
+                            <th>ID membre</th>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Rôle</th>
+                            <th>Numéro de licence</th>
+                            <th>Code licence</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Chargé en Ajax -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-<!-- END : ZONE INDEX DES MEMBRES -->
+    <!-- END : ZONE INDEX DES MEMBRES -->
 </div>
 <script>
     var baseUrl = "<?= base_url();?>"

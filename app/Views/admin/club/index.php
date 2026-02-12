@@ -33,10 +33,9 @@
                         <i class="fas fa-file-circle-plus"></i> Importer un fichier CSV
                     </a>
                     <a href="<?= base_url('/admin/club/form')?>" class="btn btn-sm btn-primary p-1 mx-1">
-                        <i class="fas fa-user-plus"></i> Créer un club
+                        <i class="fas fa-plus"></i> Créer un club
                     </a>
                 </div>
-            </div>
             <div class="card-body">
                 <table class="table table-sm table-striped" id="clubsTable">
                     <thead>
