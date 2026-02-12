@@ -75,10 +75,16 @@ class ClubModel extends Model
                 'id,
                 name,
                 code,
-                CONCAT(color_1," - ",color_2) AS colors
+                CONCAT(color_1," - ",color_2) AS colors,
+                deleted_at
                 '
             ]
         ];
     }
 
+    public function reactiveClub($id) : bool{
+        return $this->builder()
+            ->where('id', $id)
+            ->update(['deleted_at' => null, 'updated_at' => date('Y-m-d H:i:s')]);
+    }
 }

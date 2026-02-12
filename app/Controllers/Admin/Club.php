@@ -75,4 +75,39 @@ class Club extends AdminController
             return redirect()->back()->withInput();
         }
     }
+
+    public function switchActiveClub($idClub){
+
+        $club = $this->cm->withDeleted()->find($idClub);
+
+        //Test pour savoir si le club existe
+        if(!$club) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Club introuvable'
+            ]);
+        }
+
+        // Si le club est actif, on le désactive
+        if(empty($club['deleted_at'])) {
+            $this->cm->delete($idClub);
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Club désactivé',
+            ]);
+        } else {
+            //S'il est inactif, on le réactive
+            if($this->cm->reactiveClub($idClub)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Club activé',
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Erreur lors de l\'activation',
+                ]);
+            }
+        }
+    }
 }

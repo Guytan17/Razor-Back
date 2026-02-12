@@ -118,7 +118,7 @@ class Member extends AdminController
 
         $member = $this->mm->withDeleted()->find($idMember);
 
-        //Test pour savoir si l'artiste existe
+        //Test pour savoir si le club existe
         if(!$member) {
             return $this->response->setJSON([
                 'success' => false,
@@ -126,13 +126,12 @@ class Member extends AdminController
             ]);
         }
 
-        // Si l'artiste est actif, on le désactive
+        // Si le membre est actif, on le désactive
         if(empty($member->deleted_at)) {
             $this->mm->delete($idMember);
             return $this->response->setJSON([
                 'success' => true,
                 'message' => 'Membre désactivé',
-                'status' => 'inactive'
             ]);
         } else {
             //S'il est inactif, on le réactive
@@ -140,7 +139,6 @@ class Member extends AdminController
                 return $this->response->setJSON([
                     'success' => true,
                     'message' => 'Membre activé',
-                    'status' => 'active'
                 ]);
             } else {
                 return $this->response->setJSON([

@@ -133,5 +133,52 @@
         toggleActive($(this).data('id'));
     });
 
+    function toggleActive(clubId) {
+        // Effectuer la requête AJAX
+        $.ajax({
+            url: '<?= base_url('admin/club/switch-active/') ?>' + clubId,
+            type: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            data: {
+                [csrfName]: csrfHash
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    // Recharger le DataTable pour voir le changement
+                    $('#clubsTable').DataTable().ajax.reload(null, false);
+
+                    // Notification toast
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: response.message,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Erreur !',
+                        text: response.message,
+                        icon: 'error',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    title: 'Erreur !',
+                    text: 'Une erreur est survenue.',
+                    icon: 'error',
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    }
 </script>
 <?php $this->endSection() ?>
