@@ -19,15 +19,24 @@ class Club extends AdminController
         $data = [
             'title' => 'Clubs',
         ];
-        $this->addBreadcrumb('admin/club', '');
+        $this->addBreadcrumb('Liste des clubs', '');
         return $this->render('admin/club/index',$data);
     }
 
-    public function form() {
+    public function form($id=null) {
+        $this->addBreadcrumb('Liste des clubs', 'admin/club');
+        if($id != null) {
+            $title = 'Modifier un club';
+            $this->addBreadcrumb('Modifier un club');
+            $club = $this->cm->find($id);
+        } else {
+            $title = 'Ajouter un club';
+            $this->addBreadcrumb('Ajouter un club');
+        }
         $data = [
-            'title' => 'Ajout d\'un Club',
+            'title' => $title,
+            'club' => $club ?? null,
         ];
-        $this->addBreadcrumb('Liste des clubs', 'admin/club/index');
         return $this->render('admin/club/form', $data);
     }
 
