@@ -62,6 +62,7 @@ class Team extends AdminController
                 'id' => $id,
                 'name' => $this->request->getPost('name'),
                 'id_season' => $this->request->getPost('id_season'),
+                'id_category' => $this->request->getPost('id_category'),
                 'id_club' => $this->request->getPost('id_club'),
                 'id_team' => $this->request->getPost('id_team'),
             ];

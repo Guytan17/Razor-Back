@@ -56,17 +56,39 @@ class TeamModel extends Model
             'integer' => 'L\'ID du club doit être un entier.'
         ],
     ];
-    protected $skipValidation       = false;
-    protected $cleanValidationRules = true;
 
-    // Callbacks
-    protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
-    protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
-    protected $afterUpdate    = [];
-    protected $beforeFind     = [];
-    protected $afterFind      = [];
-    protected $beforeDelete   = [];
-    protected $afterDelete    = [];
+    protected $beforeInsert   = ['generateUniqueSlugName'];
+    protected $beforeUpdate   = ['generateUniqueSlugName'];
+
+    public function getDataTableConfig(): array
+    {
+        return [
+            'searchable_fields' => [
+                'id',
+                'name',
+                'slug',
+                'season_name',
+                'category_name',
+                'deleted_at',
+            ],
+            'joins' =>[
+                [
+                    'table' => 'season',
+                    'condition'=> 'season.id = team.id_season',
+                    'type' => 'INNER'
+                ],
+                [
+                    'table' => 'category',
+                    'condition'=> 'category.id = team.id_category',
+                    'type' => 'INNER'
+                ]
+            ],
+
+            'select' =>'
+            team.id,
+            team.name,
+            category.name as category_name,
+            season.name as season_name'
+        ];
+    }
 }
