@@ -121,5 +121,58 @@
             table.ajax.reload(null, false); // false pour garder la pagination
         };
     });
+
+    //Fonction pour appeler la fonction de désactivation/activation
+    $(document).on('click','.btn-toggleActive-team', function(){
+        toggleActive($(this).data('id'));
+    })
+
+    function toggleActive(teamId) {
+        // Effectuer la requête AJAX
+        $.ajax({
+            url: '<?= base_url('admin/team/switch-active/') ?>' + teamId,
+            type: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            data: {
+                [csrfName]: csrfHash
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    // Recharger le DataTable pour voir le changement
+                    $('#teamsTable').DataTable().ajax.reload(null, false);
+
+                    // Notification toast
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: response.message,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Erreur !',
+                        text: response.message,
+                        icon: 'error',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    title: 'Erreur !',
+                    text: 'Une erreur est survenue.',
+                    icon: 'error',
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    }
 </script>
 <?php $this->endSection() ; ?>

@@ -103,4 +103,39 @@ class Team extends AdminController
             return redirect()->back()->withInput();
         }
     }
+
+    public function switchActiveTeam($idTeam){
+
+        $team = $this->tm->withDeleted()->find($idTeam);
+
+        //Test pour savoir si le club existe
+        if(!$team) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Équipe introuvable'
+            ]);
+        }
+
+        // Si le membre est actif, on le désactive
+        if(empty($team->deleted_at)) {
+            $this->tm->delete($idTeam);
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Équipe désactivée',
+            ]);
+        } else {
+            //S'il est inactif, on le réactive
+            if($this->tm->reactiveTeam($idTeam)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Équipe activée',
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Erreur lors de l\'activation',
+                ]);
+            }
+        }
+    }
 }

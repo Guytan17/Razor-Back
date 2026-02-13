@@ -21,7 +21,7 @@ class TeamModel extends Model
     protected $allowedFields    = ['name','slug','id_season','id_category','id_club','created_at','updated_at','deleted_at'];
 
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
@@ -64,7 +64,7 @@ class TeamModel extends Model
     {
         return [
             'searchable_fields' => [
-                'id',
+                'team.id',
                 'name',
                 'slug',
                 'season_name',
@@ -88,7 +88,14 @@ class TeamModel extends Model
             team.id,
             team.name,
             category.name as category_name,
-            season.name as season_name'
+            season.name as season_name,
+            deleted_at',
         ];
+    }
+
+    public function reactiveTeam($id) : bool{
+        return $this->builder()
+            ->where('id', $id)
+            ->update(['deleted_at' => null, 'updated_at' => date('Y-m-d H:i:s')]);
     }
 }
