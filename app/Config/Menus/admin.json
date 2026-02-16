@@ -62,10 +62,15 @@
         "url": "/admin/season",
         "icon": "fas fa-hourglass-half"
       },
-      "leagues" : {
+      "divisions" : {
         "title" : "Championnats",
-        "url" : "/admin/league",
+        "url" : "/admin/division",
         "icon" : "fas fa-trophy"
+      },
+      "services" : {
+        "title" : "Services",
+        "url" : "/admin/service",
+        "icon" : "fas fa-cookie-bite"
       },
       "users" : {
         "title" : "Utilisateurs",
