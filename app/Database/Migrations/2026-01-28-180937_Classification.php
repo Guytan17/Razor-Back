@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class Category extends Migration
+class Classification extends Migration
 {
     public function up()
     {
@@ -14,23 +14,23 @@ class Category extends Migration
                 'constraint' => 11,
                 'auto_increment' => true,
             ],
-            'name' => [
+            'code' => [
                 'type' => 'VARCHAR',
-                'constraint' => 255,
+                'constraint' => 2,
                 'null' => false,
             ],
-            'gender' =>[
-                'type' => 'VARCHAR',
+            'explanation' => [
+                'type' => 'varchar',
                 'constraint' => 255,
-                'null' => false,
+                'null' => true,
             ]
         ]);
         $this->forge->addKey('id',true);
-        $this->forge->createTable('category',true);
+        $this->forge->createTable('classification');
     }
 
     public function down()
     {
-        $this->forge->dropTable('category',true);
+        $this->forge->dropTable('classification');
     }
 }
