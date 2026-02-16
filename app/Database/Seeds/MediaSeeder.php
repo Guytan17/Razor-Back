@@ -10,7 +10,7 @@ class MediaSeeder extends Seeder
     {
         $data = [
             [
-                'file_path'=> 'uploads/logos/TBLR logo/site-logo-69939a2cb6983.png',
+                'file_path'=> 'uploads/logos/TBLR-logo/TBLR-logo.png',
                 'entity_id'=>1,
                 'entity_type'=>'settings',
                 'title'=>'Logo du site',
