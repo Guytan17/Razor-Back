@@ -45,19 +45,14 @@ class Member extends Migration
                 'null'=>true,
             ],
             'license_status'=>[
-                'type'=>'VARCHAR',
-                'constraint'=>'255',
+                'type'=>'INT',
+                'constraint'=>11,
                 'null'=>true,
             ],
             'balance'=>[
                 'type'=>'INT',
                 'constraint'=>11,
                 'null'=>true,
-            ],
-            'id_role'=>[
-                'type'=>'INT',
-                'constraint'=>11,
-                'null'=>false,
             ],
             'created_at'=>[
                 'type'=>'DATETIME',
@@ -73,7 +68,6 @@ class Member extends Migration
             ],
         ]);
         $this->forge->addKey('id',true);
-        $this->forge->addForeignKey('id_role','role','id','CASCADE','CASCADE');
         $this->forge->addForeignKey('id_license_code','license_code','id','CASCADE','CASCADE');
         $this->forge->createTable('member',true);
     }
