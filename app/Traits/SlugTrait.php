@@ -91,7 +91,7 @@ trait SlugTrait
             $this->setEntityValue($data, 'slug', $slug);
         } else {
             $data['data']['slug'] = $slug;
-            unset($data['data']['name']);
+
         }
 
         return $data;

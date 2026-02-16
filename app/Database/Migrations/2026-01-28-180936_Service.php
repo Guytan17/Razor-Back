@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class Category extends Migration
+class Service extends Migration
 {
     public function up()
     {
@@ -14,23 +14,18 @@ class Category extends Migration
                 'constraint' => 11,
                 'auto_increment' => true,
             ],
-            'name' => [
-                'type' => 'VARCHAR',
-                'constraint' => 255,
-                'null' => false,
-            ],
-            'gender' =>[
+            'label' => [
                 'type' => 'VARCHAR',
                 'constraint' => 255,
                 'null' => false,
             ]
         ]);
-        $this->forge->addKey('id',true);
-        $this->forge->createTable('category',true);
+        $this->forge->addKey('id', true);
+        $this->forge->createTable('service');
     }
 
     public function down()
     {
-        $this->forge->dropTable('category',true);
+       $this->forge->dropTable('service',true);
     }
 }

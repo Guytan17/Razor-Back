@@ -14,19 +14,19 @@ class LeagueTeam extends Migration
                 'constraint' => 11,
                 'null' => false,
             ],
-            'id_league' => [
+            'id_division' => [
                 'type' => 'INT',
                 'constraint' => 11,
                 'null' => false,
             ],
         ]);
         $this->forge->addForeignKey('id_team','team','id','CASCADE','RESTRICT');
-        $this->forge->addForeignKey('id_league','league','id','CASCADE','RESTRICT');
-        $this->forge->createTable('league_team',true);
+        $this->forge->addForeignKey('id_division','division','id','CASCADE','RESTRICT');
+        $this->forge->createTable('division_team',true);
     }
 
     public function down()
     {
-        $this->forge->dropTable('league_team',true);
+        $this->forge->dropTable('division_team',true);
     }
 }

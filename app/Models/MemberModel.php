@@ -68,8 +68,8 @@ class MemberModel extends Model
         ]
     ];
     // Callbacks
-    protected $beforeInsert   = ['prepareName','generateUniqueSlugName'];
-    protected $beforeUpdate   = ['prepareName','generateUniqueSlugName'];
+    protected $beforeInsert   = ['prepareName','generateUniqueSlugName','unsetVirtualName'];
+    protected $beforeUpdate   = ['prepareName','generateUniqueSlugName','unsetVirtualName'];
 
     public function getDataTableConfig(): array
     {
@@ -115,10 +115,15 @@ class MemberModel extends Model
         }
         return $data;
     }
+    public function unsetVirtualName(array $data) {
+        unset($data['data']['name']);
+        return $data;
+    }
 
     public function reactiveMember($id) : bool{
         return $this->builder()
             ->where('id', $id)
             ->update(['deleted_at' => null, 'updated_at' => date('Y-m-d H:i:s')]);
     }
+
 }

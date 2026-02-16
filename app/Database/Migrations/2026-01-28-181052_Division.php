@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class League extends Migration
+class Division extends Migration
 {
     public function up()
     {
@@ -45,11 +45,11 @@ class League extends Migration
         $this->forge->addKey('id',true);
         $this->forge->addForeignKey('id_season','season','id','CASCADE','RESTRICT');
         $this->forge->addForeignKey('id_category','category','id','CASCADE','RESTRICT');
-        $this->forge->createTable('league',true);
+        $this->forge->createTable('division',true);
     }
 
     public function down()
     {
-        $this->forge->dropTable('league',true);
+        $this->forge->dropTable('division',true);
     }
 }

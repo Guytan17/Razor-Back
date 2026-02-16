@@ -1,6 +1,6 @@
-<?= $this->extend('layouts/admin') ?>
+<?php $this->extend('layouts/admin') ; ?>
 
-<?= $this->section('content') ?>
+<?php $this->section('content') ; ?>
 
 <div class="container-fluid">
     <!-- START : ZONE POUR LES TOASTS -->
@@ -22,54 +22,49 @@
         </div>
     </div>
     <!-- END : ZONE POUR LES TOASTS -->
-    <!-- START : ZONE INDEX DES MEMBRES -->
+    <!-- START : ZONE POUR LES CLUBS -->
     <div class="row">
         <div class="col">
             <div class="card">
                 <div class="card-header hstack text-center">
-                    <div class="card-title h3">Listes des membres du club</div>
+                    <div class="card-title h3">Listes des équipes du club</div>
                     <a href="" class="btn btn-sm btn-primary ms-auto p-1 mx-1">
                         <i class="fas fa-file-circle-plus"></i> Importer un fichier CSV
                     </a>
-                    <a href="<?= base_url('/admin/member/form')?>" class="btn btn-sm btn-primary p-1 mx-1">
-                        <i class="fas fa-plus"></i> Créer un membre
+                    <a href="<?= base_url('/admin/team/form')?>" class="btn btn-sm btn-primary p-1 mx-1">
+                        <i class="fas fa-plus"></i> Créer une équipe
                     </a>
                 </div>
                 <div class="card-body">
-                    <table class="table table-sm table-striped" id="membersTable">
+                    <table class="table table-sm table-striped" id="teamsTable">
                         <thead>
                         <tr>
-                            <th>Actions</th>
-                            <th>ID membre</th>
+                            <th>Action</th>
+                            <th>ID</th>
                             <th>Nom</th>
-                            <th>Prénom</th>
-                            <th>Rôle</th>
-                            <th>Numéro de licence</th>
-                            <th>Code licence</th>
+                            <th>Catégorie</th>
+                            <th>Saison</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <!-- Chargé en Ajax -->
-                        </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
-    <!-- END : ZONE INDEX DES MEMBRES -->
+    <!-- END : ZONE POUR LES CLUBS -->
 </div>
 <script>
-    var baseUrl = "<?= base_url();?>"
+    var baseUrl = "<?= base_url();?>" ;
 
     $(document).ready(function() {
-        table = $('#membersTable').DataTable({
+        table = $('#teamsTable').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
                 url: baseUrl + 'datatable/searchdatatable',
                 type: 'POST',
                 data: {
-                    model: 'MemberModel'
+                    model: 'TeamModel'
                 },
             },
             columns: [{
@@ -83,7 +78,7 @@
                         ?
                         `
                                     <button
-                                        class="btn btn-sm btn-success btn-toggleActive-member"
+                                        class="btn btn-sm btn-success btn-toggleActive-team"
                                         title="Désactiver"
                                         data-id="${row.id}">
                                             <i class="fas fa-toggle-on"></i>
@@ -92,7 +87,7 @@
                         :
                         `
                                 <button
-                                        class="btn btn-sm btn-danger btn-toggleActive-member"
+                                        class="btn btn-sm btn-danger btn-toggleActive-team"
                                         title="Activer"
                                         data-id="${row.id}">
                                             <i class="fas fa-toggle-off"></i>
@@ -100,21 +95,19 @@
                                 `
                     return `
                                 <div class="btn-group" role="group">
-                                    <a  href="${baseUrl}/admin/member/form/${row.id}" class="btn btn-sm btn-warning btn-edit-member" title="Modifier">
+                                    <a  href="${baseUrl}/admin/team/form/${row.id}" class="btn btn-sm btn-warning btn-edit-member" title="Modifier">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                    ${toggleButton}
                                 </div>
                             `
                         ;
-                    }
-                },
+                }
+            },
                 {data:'id'},
-                {data:'last_name'},
-                {data:'first_name'},
-                {data:'role_name'},
-                {data:'license_number'},
-                {data:'license_code'},
+                {data:'name'},
+                {data:'category_name'},
+                {data:'season_name'},
             ],
             language: {
                 url: baseUrl + 'assets/js/datatable/datatable-2.3.5-fr-FR.json',
@@ -130,14 +123,14 @@
     });
 
     //Fonction pour appeler la fonction de désactivation/activation
-    $(document).on('click','.btn-toggleActive-member', function(){
+    $(document).on('click','.btn-toggleActive-team', function(){
         toggleActive($(this).data('id'));
     })
 
-    function toggleActive(memberId) {
+    function toggleActive(teamId) {
         // Effectuer la requête AJAX
         $.ajax({
-            url: '<?= base_url('admin/member/switch-active/') ?>' + memberId,
+            url: '<?= base_url('admin/team/switch-active/') ?>' + teamId,
             type: 'POST',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
@@ -149,7 +142,7 @@
             success: function (response) {
                 if (response.success) {
                     // Recharger le DataTable pour voir le changement
-                    $('#membersTable').DataTable().ajax.reload(null, false);
+                    $('#teamsTable').DataTable().ajax.reload(null, false);
 
                     // Notification toast
                     Swal.fire({
@@ -182,5 +175,4 @@
         });
     }
 </script>
-
-<?= $this->endSection() ?>
+<?php $this->endSection() ; ?>

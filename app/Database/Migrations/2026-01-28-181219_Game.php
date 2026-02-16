@@ -19,6 +19,20 @@ class Game extends Migration
                 'constraint' => 11,
                 'null' => true,
             ],
+            'id_gym' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'null' => true,
+            ],
+            'schedule' => [
+                'type' => 'DATE',
+                'null' => true,
+            ],
+            'id_division' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'null' => true,
+            ],
             'mvp' => [
                 'type' => 'INT',
                 'constraint' => 11,
@@ -34,11 +48,6 @@ class Game extends Migration
                 'constraint' => 11,
                 'null' => false
             ],
-            'id_league' => [
-                'type' => 'INT',
-                'constraint' => 11,
-                'null' => true,
-            ],
             'score_home' => [
                 'type' => 'INT',
                 'constraint' => 3,
@@ -47,15 +56,6 @@ class Game extends Migration
             'score_away' => [
                 'type' => 'INT',
                 'constraint' => 3,
-                'null' => true,
-            ],
-            'schedule' => [
-                'type' => 'DATE',
-                'null' => true,
-            ],
-            'id_gym' => [
-                'type' => 'INT',
-                'constraint' => 11,
                 'null' => true,
             ],
             'created_at' => [
@@ -69,14 +69,13 @@ class Game extends Migration
             'deleted_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
-
             ]
         ]);
         $this->forge->addKey('id',true);
         $this->forge->addForeignKey('mvp','player','id_member','CASCADE','RESTRICT');
         $this->forge->addForeignKey('home_team','team','id','CASCADE','RESTRICT');
         $this->forge->addForeignKey('away_team','team','id','CASCADE','RESTRICT');
-        $this->forge->addForeignKey('id_league','league','id','CASCADE','RESTRICT');
+        $this->forge->addForeignKey('id_division','division','id','CASCADE','RESTRICT');
         $this->forge->addForeignKey('id_gym','gym','id','CASCADE','RESTRICT');
         $this->forge->createTable('game',true);
 

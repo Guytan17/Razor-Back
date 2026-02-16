@@ -18,6 +18,10 @@ class GymClub extends Migration
                 'type' => 'INT',
                 'constraint' => 11,
                 'null' => false,
+            ],
+            'main_gym' => [
+                'type' => 'BOOLEAN',
+                'null' => true,
             ]
         ]);
         $this->forge->addKey(['id_club','id_gym'],true,true);

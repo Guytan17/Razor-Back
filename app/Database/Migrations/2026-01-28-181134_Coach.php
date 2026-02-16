@@ -18,6 +18,10 @@ class Coach extends Migration
                 'type' => 'INT',
                 'constraint' => 11,
                 'null' => false,
+            ],
+            'main_team' => [
+                'type' => 'BOOLEAN',
+                'null' => false,
             ]
         ]);
         $this->forge->addForeignKey('id_member','member','id','CASCADE','RESTRICT');

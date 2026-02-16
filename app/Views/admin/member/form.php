@@ -9,7 +9,11 @@
         <div class="col">
             <div class="card">
                 <div class="card-header text-center">
+                    <?php if(isset($member->id)) : ?>
+                    <span class="card-title h3">Modification de <?= $member->first_name . " " . $member->last_name ?></span>
+                    <?php else : ?>
                     <span class="card-title h3">Création d'un membre</span>
+                    <?php endif; ?>
                 </div>
                 <!-- START : ZONE INFOS -->
                 <div class="card-body">
