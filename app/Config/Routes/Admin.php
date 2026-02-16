@@ -66,11 +66,19 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
     });
 
     //Routes pour la gestion des championnats
-    $routes->group('league',['filter' => 'group:admin'], function($routes) {
-        $routes->get('/', 'League::index');
-        $routes->post('insert', 'League::insertLeague'); //Sauvegarde création
-        $routes->post('update/(:num)', 'League::updateLeague/$1'); //Sauvegarde édition
-        $routes->post('switch-active/(:num)', 'League::switchActiveLeague/$1'); //Activation/désactivation d'un championnat
+    $routes->group('division',['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'Division::index');
+        $routes->post('insert', 'Division::insertDivision'); //Sauvegarde création
+        $routes->post('update/(:num)', 'Division::updateLeague/$1'); //Sauvegarde édition
+        $routes->post('switch-active/(:num)', 'Division::switchActiveDivision/$1');//Activation/désactivation d'un championnat
+    });
+
+    //Routes pour la gestion des services
+    $routes->group('service',['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'Service::index');
+        $routes->post('insert', 'Service::insertService'); // sauvegarde création
+        $routes->post('update/(:num)', 'Service::updateService/$1');//sauvegarde édition
+        $routes->post('delete/(:num)', 'Service::deleteService/$1'); //suppression
     });
 
     // Routes pour la gestion des utilisateurs (admin uniquement)

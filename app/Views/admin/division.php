@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-md-4 mb-3">
             <div class="card">
-                <?= form_open('/admin/league/insert') ?>
+                <?= form_open('/admin/division/insert') ?>
                 <div class="card-header">
                     <span class="card-title h5"> Création d'un nouveau championnat</span>
                 </div>
@@ -50,7 +50,7 @@
                     <span class="card-title h5">Liste des championnats</span>
                 </div>
                 <div class="card-body">
-                    <table class="table table-striped" id="leaguesTable">
+                    <table class="table table-striped" id="divisionsTable">
                         <thead >
                         <tr>
                             <th>Actions</th>
@@ -70,7 +70,7 @@
         </div>
     </div>
     <!-- START : MODAL POUR LES MODIFICATIONS -->
-    <div class="modal" id="modalLeague" tabindex="-1">
+    <div class="modal" id="modalDivision" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -103,7 +103,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                    <button onclick="saveLeague()" type="button" class="btn btn-primary">Sauvegarder</button>
+                    <button onclick="saveDivision()" type="button" class="btn btn-primary">Sauvegarder</button>
                 </div>
             </div>
         </div>
@@ -114,14 +114,14 @@
     var baseUrl = "<?=base_url();?>";
 
     $(document).ready(function() {
-        table = $('#leaguesTable').DataTable({
+        table = $('#divisionsTable').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
                 url: baseUrl + 'datatable/searchdatatable',
                 type: 'POST',
                 data: {
-                    model: 'LeagueModel'
+                    model: 'DivisionModel'
                 }
             },
             columns: [
@@ -136,7 +136,7 @@
                         ?
                             `
                                 <button
-                                    class="btn btn-sm btn-success btn-toggleActive-league"
+                                    class="btn btn-sm btn-success btn-toggleActive-division"
                                     title="Désactiver"
                                     data-id="${row.id}">
                                         <i class="fas fa-toggle-on"></i>
@@ -145,7 +145,7 @@
                         :
                             `
                             <button
-                                    class="btn btn-sm btn-danger btn-toggleActive-league"
+                                    class="btn btn-sm btn-danger btn-toggleActive-division"
                                     title="Activer"
                                     data-id="${row.id}">
                                         <i class="fas fa-toggle-off"></i>
@@ -154,7 +154,7 @@
                         return `
                             <div class="btn-group" role="group">
                                 <button
-                                    class="btn btn-sm btn-warning btn-edit-league"
+                                    class="btn btn-sm btn-warning btn-edit-division"
                                     title="Modifier"
                                     data-id='${row.id}'
                                     data-name='${escapeHtml(row.name)}'
@@ -188,10 +188,10 @@
     });
 
     //Définition de la modal
-    const myModal = new bootstrap.Modal('#modalLeague');
+    const myModal = new bootstrap.Modal('#modalDivision');
 
     //Fonction pour ouvrir la modal avec les données préremplies
-    $(document).on('click','.btn-edit-league', function() {
+    $(document).on('click','.btn-edit-division', function() {
         const btn = $(this);
         const seasonId = btn.data('season-id');
         const categoryId = btn.data('category-id');
@@ -205,7 +205,7 @@
     });
 
     //Fonction pour appeler la fonction de désactivation/activation
-    $(document).on('click','.btn-toggleActive-league', function(){
+    $(document).on('click','.btn-toggleActive-division', function(){
        toggleActive($(this).data('id'));
     })
 
@@ -216,7 +216,7 @@
         let categoryId = $('#modalSelectIdCategory').val();
 
         $.ajax({
-            url: baseUrl + 'admin/league/update/'+id,
+            url: baseUrl + 'admin/division/update/'+id,
             type:'POST',
             headers : {
                 'X-Requested-With': 'XMLHttpRequest'
@@ -251,9 +251,9 @@
         })
     }
 
-    function toggleActive(leagueId) {
+    function toggleActive(divisionId) {
         $.ajax({
-            url: '<?= base_url('admin/league/switch-active/') ?>' + leagueId,
+            url: '<?= base_url('admin/division/switch-active/') ?>' + divisionId,
             type: 'POST',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
@@ -265,7 +265,7 @@
             success: function (response) {
                 if (response.success) {
                     // Recharger le DataTable pour voir le changement
-                    $('#leaguesTable').DataTable().ajax.reload(null, false);
+                    $('#divisionsTable').DataTable().ajax.reload(null, false);
 
                     // Notification toast
                     Swal.fire({
