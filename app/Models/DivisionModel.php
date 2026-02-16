@@ -6,12 +6,12 @@ use App\Traits\DataTableTrait;
 use App\Traits\SlugTrait;
 use CodeIgniter\Model;
 
-class LeagueModel extends Model
+class DivisionModel extends Model
 {
     use DataTableTrait;
     use SlugTrait;
 
-    protected $table = 'league';
+    protected $table = 'division';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
     protected $returnType = 'array';
@@ -59,10 +59,10 @@ class LeagueModel extends Model
         return [
             'searchable_fields' =>
                 [
-                    'league.id',
-                    'league.name',
-                    'league.id_season',
-                    'league.id_category',
+                    'division.id',
+                    'division.name',
+                    'division.id_season',
+                    'division.id_category',
                     'season_name',
                     'category_name',
 
@@ -71,20 +71,20 @@ class LeagueModel extends Model
             [
                 [
                     'table' => 'season',
-                    'condition' => 'league.id_season = season.id',
+                    'condition' => 'division.id_season = season.id',
                     'type' => 'INNER'
                 ],
                 [
                     'table' => 'category',
-                    'condition' => 'league.id_category = category.id',
+                    'condition' => 'division.id_category = category.id',
                     'type' => 'INNER'
                 ]
             ],
-            'select' => 'league.id,league.name,league.id_season,league.id_category,season.name as season_name,category.name as category_name,league.deleted_at',
+            'select' => 'division.id,division.name,division.id_season,division.id_category,season.name as season_name,category.name as category_name,division.deleted_at',
         ];
     }
 
-    public function reactiveLeague($id) : bool{
+    public function reactiveDivision($id) : bool{
         return $this->builder()
             ->where('id', $id)
             ->update(['deleted_at' => null, 'updated_at' => date('Y-m-d H:i:s')]);

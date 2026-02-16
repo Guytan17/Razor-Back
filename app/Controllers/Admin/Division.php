@@ -4,18 +4,18 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\CategoryModel;
-use App\Models\LeagueModel;
+use App\Models\DivisionModel;
 use App\Models\SeasonModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
-class League extends AdminController
+class Division extends AdminController
 {
-    protected $lm;
+    protected $dm;
     protected $sm;
     protected $cm;
 
     public function __construct(){
-        $this->lm = new LeagueModel();
+        $this->dm = new DivisionModel();
         $this->sm = new SeasonModel();
         $this->cm = new CategoryModel();
     }
@@ -30,10 +30,10 @@ class League extends AdminController
             'categories' => $categories
         ];
         $this->addBreadcrumb('Championnats');
-        return $this->render('admin/league',$data);
+        return $this->render('admin/division',$data);
     }
 
-    public function insertLeague () {
+    public function insertDivision () {
         try {
             //Récupération des données
             $dataLeague =[
@@ -41,31 +41,31 @@ class League extends AdminController
                 'id_season' => $this->request->getPost('id_season'),
                 'id_category' => $this->request->getPost('id_category'),
             ];
-            if ($this->lm->insert($dataLeague)) {
+            if ($this->dm->insert($dataLeague)) {
                 $this->success('Championnat créé avec succès');
             } else {
-                foreach ($this->lm->errors() as $error) {
+                foreach ($this->dm->errors() as $error) {
                     $this->error($error);
                 }
             }
-            return $this->redirect('admin/league');
+            return $this->redirect('admin/division');
         } catch (\Exception $e) {
             $this->error = $e->getMessage();
             return redirect()->back()->withInput();
         }
     }
 
-    public function updateLeague ($id) {
+    public function updateDivision ($id) {
         try{
             // Récupération des données
-            $dataLeague=[
+            $dataDivision=[
                 'name'=>$this->request->getPost('name'),
                 'id_season'=>$this->request->getPost('id_season'),
                 'id_category'=>$this->request->getPost('id_category'),
 
             ];
 
-            if($this->lm->update($id,$dataLeague)){
+            if($this->dm->update($id,$dataDivision)){
                 return $this->response->setJSON([
                     'success' => true,
                     'message' => 'Championnat modifié avec succès',
@@ -73,7 +73,7 @@ class League extends AdminController
             } else {
                 return $this->response->setJSON([
                     'success' => false,
-                    'message' => $this->lm->errors(),
+                    'message' => $this->dm->errors(),
                 ]);
             }
         } catch(\Exception $e) {
