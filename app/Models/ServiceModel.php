@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\DataTableTrait;
 use CodeIgniter\Model;
 
 class ServiceModel extends Model
 {
+    use DataTableTrait;
+
     protected $table            = 'service';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
@@ -23,4 +26,14 @@ class ServiceModel extends Model
             'max_length' => ' Le libellé du service ne peut pas excéder 255 caractères'
         ]
     ];
+
+    public function getDataTableConfig(): array {
+        return [
+            'searchable_fields' => [
+                'label',
+            ],
+            'joins' => [],
+            'select' => 'id,label'
+        ];
+    }
 }

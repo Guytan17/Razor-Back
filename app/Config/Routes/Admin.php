@@ -70,7 +70,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->get('/', 'Division::index');
         $routes->post('insert', 'Division::insertDivision'); //Sauvegarde création
         $routes->post('update/(:num)', 'Division::updateLeague/$1'); //Sauvegarde édition
-        $routes->post('switch-active/(:num)', 'Division::switchActiveDivision/$1'); //Activation/désactivation d'un championnat
+        $routes->post('switch-active/(:num)', 'Division::switchActiveDivision/$1');//Activation/désactivation d'un championnat
     });
 
     //Routes pour la gestion des services
