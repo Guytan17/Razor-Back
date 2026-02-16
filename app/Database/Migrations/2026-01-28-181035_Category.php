@@ -19,6 +19,12 @@ class Category extends Migration
                 'constraint' => 255,
                 'null' => false,
             ],
+            'slug' => [
+                'type' => 'VARCHAR',
+                'constraint' => 255,
+                'null' => false,
+                'unique' => true,
+            ],
             'gender' =>[
                 'type' => 'VARCHAR',
                 'constraint' => 255,
