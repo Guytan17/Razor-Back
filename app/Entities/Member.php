@@ -8,6 +8,12 @@ class Member extends Entity
 {
     protected $datamap = [];
     protected $dates   = ['created_at', 'updated_at', 'deleted_at'];
+
+    protected $attributes = [
+        'id_license_code' => 5,
+        'license_status' => 0,
+        'balance'=>0,
+    ];
     protected $casts   = [
         'first_name' => 'string',
         'last_name'  => 'string',
@@ -17,7 +23,6 @@ class Member extends Entity
         'id_license_code' => 'integer',
         'license_status' => 'integer',
         'balance' => 'float',
-        'id_role' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime'

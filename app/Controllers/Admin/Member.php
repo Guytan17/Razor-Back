@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\MemberModel;
 use App\Models\RoleModel;
 use App\Models\LicenseCodeModel;
+use App\Models\RoleMemberModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Member extends AdminController
@@ -14,11 +15,13 @@ class Member extends AdminController
     protected $mm;
     protected $rm;
     protected $lcm;
+    protected $rmm;
 
     public function __construct(){
         $this->mm = new MemberModel();
         $this->rm = new RoleModel();
         $this->lcm = new LicenseCodeModel();
+        $this->rmm = new RoleMemberModel();
     }
     public function index()
     {
@@ -59,11 +62,12 @@ class Member extends AdminController
                 'first_name' => $this->request->getPost('first_name'),
                 'last_name' => $this->request->getPost('last_name'),
                 'date_of_birth' => $this->request->getPost('date_of_birth'),
-                'id_role' => $this->request->getPost('role'),
                 'id_license_code' => $this->request->getPost('license_code'),
-                'license_statut' => $this->request->getPost('license_statut'),
+                'license_status' => $this->request->getPost('license_status'),
                 'balance' => $this->request->getPost('balance'),
             ];
+
+
 
             // Récupération des données de contact
             $dataContact = [
@@ -92,13 +96,28 @@ class Member extends AdminController
             //Enregistrement en BDD
             if(!$this->mm->save($member)){
                 $this->error(implode('<br>',$this->mm->errors()));
-                return $this->redirect('/admin/member');
             }
 
             //On récupère l'ID si c'est une création pour les tables d'asso
             if($newMember) {
                 $member->id = $this->mm->getInsertID();
             }
+
+            //Récupération du rôle
+            $dataRole = [
+                'id_role' => $this->request->getPost('role'),
+                'id_member' => $id ?? $member->id,
+            ];
+
+            //Suppression des rôles existants en cas de modif
+//            $existingRole= $this->rmm->getRoleMember($dataRole['id_member']);
+//            if($existingRole) {
+//
+//            }
+
+
+            //Enregistrement du rôle
+
 
             // Gestion des messages de validation
             if($newMember){

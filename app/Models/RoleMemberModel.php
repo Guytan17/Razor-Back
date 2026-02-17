@@ -29,4 +29,11 @@ class RoleMemberModel extends Model
             'integer' => 'L\'ID du rôle doit être un entier'
         ]
     ];
+
+    public function getRoleMember($id_member)
+    {
+        $this->select('id_member,id_role');
+        $this->where('id_member', $id_member);
+        return $this->findAll();
+    }
 }
