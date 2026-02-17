@@ -13,6 +13,7 @@ class MasterSeeder extends Seeder
         $this->call('LicenseCodeSeeder');
         $this->call('CategorySeeder');
         $this->call('MemberSeeder');
+        $this->call('RoleMemberSeeder');
         $this->call('MediaSeeder');
     }
 }

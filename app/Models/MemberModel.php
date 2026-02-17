@@ -18,7 +18,7 @@ class MemberModel extends Model
     protected $returnType       = Member::class;
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['first_name', 'last_name', 'slug', 'date_of_birth', 'license_number', 'id_license_code', 'balance', 'id_role'];
+    protected $allowedFields    = ['first_name', 'last_name', 'slug', 'date_of_birth', 'license_number', 'id_license_code','license_status','balance'];
     // Dates
     protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
@@ -33,8 +33,8 @@ class MemberModel extends Model
         'slug'       => 'max_length[255]',
         'date_of_birth' => 'required|valid_date',
         'license_number' => 'permit_empty|max_length[10]',
-        'license_statut'=> 'integer|in_list[0,1]',
         'id_license_code' => 'permit_empty|integer',
+        'license_status'=> 'integer|in_list[0,1]',
         'balance' => 'permit_empty|integer',
 
     ];
@@ -60,7 +60,7 @@ class MemberModel extends Model
         'id_license_code' => [
             'integer' => 'L\'ID de licence doit être un nombre entier'
         ],
-        'license_statut' => [
+        'license_status' => [
             'integer' => 'Le statut de la licence doit être un nombre entier',
             'in_list' => 'Le statut de la licence doit être 0(inactif) ou 1(actif)'
         ],
@@ -85,8 +85,9 @@ class MemberModel extends Model
             ],
             'joins' => [
                 [
-                  'table' => 'role_member',
-                  'condition' => 'member.id = role_member.id_member',
+                    'table' => 'role_member',
+                    'condition' => 'member.id = role_member.id_member',
+                    'type' => 'inner'
                 ],
                 [
                     'table' => 'role',
