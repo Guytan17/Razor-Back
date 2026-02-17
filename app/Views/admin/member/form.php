@@ -19,27 +19,33 @@
                 <div class="card-body">
                     <!-- START : ZONE AVEC INFOS GÉNÉRALES DU MEMBRE -->
                     <div class="row">
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-6 mb-3">
                             <label class="form-label" for="last_name">Nom <span class="text-danger">*</span></label>
                             <input class="form-control" type="text" name="last_name" id="last_name" value="<?= esc($member->last_name ?? '') ?>" required>
                         </div>
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-6 mb-3">
                             <label class="form-label" for="first_name">Prénom <span class="text-danger">*</span></label>
                             <input class="form-control" type="text" name="first_name" id="first_name" value="<?= esc($member->first_name ?? '') ?>" required>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-6 mb-3">
                             <label class="form-label" for="date_of_birth">Date de naissance <span class="text-danger">*</span></label>
                             <input class="form-control" type="date" name="date_of_birth" id="date_of_birth" value="<?= esc($member?->date_of_birth?->toDateString() ?? '') ?>" required>
                         </div>
-                        <div class="col-md-6 mb-2">
-                            <label class="form-label" for="role">Rôle <span class="text-danger">*</span></label>
-                            <select class="form-select" name="role" id="role" required>
-                                <?php foreach($roles as $role): ?>
-                                    <option value=<?= esc($role['id']) ?> <?= isset($member) && $role['id'] == $member->id_role ? 'selected' : '' ?>><?= esc($role['name']) ?></option>
-                                <?php endforeach ; ?>
-                            </select>
+                        <div class="col-md-6">
+                            <label class="mb-3">Rôle(s) <span class="text-danger">*</span></label>
+                            <div class="row row-cols-auto">
+                                <?php foreach($roles as $role) : ?>
+                                    <div class="col mb-3 role">
+                                       <div class="form-check">
+                                           <input class="form-check-input" type="checkbox" value="<?=$role['id']?>" id="role-<?=$role['id']?>" name="roles[]">
+                                           <label class="form-check-label" for="role-<?=$role['id']?>"><?= $role['name'] ?></label>
+                                       </div>
+                                    </div>
+
+                                <?php endforeach; ?>
+                            </div>
                         </div>
                     </div>
                     <!-- END : ZONE AVEC INFOS GÉNÉRALES DU MEMBRE -->
