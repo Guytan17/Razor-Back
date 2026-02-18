@@ -81,7 +81,8 @@ class MemberModel extends Model
                 'first_name',
                 'license_number',
                 'id_license_code',
-                'member.deleted_at'
+                'member.deleted_at',
+                'role.name'
             ],
             'joins' => [
                 [
@@ -100,16 +101,17 @@ class MemberModel extends Model
                     'type' => 'inner'
                 ]
             ],
-            'select' => '
+            'select' => "
             member.id,
             member.last_name,
             member.first_name,
             member.license_number,
             member.id_license_code,
             member.deleted_at,
-            role.name as role_name,
-            license_code.code as license_code,
-            '
+            GROUP_CONCAT(role.name SEPARATOR ' - ') as role_name,
+            license_code.code as license_code
+            ",
+            'groupBy' => 'member.id'
         ];
     }
 
