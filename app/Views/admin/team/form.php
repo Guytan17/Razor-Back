@@ -70,6 +70,12 @@
                                     <span class="card-title h5">Coachs</span>
                                 </div>
                                 <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <label for="select-coach">Ajouter un coach</label>
+                                            <select name="" id=""></select>
+                                        </div>
+                                    </div>
 
                                 </div>
                             </div>

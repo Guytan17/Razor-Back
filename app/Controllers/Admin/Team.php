@@ -40,6 +40,8 @@ class Team extends AdminController
         if($id != null) {
             $title = 'Modifier une équipe';
             $this->addBreadcrumb($title);
+            $team = $this->tm->find($id);
+
         } else {
             $title = 'Ajouter une équipe';
             $this->addBreadcrumb($title);
@@ -50,6 +52,7 @@ class Team extends AdminController
             'seasons' => $seasons,
             'clubs' => $clubs,
             'categories' => $categories,
+            'team' => $team ?? null,
         ];
 
         return $this->render('admin/team/form',$data);

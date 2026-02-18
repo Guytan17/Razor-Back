@@ -19,6 +19,12 @@ class Team extends Migration
                 'constraint'=>255,
                 'null'=>false,
             ],
+            'slug' => [
+                'type'=>'VARCHAR',
+                'constraint'=>255,
+                'null'=>false,
+                'unique'=>true,
+            ],
             'id_club'=> [
                 'type'=>'INT',
                 'constraint'=>11,
