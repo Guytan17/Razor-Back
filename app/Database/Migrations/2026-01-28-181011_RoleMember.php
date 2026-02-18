@@ -22,6 +22,7 @@ class RoleMember extends Migration
         ]);
         $this->forge->addKey(['id_member','id_role'], true,true);
         $this->forge->addForeignKey('id_member','member','id','CASCADE','RESTRICT');
+        $this->forge->addForeignKey('id_role','role','id','CASCADE','RESTRICT');
         $this->forge->createTable('role_member',true);
     }
 

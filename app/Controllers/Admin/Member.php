@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\MemberModel;
 use App\Models\RoleModel;
 use App\Models\LicenseCodeModel;
+use App\Models\RoleMemberModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Member extends AdminController
@@ -14,11 +15,13 @@ class Member extends AdminController
     protected $mm;
     protected $rm;
     protected $lcm;
+    protected $rmm;
 
     public function __construct(){
         $this->mm = new MemberModel();
         $this->rm = new RoleModel();
         $this->lcm = new LicenseCodeModel();
+        $this->rmm = new RoleMemberModel();
     }
     public function index()
     {
@@ -38,6 +41,7 @@ class Member extends AdminController
             $this->addBreadcrumb('Modifier un membre');
             //Récupération des données pour l'édition
             $member = $this->mm->withDeleted()->find($id);
+            $member->roles = $this->rmm->getRoleMember($id);
         } else {
             $title = 'Ajouter un membre';
             $this->addBreadcrumb('Ajouter un membre');
@@ -59,11 +63,19 @@ class Member extends AdminController
                 'first_name' => $this->request->getPost('first_name'),
                 'last_name' => $this->request->getPost('last_name'),
                 'date_of_birth' => $this->request->getPost('date_of_birth'),
-                'id_role' => $this->request->getPost('role'),
                 'id_license_code' => $this->request->getPost('license_code'),
-                'license_statut' => $this->request->getPost('license_statut'),
                 'balance' => $this->request->getPost('balance'),
             ];
+            //Gestion du statut de la licence
+             $license_status = $this->request->getPost('license_status');
+             if($license_status === "on"){
+                 $dataMember['license_status'] = 1;
+             } else {
+                 $dataMember['license_status'] = 0;
+             }
+
+            //Récupération des rôles
+            $roles = $this->request->getPost('roles');
 
             // Récupération des données de contact
             $dataContact = [
@@ -92,12 +104,27 @@ class Member extends AdminController
             //Enregistrement en BDD
             if(!$this->mm->save($member)){
                 $this->error(implode('<br>',$this->mm->errors()));
-                return $this->redirect('/admin/member');
             }
 
             //On récupère l'ID si c'est une création pour les tables d'asso
             if($newMember) {
                 $member->id = $this->mm->getInsertID();
+            }
+            //Suppression des rôles existants en cas de modif
+//            $existingRole= $this->rmm->getRoleMember($dataRole['id_member']);
+//            if($existingRole) {
+//
+//            }
+            //Gestion des rôles
+            if(isset($roles)) {
+                $this->rmm->where('id_member', $id)->delete();
+                foreach($roles as $role) {
+                    $dataRole = [
+                        'id_member' => intval($id),
+                        'id_role' => intval($role)
+                    ];
+                    $this->rmm->insert($dataRole);
+                }
             }
 
             // Gestion des messages de validation

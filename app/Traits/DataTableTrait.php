@@ -14,6 +14,7 @@ trait DataTableTrait
             'joins' => [],
             'select' => '*',
             'with_deleted' => false, // Inclure les enregistrements soft deleted
+            'groupBy' => null,
         ];
     }
 
@@ -75,6 +76,11 @@ trait DataTableTrait
         // Applique la sélection
         if (!empty($config['select'])) {
             $builder->select($config['select']);
+        }
+
+        // Applique le GROUP BY
+        if(!empty($config['groupBy'])) {
+            $builder->groupBy($config['groupBy']);
         }
 
         return $builder;

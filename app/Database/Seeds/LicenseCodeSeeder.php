@@ -24,6 +24,10 @@ class LicenseCodeSeeder extends Seeder
             [
                 'code' => '2C',
                 'explanation'=>'Licence compétition avec mutation tardive, hors de la période définie par la FFBB',
+            ],
+            [
+                'code' => '0',
+                'explanation' => 'Licence permettant de participer uniquement aux entraînements'
             ]
         ];
         $this->db->table('license_code')->insertBatch($data);
