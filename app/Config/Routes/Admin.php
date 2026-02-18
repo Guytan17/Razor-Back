@@ -11,6 +11,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('save', 'Member::saveMember'); // sauvegarde création
         $routes->post('save/(:num)', 'Member::saveMember/$1'); // sauvegarde édition
         $routes->post('switch-active/(:num)', 'Member::switchActiveMember/$1'); //(dés)activation membres
+        $routes->get('search', 'Member::searchMember');
     });
 
     //Routes pour la gestion des clubs

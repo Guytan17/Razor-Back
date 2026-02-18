@@ -72,8 +72,8 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col">
-                                            <label for="select-coach">Ajouter un coach</label>
-                                            <select name="" id=""></select>
+                                            <label class="form-label" for="select-coach">Ajouter un coach</label>
+                                            <select class="form-select" name="select-coach" id="select-coach"></select>
                                         </div>
                                     </div>
 
@@ -122,5 +122,9 @@
         </div>
     </div>
 </div>
-
+<script>
+    $(document).ready(function () {
+        initAjaxSelect2('#select-coach', {url:'/admin/member/search', searchFields: 'first_name,last_name,license_number'});
+    });
+</script>
 <?php $this->endSection() ; ?>

@@ -60,8 +60,8 @@ class Member extends AdminController
             //Récupération des données principales
             $dataMember = [
                 'id' => $id,
-                'first_name' => $this->request->getPost('first_name'),
-                'last_name' => $this->request->getPost('last_name'),
+                'first_name' => ucwords($this->request->getPost('first_name')),
+                'last_name' => strtoupper($this->request->getPost('last_name')),
                 'date_of_birth' => $this->request->getPost('date_of_birth'),
                 'id_license_code' => $this->request->getPost('license_code'),
                 'balance' => $this->request->getPost('balance'),
@@ -120,7 +120,7 @@ class Member extends AdminController
                 $this->rmm->where('id_member', $id)->delete();
                 foreach($roles as $role) {
                     $dataRole = [
-                        'id_member' => intval($id),
+                        'id_member' => intval($member->id),
                         'id_role' => intval($role)
                     ];
                     $this->rmm->insert($dataRole);
@@ -174,5 +174,25 @@ class Member extends AdminController
                 ]);
             }
         }
+    }
+
+    public function searchMember(){
+        $request = $this->request;
+
+        //Vérification Ajax
+        if(!$request->isAJAX()) {
+            return $this->response->setJSON(['error'=> 'Requête non autorisée']);
+        }
+
+        //Paramètres de recherche
+        $search = $request->getget('search') ?? '';
+        $page = (int) $request->getget('page') ?? 1;
+        $limit = 25;
+
+        //Utilisation de la méthode du Model (via le trait)
+        $result = $this->mm->quickSearchForSelect2($search, $page, $limit, 'last_name', 'ASC');
+
+        //Réponse JSON
+        return $this->response->setJSON($result);
     }
 }

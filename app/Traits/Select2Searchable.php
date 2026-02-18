@@ -68,9 +68,23 @@ trait Select2Searchable
         // Formatage des données pour Select2
         $formattedResults = [];
         foreach ($results as $result) {
+
+            //On gère le cas où il y a plusieurs champs à afficher
+            if(str_contains($displayField, ',')) {
+                $fields = array_map('trim', explode(',', $displayField));
+                $textParts = [];
+                foreach ($fields as $field) {
+                    if(!empty($result[$field])) {
+                        $textParts[] = $result[$field];
+                    }
+                }
+                $text = implode(' ', $textParts);
+            } else {
+                $text = $result[$displayField] ?? '';
+            }
             $item = [
                 'id' => $result[$this->primaryKey],
-                'text' => $result[$displayField] ?? ''
+                'text' => $text
             ];
 
             // Ajout des champs supplémentaires
