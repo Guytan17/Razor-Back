@@ -34,6 +34,6 @@ class RoleMemberModel extends Model
     {
         $this->select('id_member,id_role');
         $this->where('id_member', $id_member);
-        return $this->findAll();
+        return $this->findColumn('id_role');
     }
 }

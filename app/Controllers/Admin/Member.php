@@ -41,6 +41,7 @@ class Member extends AdminController
             $this->addBreadcrumb('Modifier un membre');
             //Récupération des données pour l'édition
             $member = $this->mm->withDeleted()->find($id);
+            $member->roles = $this->rmm->getRoleMember($id);
         } else {
             $title = 'Ajouter un membre';
             $this->addBreadcrumb('Ajouter un membre');

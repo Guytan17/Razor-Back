@@ -39,7 +39,7 @@
                                 <?php foreach($roles as $role) : ?>
                                     <div class="col mb-3 role">
                                        <div class="form-check">
-                                           <input class="form-check-input" type="checkbox" value="<?=$role['id']?>" id="role-<?=$role['id']?>" name="roles[]">
+                                           <input class="form-check-input" type="checkbox" value="<?=$role['id']?>" id="role-<?=$role['id']?>" name="roles[]" <?= (isset($member->roles) && in_array($role['id'], $member->roles)) ? 'checked' : '' ;?>>
                                            <label class="form-check-label" for="role-<?=$role['id']?>"><?= $role['name'] ?></label>
                                        </div>
                                     </div>
