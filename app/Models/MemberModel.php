@@ -119,7 +119,9 @@ class MemberModel extends Model
 
     protected $select2SearchFields = ['first_name', 'last_name', 'license_number'];
 
-    protected $select2DisplayField = 'first_name,last_name,license_number';
+    protected $select2DisplayField = 'first_name,last_name';
+
+    protected $select2AdditionalFields = ['license_number'];
 
     protected function prepareName(array $data) {
         if(isset($data['data']['last_name'],$data['data']['first_name'])) {

@@ -155,7 +155,7 @@
         console.log(nbCoachs);
 
         //initialisation select-coach
-        initAjaxSelect2(`#select-coach`, {url:'/admin/member/search', searchFields: 'first_name,last_name,license_number'});
+        initAjaxSelect2(`#select-coach`, {url:'/admin/member/search', searchFields: 'first_name,last_name',  additionalFields :'license_number'});
 
         //Gestion ajout coach
         $('#add-coach').on('click', function(){
@@ -181,7 +181,7 @@
                                    <span class="fs-4" id="delete-coach-${nbCoachs}"><i class="fas fa-trash-alt text-danger delete-coach-button"></i></span>
                                </div>
                                 <div class="col d-flex align-items-center">
-                                    <span class="fw-semibold" >${coach.text}</span>
+                                    <span class="fw-semibold" >${coach.text} - ${coach.license_number}</span>
                                 </div>
                             </div>
                         </div>

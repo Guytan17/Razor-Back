@@ -82,10 +82,25 @@ trait Select2Searchable
             } else {
                 $text = $result[$displayField] ?? '';
             }
+
             $item = [
                 'id' => $result[$this->primaryKey],
                 'text' => $text
             ];
+
+//            if(is_array($displayField)) {
+//                $nameParts = [];
+//                foreach ($displayField['fields'] as $field) {
+//                    if(!empty($result[$field])) {
+//                        $nameParts[] = $result[$field];
+//                    }
+//                }
+//                $name = implode(' ', $nameParts);
+//
+//                if(!empty($result[$displayField['suffix']])) {
+//                    $text .=' - ' . $result[$displayField['suffix']];
+//                }
+//            }
 
             // Ajout des champs supplémentaires
             foreach ($additionalFields as $field) {
