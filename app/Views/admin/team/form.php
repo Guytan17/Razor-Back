@@ -78,7 +78,21 @@
                                     </div>
                                 </div>
                                 <div class="card-body" id="zone-coach">
-
+                                    <?php if(isset($team->coachs)){
+                                        $cpt_coachs = 0 ;
+                                        foreach ($team->coachs as $coach) :
+                                            $cpt_coachs ++ ?>
+                                            <div class="row mb-3 ">
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fas fa-trash-alt text-danger"></i></span>
+                                                    <select class="form-select select-coach" name="coachs[][id_coach]" id="select-coach-<?= $cpt_coachs ?>">
+                                                        <option value="<?= $coach['id_member']?>"><?= $coach['coach_first_name'].' '.$coach['coach_last_name'].' '.$coach['coach_license_number']
+                                                            ?></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                    <?php endforeach;
+                                    } ?>
                                 </div>
                             </div>
                             <!-- END : COACHS -->
@@ -127,7 +141,8 @@
 <script>
     $(document).ready(function () {
 
-        let nbCoachs = 0 ;
+        let nbCoachs = $('#zone-coach .select-coach').length ;
+        console.log(nbCoachs);
 
         $('#add-coach').on('click', function(){
             nbCoachs ++;
@@ -147,3 +162,4 @@
     });
 </script>
 <?php $this->endSection() ; ?>
+}

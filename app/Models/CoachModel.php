@@ -29,4 +29,11 @@ class CoachModel extends Model
             'integer' => 'L\'ID de l\'équipe doit être un entier',
         ],
     ];
+
+    public function getCoachesByTeam($id_team) {
+        $this->select('coach.*,member.first_name as coach_first_name,member.last_name as coach_last_name, member.license_number as coach_license_number');
+        $this->where('coach.id_team', $id_team);
+        $this->join('member', 'coach.id_member = member.id');
+        return $this->findAll();
+    }
 }
