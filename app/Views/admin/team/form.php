@@ -74,9 +74,9 @@
                                     <div class="row mb-3">
                                         <div class="col p-3">
                                             <div class="input-group">
-                                                <select class="form-select select-coach" name="coachs[][id_coach]" id="select-coach">
+                                                <select class="form-select select-coach" id="select-coach">
                                                 </select>
-                                                <span class="input-group-text btn btn-sm btn-primary d-flex align-items-center" id="add-coach"><i class="fas fa-plus"></i></span>
+                                                <span class="input-group-text btn btn-sm btn-primary d-flex align-items-center" id="add-coach"><i class="fas fa-plus"></i> Ajouter</span>
                                             </div>
                                         </div>
                                     </div>
@@ -99,9 +99,9 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                        </div>
-
-                                    <?php endforeach;
+                                                <input type="hidden" name="newCoachs[]" value="<?= $coach['id_member'] ?>">
+                                            </div>
+                                        <?php endforeach;
                                     } ?>
                                 </div>
                             </div>
@@ -181,12 +181,13 @@
                                    <span class="fs-4" id="delete-coach-${nbCoachs}"><i class="fas fa-trash-alt text-danger delete-coach-button"></i></span>
                                </div>
                                 <div class="col d-flex align-items-center">
-                                    <span class="fw-semibold" data-id="${coach.id}">${coach.text}</span>
+                                    <span class="fw-semibold" >${coach.text}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <input type="hidden" name="newCoachs[]" value="${coach.id}">
             </div>
             `;
 

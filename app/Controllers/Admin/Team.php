@@ -62,6 +62,8 @@ class Team extends AdminController
     }
 
     public function saveTeam ($id=null) {
+//        $data=$this->request->getPost();
+//        dd($data);
         try {
             //Récupération des données
             $dataTeam = [
@@ -72,7 +74,7 @@ class Team extends AdminController
                 'id_category' => $this->request->getPost('id_category'),
             ];
 
-            $coachs = $this->request->getPost('coachs');
+            $coachs = $this->request->getPost('newCoachs') ?? [];
 
             //Préparation de la variable pour savoir si c'est une création
             $newTeam = empty($dataTeam['id']);
@@ -103,16 +105,18 @@ class Team extends AdminController
             }
 
             //Gestion des coachs
-            if(isset($coachs)) {
+            //Récupération des coachs actuels
+            $currentCoachs = array_column($this->coachm->getCoachesById($id,'team'),'id_member');
+
+            if(empty($coachs) || $currentCoachs!=$coachs) {
                 $this->coachm->where('id_team', $team->id)->delete();
                 foreach ($coachs as $coach) {
                     $dataCoach = [
-                        'id_member' => $coach['id_coach'],
+                        'id_member' => intval($coach),
                         'id_team' => $team->id,
                     ];
 
                     $this->coachm->insert($dataCoach);
-//                    $existingCoach = $this->coachm->where('id_member', $coach)->where('id_team', $team->id)->first();
                 }
             }
 
