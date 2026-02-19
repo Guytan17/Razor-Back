@@ -77,14 +77,14 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-body" id="zone-coach">
+                                <div class="card-body overflow-y-auto" id="zone-coach">
                                     <?php if(isset($team->coachs)){
                                         $cpt_coachs = 0 ;
                                         foreach ($team->coachs as $coach) :
                                             $cpt_coachs ++ ?>
                                             <div class="row mb-3 ">
                                                 <div class="input-group">
-                                                    <span class="input-group-text"><i class="fas fa-trash-alt text-danger"></i></span>
+                                                    <span class="input-group-text" id="delete-coach-<?= $cpt_coachs ?>"><i class="fas fa-trash-alt text-danger delete-coach-button"></i></span>
                                                     <select class="form-select select-coach" name="coachs[][id_coach]" id="select-coach-<?= $cpt_coachs ?>">
                                                         <option value="<?= $coach['id_member']?>"><?= $coach['coach_first_name'].' '.$coach['coach_last_name'].' '.$coach['coach_license_number']
                                                             ?></option>
@@ -101,7 +101,7 @@
                                 <div class="card-header text-center">
                                     <span class="card-title h5">Joueurs</span>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body" id="zone-player">
 
                                 </div>
                             </div>
@@ -113,7 +113,7 @@
                                 <div class="card-header text-center">
                                     <span class="card-title h5">Championnats et coupes</span>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body" id="zone-division">
 
                                 </div>
                             </div>
@@ -123,7 +123,7 @@
                                 <div class="card-header text-center">
                                     <span class="card-title h5">Matchs</span>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body" id="zone-game">
 
                                 </div>
                             </div>
@@ -144,14 +144,15 @@
         let nbCoachs = $('#zone-coach .select-coach').length ;
         console.log(nbCoachs);
 
+        //Gestion ajout coach
         $('#add-coach').on('click', function(){
             nbCoachs ++;
             let row = `
                 <div class="row mb-3 ">
                     <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-trash-alt text-danger"></i></span>
+                        <span class="input-group-text" id="delete-coach-${nbCoachs}"><i class="fas fa-trash-alt text-danger delete-coach-button"></i></span>
                         <select class="form-select" name="coachs[][id_coach]" id="select-coach-${nbCoachs}"></select>
-                        </div>
+                    </div>
                 </div>
 
             `;
@@ -159,7 +160,24 @@
             $('#zone-coach').append(row);
             initAjaxSelect2(`#select-coach-${nbCoachs}`, {url:'/admin/member/search', searchFields: 'first_name,last_name,license_number'});
         });
+
+        // Gestion suppression coach
+        $('#zone-coach .delete-coach-button').on('click', function(){
+            nbCoachs --;
+            $(this).closest('.row').remove();
+
+        })
     });
 </script>
+<style>
+    #zone-coach,#zone-division {
+        max-height : 200px;
+    }
+
+    .delete-coach-button:hover {
+        scale:1.2;
+        cursor: pointer;
+    }
+</style>
 <?php $this->endSection() ; ?>
 }
