@@ -109,7 +109,7 @@
                             <div class="card-header text-center">
                                 <span class="card-title"><span class="fw-bold h5">Équipes</span> <span class="fw-semibold h6">(joueur)</span></span>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body" id="zone-player">
 
                             </div>
                         </div>
@@ -121,7 +121,7 @@
                             <div class="card-header text-center">
                                 <span class="card-title"><span class="fw-bold h5">Équipes</span> <span class="fw-semibold h6">(coach)</span></span>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body" id="zone-coach">
 
                             </div>
                         </div>
@@ -187,8 +187,8 @@
 
 </script>
 <style>
-    .zone-team {
-        min-height: 150px;
+    #zone-player,#zone-coach {
+        max-height: 200px;
     }
 </style>
 <?= $this->endSection() ?>

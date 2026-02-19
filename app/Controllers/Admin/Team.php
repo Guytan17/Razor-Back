@@ -43,7 +43,7 @@ class Team extends AdminController
             $title = 'Modifier une équipe';
             $this->addBreadcrumb($title);
             $team = $this->tm->find($id);
-            $team->coachs = $this->coachm->getCoachesByTeam($id);
+            $team->coachs = $this->coachm->getCoachesById($id,'team');
 
         } else {
             $title = 'Ajouter une équipe';

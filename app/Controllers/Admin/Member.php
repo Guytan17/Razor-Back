@@ -7,6 +7,8 @@ use App\Models\MemberModel;
 use App\Models\RoleModel;
 use App\Models\LicenseCodeModel;
 use App\Models\RoleMemberModel;
+use App\Models\CoachModel;
+
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Member extends AdminController
@@ -16,12 +18,14 @@ class Member extends AdminController
     protected $rm;
     protected $lcm;
     protected $rmm;
+    protected $coachm;
 
     public function __construct(){
         $this->mm = new MemberModel();
         $this->rm = new RoleModel();
         $this->lcm = new LicenseCodeModel();
         $this->rmm = new RoleMemberModel();
+        $this->coachm = new CoachModel();
     }
     public function index()
     {
@@ -42,6 +46,7 @@ class Member extends AdminController
             //Récupération des données pour l'édition
             $member = $this->mm->withDeleted()->find($id);
             $member->roles = $this->rmm->getRoleMember($id);
+            $member->coach_teams = $this->coachm->getCoachesById($id,'member');
         } else {
             $title = 'Ajouter un membre';
             $this->addBreadcrumb('Ajouter un membre');

@@ -68,29 +68,39 @@
                             <!-- START : COACHS -->
                             <div class="card mb-3">
                                 <div class="card-header text-center">
-                                    <div class="row">
-                                        <div class="col">
-                                            <span class="card-title h5">Coachs</span>
-                                        </div>
-                                        <div class="col-auto">
-                                            <span class="btn btn-sm btn-primary" id="add-coach"><i class="fas fa-plus"></i> Ajouter un coach</span>
-                                        </div>
-                                    </div>
+                                    <span class="card-title h5">Coachs</span>
                                 </div>
                                 <div class="card-body overflow-y-auto" id="zone-coach">
+                                    <div class="row mb-3">
+                                        <div class="col p-3">
+                                            <div class="input-group">
+                                                <select class="form-select select-coach" name="coachs[][id_coach]" id="select-coach">
+                                                </select>
+                                                <span class="input-group-text btn btn-sm btn-primary d-flex align-items-center" id="add-coach"><i class="fas fa-plus"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <?php if(isset($team->coachs)){
                                         $cpt_coachs = 0 ;
                                         foreach ($team->coachs as $coach) :
                                             $cpt_coachs ++ ?>
-                                            <div class="row mb-3 ">
-                                                <div class="input-group">
-                                                    <span class="input-group-text" id="delete-coach-<?= $cpt_coachs ?>"><i class="fas fa-trash-alt text-danger delete-coach-button"></i></span>
-                                                    <select class="form-select select-coach" name="coachs[][id_coach]" id="select-coach-<?= $cpt_coachs ?>">
-                                                        <option value="<?= $coach['id_member']?>"><?= $coach['coach_first_name'].' '.$coach['coach_last_name'].' '.$coach['coach_license_number']
-                                                            ?></option>
-                                                    </select>
+                                            <div class="row row-coach">
+                                                <div class="col">
+                                                    <div class="card card-coach">
+                                                        <div class="card-body p-1 d-flex align-items-center">
+                                                            <div class="row">
+                                                                <div class="col-auto">
+                                                                    <span class="fs-4" id="delete-coach-<?= $cpt_coachs ?>"><i class="fas fa-trash-alt text-danger delete-coach-button"></i></span>
+                                                                </div>
+                                                                <div class="col d-flex align-items-center">
+                                                                    <span class="fw-semibold"><?= $coach['coach_first_name'].' '.$coach['coach_last_name'].' - '.$coach['coach_license_number']?></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                        </div>
+
                                     <?php endforeach;
                                     } ?>
                                 </div>
@@ -141,37 +151,63 @@
 <script>
     $(document).ready(function () {
 
-        let nbCoachs = $('#zone-coach .select-coach').length ;
+        let nbCoachs = $('#zone-coach .card-coach').length ;
         console.log(nbCoachs);
+
+        //initialisation select-coach
+        initAjaxSelect2(`#select-coach`, {url:'/admin/member/search', searchFields: 'first_name,last_name,license_number'});
 
         //Gestion ajout coach
         $('#add-coach').on('click', function(){
+            let selectedMember = $('#select-coach').select2('data');
+            console.log(selectedMember);
+
+            // si aucun membre n'est sélectionné lors du clic, on fait bloque la création de la row
+            if (!selectedMember.length) {
+                return;
+            }
+
+            //Si un membre est sélectionné, on
             nbCoachs ++;
+            let coach = selectedMember[0];
+            console.log(coach);
             let row = `
-                <div class="row mb-3 ">
-                    <div class="input-group">
-                        <span class="input-group-text" id="delete-coach-${nbCoachs}"><i class="fas fa-trash-alt text-danger delete-coach-button"></i></span>
-                        <select class="form-select" name="coachs[][id_coach]" id="select-coach-${nbCoachs}"></select>
+            <div class="row row-coach">
+                <div class="col">
+                    <div class="card card-coach">
+                        <div class="card-body p-1 d-flex align-items-center">
+                            <div class="row">
+                               <div class="col-auto">
+                                   <span class="fs-4" id="delete-coach-${nbCoachs}"><i class="fas fa-trash-alt text-danger delete-coach-button"></i></span>
+                               </div>
+                                <div class="col d-flex align-items-center">
+                                    <span class="fw-semibold" data-id="${coach.id}">${coach.text}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
+            </div>
             `;
 
             $('#zone-coach').append(row);
-            initAjaxSelect2(`#select-coach-${nbCoachs}`, {url:'/admin/member/search', searchFields: 'first_name,last_name,license_number'});
+            $('#select-coach').empty();
         });
 
         // Gestion suppression coach
-        $('#zone-coach .delete-coach-button').on('click', function(){
+        $('#zone-coach').on('click' , '.delete-coach-button', function(){
             nbCoachs --;
-            $(this).closest('.row').remove();
-
+            $(this).closest('.row-coach').remove();
         })
     });
 </script>
 <style>
     #zone-coach,#zone-division {
-        max-height : 200px;
+        max-height : 300px;
+    }
+
+    .row-coach {
+        margin-bottom: 1rem;
     }
 
     .delete-coach-button:hover {

@@ -30,9 +30,9 @@ class CoachModel extends Model
         ],
     ];
 
-    public function getCoachesByTeam($id_team) {
+    public function getCoachesById($id,$table) {
         $this->select('coach.*,member.first_name as coach_first_name,member.last_name as coach_last_name, member.license_number as coach_license_number');
-        $this->where('coach.id_team', $id_team);
+        $this->where('coach.id_'.$table,$id);
         $this->join('member', 'coach.id_member = member.id');
         return $this->findAll();
     }
