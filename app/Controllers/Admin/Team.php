@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\CategoryModel;
+use App\Models\CoachModel;
 use App\Models\TeamModel;
 use App\Models\SeasonModel;
 use App\Models\ClubModel;
@@ -15,13 +16,14 @@ class Team extends AdminController
     protected $sm;
     protected $cm;
     protected $catm;
+    protected $coachm;
 
     public function __construct(){
         $this->tm = new TeamModel();
         $this->cm = new ClubModel();
         $this->catm = new CategoryModel();
         $this->sm = new SeasonModel();
-
+        $this->coachm = new CoachModel();
     }
     public function index()
     {
@@ -64,11 +66,12 @@ class Team extends AdminController
             $dataTeam = [
                 'id' => $id,
                 'name' => $this->request->getPost('name'),
+                'id_club' => $this->request->getPost('id_club'),
                 'id_season' => $this->request->getPost('id_season'),
                 'id_category' => $this->request->getPost('id_category'),
-                'id_club' => $this->request->getPost('id_club'),
-                'id_team' => $this->request->getPost('id_team'),
             ];
+
+            $coachs = $this->request->getPost('coachs');
 
             //Préparation de la variable pour savoir si c'est une création
             $newTeam = empty($dataTeam['id']);
@@ -86,14 +89,34 @@ class Team extends AdminController
             $team->fill($dataTeam);
 
             //Enregistrement en BDD
-            if(!$this->tm->save($team)){
-                $this->error(implode('<br>',$this->tm->errors()));
-                return $this->redirect('/admin/team');
+            if($newTeam || $team->hasChanged()) {
+                if(!$this->tm->save($team)){
+                    $this->error(implode('<br>',$this->tm->errors()));
+                    return $this->redirect('/admin/team');
+                }
+            }
+
+            //Récupération de l'ID
+            if($newTeam) {
+                $team->id = $this->tm->getInsertID();
+            }
+
+            //Gestion des coachs
+            if(isset($coachs)) {
+                $this->coachm->where('id_team', $team->id)->delete();
+                foreach ($coachs as $coach) {
+                    $dataCoach = [
+                        'id_member' => $coach['id_coach'],
+                        'id_team' => $team->id,
+                    ];
+
+                    $this->coachm->insert($dataCoach);
+//                    $existingCoach = $this->coachm->where('id_member', $coach)->where('id_team', $team->id)->first();
+                }
             }
 
             //Récupération ID et gestion des messages de validation
             if($newTeam) {
-                $id = $this->tm->getInsertID();
                 $this->success('Équipe créée avec succès');
             } else {
                 $this->success('Équipe modifiée avec succès');

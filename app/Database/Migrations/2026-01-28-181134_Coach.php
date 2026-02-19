@@ -19,11 +19,8 @@ class Coach extends Migration
                 'constraint' => 11,
                 'null' => false,
             ],
-            'main_team' => [
-                'type' => 'BOOLEAN',
-                'null' => false,
-            ]
         ]);
+        $this->forge->addPrimaryKey(['id_member','id_team']);
         $this->forge->addForeignKey('id_member','member','id','CASCADE','RESTRICT');
         $this->forge->addForeignKey('id_team','team','id','CASCADE','RESTRICT');
         $this->forge->createTable('coach',true);
