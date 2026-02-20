@@ -88,7 +88,7 @@ class Member extends AdminController
             ];
 
             //Gérer Équipes (coach et joueurs)
-
+            $coachs = $this->request->getPost('coachs') ?? [];
 
             //préparation de la variable pour savoir si c'est une création
             $newMember = empty($dataMember['id']);
@@ -129,6 +129,22 @@ class Member extends AdminController
                         'id_role' => intval($role)
                     ];
                     $this->rmm->insert($dataRole);
+                }
+            }
+
+            //Gestion des coachs
+            //Récupération des coachs actuels
+            $currentCoachs = array_column($this->coachm->getCoachesByIdMember($id),'id_team');
+
+            if(empty($coachs) || $currentCoachs!=$coachs) {
+                $this->coachm->where('id_member', $member->id)->delete();
+                foreach ($coachs as $coach) {
+                    $dataCoach = [
+                        'id_member' => $member->id,
+                        'id_team' => intval($coach),
+                    ];
+
+                    $this->coachm->insert($dataCoach);
                 }
             }
 

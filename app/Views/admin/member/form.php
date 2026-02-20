@@ -152,7 +152,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <input type="hidden" name="newCoachs[]" value="<?= $team['id_team'] ?>">
+                                                    <input type="hidden" name="coachs[]" value="<?= $team['id_team'] ?>">
                                                 </div>
                                             <?php endforeach;
                                         } ?>
@@ -255,7 +255,7 @@ $(document).ready(function () {
                         </div>
                     </div>
                 </div>
-                <input type="hidden" name="newCoachs[]" value="${team.id}">
+                <input type="hidden" name="coachs[]" value="${team.id}">
             </div>
         `;
         $('#zone-coach-list').prepend(row);

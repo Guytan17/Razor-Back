@@ -101,7 +101,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <input type="hidden" name="newCoachs[]" value="<?= $coach['id_member'] ?>">
+                                                        <input type="hidden" name="coachs[]" value="<?= $coach['id_member'] ?>">
                                                     </div>
                                                 <?php endforeach;
                                             } ?>
@@ -191,7 +191,7 @@
                         </div>
                     </div>
                 </div>
-                <input type="hidden" name="newCoachs[]" value="${coach.id}">
+                <input type="hidden" name="coachs[]" value="${coach.id}">
             </div>
             `;
 

@@ -74,7 +74,7 @@ class Team extends AdminController
                 'id_category' => $this->request->getPost('id_category'),
             ];
 
-            $coachs = $this->request->getPost('newCoachs') ?? [];
+            $coachs = $this->request->getPost('coachs') ?? [];
 
             //Préparation de la variable pour savoir si c'est une création
             $newTeam = empty($dataTeam['id']);
