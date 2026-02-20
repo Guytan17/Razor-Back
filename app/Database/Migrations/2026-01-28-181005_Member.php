@@ -54,6 +54,19 @@ class Member extends Migration
                 'constraint'=>11,
                 'null'=>true,
             ],
+            'overqualified' => [
+                'type' => 'INT',
+                'contraint'=> 1,
+                'null' => false,
+            ],
+            'available' => [
+                'type' => 'BOOLEAN',
+                'null' => false,
+            ],
+            'details' => [
+                'type' => 'TEXT',
+                'null' => true,
+            ],
             'created_at'=>[
                 'type'=>'DATETIME',
                 'null'=>false,

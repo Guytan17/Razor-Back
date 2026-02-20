@@ -19,23 +19,6 @@ class Player extends Migration
                 'constraint' => 11,
                 'null' => false,
             ],
-            'main_team' => [
-                'type' => 'BOOLEAN',
-                'null' => false,
-            ],
-            'overqualified' => [
-                'type' => 'INT',
-                'contraint'=> 1,
-                'null' => false,
-            ],
-            'available' => [
-                'type' => 'BOOLEAN',
-                'null' => false,
-            ],
-            'details' => [
-                'type' => 'TEXT',
-                'null' => true,
-            ]
         ]);
         $this->forge->addForeignKey('id_member', 'member', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->addForeignKey('id_team', 'team', 'id', 'CASCADE', 'RESTRICT');
