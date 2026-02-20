@@ -70,7 +70,7 @@
                                 <div class="card-header text-center">
                                     <span class="card-title h5">Coachs</span>
                                 </div>
-                                <div class="card-body overflow-y-auto" id="zone-coach">
+                                <div class="card-body" id="zone-coach">
                                     <div class="row mb-3">
                                         <div class="col p-3">
                                             <div class="input-group">
@@ -80,29 +80,34 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <?php if(isset($team->coachs)){
-                                        $cpt_coachs = 0 ;
-                                        foreach ($team->coachs as $coach) :
-                                            $cpt_coachs ++ ?>
-                                            <div class="row row-coach">
-                                                <div class="col">
-                                                    <div class="card card-coach">
-                                                        <div class="card-body p-1 d-flex align-items-center">
-                                                            <div class="row">
-                                                                <div class="col-auto">
-                                                                    <span class="fs-4" id="delete-coach-<?= $cpt_coachs ?>"><i class="fas fa-trash-alt text-danger delete-coach-button"></i></span>
-                                                                </div>
-                                                                <div class="col d-flex align-items-center">
-                                                                    <span class="fw-semibold"><?= $coach['coach_first_name'].' '.$coach['coach_last_name'].' - '.$coach['coach_license_number']?></span>
+                                    <div class="row mb-3 overflow-auto">
+                                        <div class="col" id="zone-coach-list">
+                                            <?php if(isset($team->coachs)){
+                                                $cpt_coachs = 0 ;
+                                                foreach ($team->coachs as $coach) :
+                                                    $cpt_coachs ++ ?>
+                                                    <div class="row row-coach">
+                                                        <div class="col">
+                                                            <div class="card card-coach">
+                                                                <div class="card-body p-1 d-flex align-items-center">
+                                                                    <div class="row">
+                                                                        <div class="col-auto">
+                                                                            <span class="fs-4" id="delete-coach-<?= $cpt_coachs ?>"><i class="fas fa-trash-alt text-danger delete-coach-button"></i></span>
+                                                                        </div>
+                                                                        <div class="col d-flex align-items-center">
+                                                                            <span class="fw-semibold"><?= $coach['coach_first_name'].' '.$coach['coach_last_name'].' - '.$coach['coach_license_number']?></span>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <input type="hidden" name="newCoachs[]" value="<?= $coach['id_member'] ?>">
                                                     </div>
-                                                </div>
-                                                <input type="hidden" name="newCoachs[]" value="<?= $coach['id_member'] ?>">
-                                            </div>
-                                        <?php endforeach;
-                                    } ?>
+                                                <?php endforeach;
+                                            } ?>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                             <!-- END : COACHS -->
@@ -191,7 +196,7 @@
             </div>
             `;
 
-            $('#zone-coach').append(row);
+            $('#zone-coach-list').prepend(row);
             $('#select-coach').empty();
         });
 
@@ -203,8 +208,8 @@
     });
 </script>
 <style>
-    #zone-coach,#zone-division {
-        max-height : 300px;
+    #zone-coach-list,#zone-division-list {
+        max-height : 250px;
     }
 
     .row-coach {
