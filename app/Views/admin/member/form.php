@@ -226,6 +226,47 @@ $(document).ready(function () {
     //initialisation select-coach
     initAjaxSelect2(`#select-coach`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher un équipe'});
 
+    //Gestion de l'ajout d'une équipe
+    $('#add-coach').on('click', function(){
+        let selectedTeam = $('#select-coach').select2('data');
+        console.log(selectedTeam);
+
+        // si aucune équipe n'est sélectionnée lors du clic, on bloque la création de la row
+        if (!selectedTeam.length) {
+            return;
+        }
+
+        //Si une équipe est sélectionnée
+        nbCoachs++;
+        let team=selectedTeam[0] ;
+        let row=`
+            <div class="row row-coach">
+                <div class="col">
+                    <div class="card card-coach">
+                        <div class="card-body p-1 d-flex align-items-center">
+                            <div class="row">
+                               <div class="col-auto">
+                                   <span class="fs-4" id="delete-coach-${nbCoachs}"><i class="fas fa-trash-alt text-danger delete-coach-button"></i></span>
+                               </div>
+                                <div class="col d-flex align-items-center">
+                                    <span class="fw-semibold" >${team.text}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="newCoachs[]" value="${team.id}">
+            </div>
+        `;
+        $('#zone-coach-list').prepend(row);
+        $('#select-coach').empty();
+    });
+
+    // Gestion suppression coach
+    $('#zone-coach').on('click' , '.delete-coach-button', function(){
+        nbCoachs --;
+        $(this).closest('.row-coach').remove();
+    })
 })
 </script>
 <style>
@@ -235,6 +276,11 @@ $(document).ready(function () {
 
     .row-coach {
         margin-bottom: 1rem;
+    }
+
+    .delete-coach-button:hover {
+        scale:1.20;
+        cursor: pointer;
     }
 </style>
 <?= $this->endSection() ?>

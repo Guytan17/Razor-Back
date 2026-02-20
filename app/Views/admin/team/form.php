@@ -166,7 +166,7 @@
             let selectedMember = $('#select-coach').select2('data');
             console.log(selectedMember);
 
-            // si aucun membre n'est sélectionné lors du clic, on fait bloque la création de la row
+            // si aucun membre n'est sélectionné lors du clic, on bloque la création de la row
             if (!selectedMember.length) {
                 return;
             }
