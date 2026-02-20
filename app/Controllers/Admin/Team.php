@@ -43,7 +43,7 @@ class Team extends AdminController
             $title = 'Modifier une équipe';
             $this->addBreadcrumb($title);
             $team = $this->tm->find($id);
-            $team->coachs = $this->coachm->getCoachesById($id,'team');
+            $team->coachs = $this->coachm->getCoachesByIdTeam($id);
 
         } else {
             $title = 'Ajouter une équipe';
@@ -106,7 +106,7 @@ class Team extends AdminController
 
             //Gestion des coachs
             //Récupération des coachs actuels
-            $currentCoachs = array_column($this->coachm->getCoachesById($id,'team'),'id_member');
+            $currentCoachs = array_column($this->coachm->getCoachesByIdTeam($id),'id_member');
 
             if(empty($coachs) || $currentCoachs!=$coachs) {
                 $this->coachm->where('id_team', $team->id)->delete();
@@ -168,5 +168,25 @@ class Team extends AdminController
                 ]);
             }
         }
+    }
+
+    public function searchTeam(){
+        $request = $this->request;
+
+        //Vérification Ajax
+        if(!$request->isAJAX()) {
+            return $this->response->setJSON(['error'=> 'Requête non autorisée']);
+        }
+
+        //Paramètres de recherche
+        $search = $request->getget('search') ?? '';
+        $page = (int) $request->getget('page') ?? 1;
+        $limit = 25;
+
+        //Utilisation de la méthode du Model (via le trait)
+        $result = $this->tm->quickSearchForSelect2($search, $page, $limit, 'name', 'ASC');
+
+        //Réponse JSON
+        return $this->response->setJSON($result);
     }
 }

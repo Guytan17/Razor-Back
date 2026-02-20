@@ -46,7 +46,7 @@ class Member extends AdminController
             //Récupération des données pour l'édition
             $member = $this->mm->withDeleted()->find($id);
             $member->roles = $this->rmm->getRoleMember($id);
-            $member->coach_teams = $this->coachm->getCoachesById($id,'member');
+            $member->coach_teams = $this->coachm->getCoachesByIdMember($id);
         } else {
             $title = 'Ajouter un membre';
             $this->addBreadcrumb('Ajouter un membre');

@@ -107,7 +107,6 @@
                                             } ?>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                             <!-- END : COACHS -->
@@ -160,7 +159,7 @@
         console.log(nbCoachs);
 
         //initialisation select-coach
-        initAjaxSelect2(`#select-coach`, {url:'/admin/member/search', searchFields: 'first_name,last_name',  additionalFields :'license_number'});
+        initAjaxSelect2(`#select-coach`, {url:'/admin/member/search', searchFields: 'first_name,last_name',  additionalFields :'license_number', placeholder:'Rechercher un membre'});
 
         //Gestion ajout coach
         $('#add-coach').on('click', function(){

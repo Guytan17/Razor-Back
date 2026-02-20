@@ -32,6 +32,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('save', 'Team::saveTeam'); // sauvegarde création
         $routes->post('save/(:num)', 'Team::saveTeam/$1'); //sauvegarde édition
         $routes->post('switch-active/(:num)', 'Team::switchActiveTeam/$1');
+        $routes->get('search', 'Team::searchTeam');
     });
 
     //Routes pour la gestion des codes licences
