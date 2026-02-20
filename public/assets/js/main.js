@@ -80,6 +80,7 @@ function initAjaxSelect2(selector, options) {
         delay: 300,                  // Délai en ms avant de lancer la recherche (évite trop de requêtes)
         url: '',                     // URL pour la recherche AJAX (OBLIGATOIRE)
         searchFields: '',            // Champs à rechercher (optionnel, pour info)
+        additionalFields: '',        // Champs supplémentaires à afficher
         cache: true,                 // Met en cache les résultats pour éviter les requêtes répétées
         showDescription: false       // Affiche ou non la description dans les résultats
     };
@@ -158,6 +159,13 @@ function initAjaxSelect2(selector, options) {
                 "<div class='select2-result-item__title'>" +
                 (item.text || 'Sans nom') +
                 "</div>";
+
+            //Ajout du champ additionnel si configuré
+            if (config.additionalFields && item[config.additionalFields]) {
+                html += "<div class='select2-result-item__additionalFields'>" +
+                    item[config.additionalFields] +
+                    "</div>";
+            }
 
             // Ajout de la description si elle existe et si configurée
             if (config.showDescription && item.description) {

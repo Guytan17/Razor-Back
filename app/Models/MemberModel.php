@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\DataTableTrait;
+use App\Traits\Select2Searchable;
 use App\Traits\SlugTrait;
 use CodeIgniter\Model;
 use App\Entities\Member;
@@ -11,6 +12,7 @@ class MemberModel extends Model
 {
     use SlugTrait ;
     use DataTableTrait;
+    use Select2Searchable;
 
     protected $table            = 'member';
     protected $primaryKey       = 'id';
@@ -114,6 +116,12 @@ class MemberModel extends Model
             'groupBy' => 'member.id'
         ];
     }
+
+    protected $select2SearchFields = ['first_name', 'last_name', 'license_number'];
+
+    protected $select2DisplayField = 'first_name,last_name';
+
+    protected $select2AdditionalFields = ['license_number'];
 
     protected function prepareName(array $data) {
         if(isset($data['data']['last_name'],$data['data']['first_name'])) {

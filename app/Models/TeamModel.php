@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\DataTableTrait;
+use App\Traits\Select2Searchable;
 use App\Traits\SlugTrait;
 use CodeIgniter\Model;
 use App\Entities\Team;
@@ -11,6 +12,7 @@ class TeamModel extends Model
 {
     use DataTableTrait;
     use SlugTrait;
+    use Select2Searchable;
 
     protected $table            = 'team';
     protected $primaryKey       = 'id';
@@ -92,6 +94,9 @@ class TeamModel extends Model
             deleted_at',
         ];
     }
+
+    protected $select2SearchFields = ['name'];
+    protected $select2DisplayField = 'name';
 
     public function reactiveTeam($id) : bool{
         return $this->builder()

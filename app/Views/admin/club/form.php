@@ -16,11 +16,11 @@
                     <div class="row mb-2">
                         <div class="col-md-6">
                             <label class="form-label" for="code">Code FBI du club <span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" name="code" id="code" value="<?= esc($club['code']) ; ?>" required>
+                            <input class="form-control" type="text" name="code" id="code" value="<?= esc(isset($club['code'])) ; ?>" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label" for="name">Nom du club <span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" name="name" id="name" value="<?= esc($club['name']) ; ?>" required>
+                            <input class="form-control" type="text" name="name" id="name" value="<?= esc(isset($club['name'])) ; ?>" required>
                         </div>
                     </div>
                     <div class="row mb-3">

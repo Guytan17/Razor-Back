@@ -109,7 +109,7 @@
                             <div class="card-header text-center">
                                 <span class="card-title"><span class="fw-bold h5">Équipes</span> <span class="fw-semibold h6">(joueur)</span></span>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body" id="zone-player">
 
                             </div>
                         </div>
@@ -121,8 +121,43 @@
                             <div class="card-header text-center">
                                 <span class="card-title"><span class="fw-bold h5">Équipes</span> <span class="fw-semibold h6">(coach)</span></span>
                             </div>
-                            <div class="card-body">
-
+                            <div class="card-body" id="zone-coach">
+                                <div class="row mb-3">
+                                    <div class="col p-3">
+                                        <div class="input-group">
+                                            <select class="form-select select-coach" id="select-coach">
+                                            </select>
+                                            <span class="input-group-text btn btn-sm btn-primary d-flex align-items-center" id="add-coach"><i class="fas fa-plus"></i> Ajouter</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3 overflow-auto">
+                                    <div class="col" id="zone-coach-list">
+                                        <?php if(isset($member->coach_teams)){
+                                            $cpt_teams = 0 ;
+                                            foreach ($member->coach_teams as $team) :
+                                                $cpt_teams ++ ?>
+                                                <div class="row row-coach">
+                                                    <div class="col">
+                                                        <div class="card card-coach">
+                                                            <div class="card-body p-1 d-flex align-items-center">
+                                                                <div class="row">
+                                                                    <div class="col-auto">
+                                                                        <span class="fs-4" id="delete-coach-<?= $cpt_teams ?>"><i class="fas fa-trash-alt text-danger delete-coach-button"></i></span>
+                                                                    </div>
+                                                                    <div class="col d-flex align-items-center">
+                                                                        <span class="fw-semibold"><?= $team['team_name'] ?></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <input type="hidden" name="coachs[]" value="<?= $team['id_team'] ?>">
+                                                </div>
+                                            <?php endforeach;
+                                        } ?>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -184,11 +219,68 @@
 <?php echo form_close() ?>
 </div>
 <script>
+$(document).ready(function () {
+    let nbCoachs = $('#zone-coach .card-coach').length ;
+    console.log(nbCoachs);
 
+    //initialisation select-coach
+    initAjaxSelect2(`#select-coach`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher un équipe'});
+
+    //Gestion de l'ajout d'une équipe
+    $('#add-coach').on('click', function(){
+        let selectedTeam = $('#select-coach').select2('data');
+        console.log(selectedTeam);
+
+        // si aucune équipe n'est sélectionnée lors du clic, on bloque la création de la row
+        if (!selectedTeam.length) {
+            return;
+        }
+
+        //Si une équipe est sélectionnée
+        nbCoachs++;
+        let team=selectedTeam[0] ;
+        let row=`
+            <div class="row row-coach">
+                <div class="col">
+                    <div class="card card-coach">
+                        <div class="card-body p-1 d-flex align-items-center">
+                            <div class="row">
+                               <div class="col-auto">
+                                   <span class="fs-4" id="delete-coach-${nbCoachs}"><i class="fas fa-trash-alt text-danger delete-coach-button"></i></span>
+                               </div>
+                                <div class="col d-flex align-items-center">
+                                    <span class="fw-semibold" >${team.text}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="coachs[]" value="${team.id}">
+            </div>
+        `;
+        $('#zone-coach-list').prepend(row);
+        $('#select-coach').empty();
+    });
+
+    // Gestion suppression coach
+    $('#zone-coach').on('click' , '.delete-coach-button', function(){
+        nbCoachs --;
+        $(this).closest('.row-coach').remove();
+    })
+})
 </script>
 <style>
-    .zone-team {
-        min-height: 150px;
+    #zone-player,#zone-coach-list {
+        max-height: 250px;
+    }
+
+    .row-coach {
+        margin-bottom: 1rem;
+    }
+
+    .delete-coach-button:hover {
+        scale:1.20;
+        cursor: pointer;
     }
 </style>
 <?= $this->endSection() ?>

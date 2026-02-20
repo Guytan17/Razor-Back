@@ -25,7 +25,7 @@
     <!-- START : ZONE INDEX DES MEMBRES -->
     <div class="row">
         <div class="col">
-            <div class="card">
+            <div class="card overflow-auto">
                 <div class="card-header hstack text-center">
                     <div class="card-title h3">Listes des membres du club</div>
                     <a href="" class="btn btn-sm btn-primary ms-auto p-1 mx-1">
@@ -40,7 +40,7 @@
                         <thead>
                         <tr>
                             <th>Actions</th>
-                            <th>ID membre</th>
+                            <th>ID</th>
                             <th>Nom</th>
                             <th>Prénom</th>
                             <th>Rôle</th>

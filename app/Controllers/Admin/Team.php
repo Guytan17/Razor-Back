@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\CategoryModel;
+use App\Models\CoachModel;
 use App\Models\TeamModel;
 use App\Models\SeasonModel;
 use App\Models\ClubModel;
@@ -15,13 +16,14 @@ class Team extends AdminController
     protected $sm;
     protected $cm;
     protected $catm;
+    protected $coachm;
 
     public function __construct(){
         $this->tm = new TeamModel();
         $this->cm = new ClubModel();
         $this->catm = new CategoryModel();
         $this->sm = new SeasonModel();
-
+        $this->coachm = new CoachModel();
     }
     public function index()
     {
@@ -40,6 +42,9 @@ class Team extends AdminController
         if($id != null) {
             $title = 'Modifier une équipe';
             $this->addBreadcrumb($title);
+            $team = $this->tm->find($id);
+            $team->coachs = $this->coachm->getCoachesByIdTeam($id);
+
         } else {
             $title = 'Ajouter une équipe';
             $this->addBreadcrumb($title);
@@ -50,22 +55,26 @@ class Team extends AdminController
             'seasons' => $seasons,
             'clubs' => $clubs,
             'categories' => $categories,
+            'team' => $team ?? null,
         ];
 
         return $this->render('admin/team/form',$data);
     }
 
     public function saveTeam ($id=null) {
+//        $data=$this->request->getPost();
+//        dd($data);
         try {
             //Récupération des données
             $dataTeam = [
                 'id' => $id,
                 'name' => $this->request->getPost('name'),
+                'id_club' => $this->request->getPost('id_club'),
                 'id_season' => $this->request->getPost('id_season'),
                 'id_category' => $this->request->getPost('id_category'),
-                'id_club' => $this->request->getPost('id_club'),
-                'id_team' => $this->request->getPost('id_team'),
             ];
+
+            $coachs = $this->request->getPost('coachs') ?? [];
 
             //Préparation de la variable pour savoir si c'est une création
             $newTeam = empty($dataTeam['id']);
@@ -83,14 +92,36 @@ class Team extends AdminController
             $team->fill($dataTeam);
 
             //Enregistrement en BDD
-            if(!$this->tm->save($team)){
-                $this->error(implode('<br>',$this->tm->errors()));
-                return $this->redirect('/admin/team');
+            if($newTeam || $team->hasChanged()) {
+                if(!$this->tm->save($team)){
+                    $this->error(implode('<br>',$this->tm->errors()));
+                    return $this->redirect('/admin/team');
+                }
+            }
+
+            //Récupération de l'ID
+            if($newTeam) {
+                $team->id = $this->tm->getInsertID();
+            }
+
+            //Gestion des coachs
+            //Récupération des coachs actuels
+            $currentCoachs = array_column($this->coachm->getCoachesByIdTeam($id),'id_member');
+
+            if(empty($coachs) || $currentCoachs!=$coachs) {
+                $this->coachm->where('id_team', $team->id)->delete();
+                foreach ($coachs as $coach) {
+                    $dataCoach = [
+                        'id_member' => intval($coach),
+                        'id_team' => $team->id,
+                    ];
+
+                    $this->coachm->insert($dataCoach);
+                }
             }
 
             //Récupération ID et gestion des messages de validation
             if($newTeam) {
-                $id = $this->tm->getInsertID();
                 $this->success('Équipe créée avec succès');
             } else {
                 $this->success('Équipe modifiée avec succès');
@@ -137,5 +168,25 @@ class Team extends AdminController
                 ]);
             }
         }
+    }
+
+    public function searchTeam(){
+        $request = $this->request;
+
+        //Vérification Ajax
+        if(!$request->isAJAX()) {
+            return $this->response->setJSON(['error'=> 'Requête non autorisée']);
+        }
+
+        //Paramètres de recherche
+        $search = $request->getget('search') ?? '';
+        $page = (int) $request->getget('page') ?? 1;
+        $limit = 25;
+
+        //Utilisation de la méthode du Model (via le trait)
+        $result = $this->tm->quickSearchForSelect2($search, $page, $limit, 'name', 'ASC');
+
+        //Réponse JSON
+        return $this->response->setJSON($result);
     }
 }

@@ -7,6 +7,8 @@ use App\Models\MemberModel;
 use App\Models\RoleModel;
 use App\Models\LicenseCodeModel;
 use App\Models\RoleMemberModel;
+use App\Models\CoachModel;
+
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Member extends AdminController
@@ -16,12 +18,14 @@ class Member extends AdminController
     protected $rm;
     protected $lcm;
     protected $rmm;
+    protected $coachm;
 
     public function __construct(){
         $this->mm = new MemberModel();
         $this->rm = new RoleModel();
         $this->lcm = new LicenseCodeModel();
         $this->rmm = new RoleMemberModel();
+        $this->coachm = new CoachModel();
     }
     public function index()
     {
@@ -42,6 +46,7 @@ class Member extends AdminController
             //Récupération des données pour l'édition
             $member = $this->mm->withDeleted()->find($id);
             $member->roles = $this->rmm->getRoleMember($id);
+            $member->coach_teams = $this->coachm->getCoachesByIdMember($id);
         } else {
             $title = 'Ajouter un membre';
             $this->addBreadcrumb('Ajouter un membre');
@@ -60,8 +65,8 @@ class Member extends AdminController
             //Récupération des données principales
             $dataMember = [
                 'id' => $id,
-                'first_name' => $this->request->getPost('first_name'),
-                'last_name' => $this->request->getPost('last_name'),
+                'first_name' => ucwords($this->request->getPost('first_name')),
+                'last_name' => strtoupper($this->request->getPost('last_name')),
                 'date_of_birth' => $this->request->getPost('date_of_birth'),
                 'id_license_code' => $this->request->getPost('license_code'),
                 'balance' => $this->request->getPost('balance'),
@@ -83,7 +88,7 @@ class Member extends AdminController
             ];
 
             //Gérer Équipes (coach et joueurs)
-
+            $coachs = $this->request->getPost('coachs') ?? [];
 
             //préparation de la variable pour savoir si c'est une création
             $newMember = empty($dataMember['id']);
@@ -120,10 +125,26 @@ class Member extends AdminController
                 $this->rmm->where('id_member', $id)->delete();
                 foreach($roles as $role) {
                     $dataRole = [
-                        'id_member' => intval($id),
+                        'id_member' => intval($member->id),
                         'id_role' => intval($role)
                     ];
                     $this->rmm->insert($dataRole);
+                }
+            }
+
+            //Gestion des coachs
+            //Récupération des coachs actuels
+            $currentCoachs = array_column($this->coachm->getCoachesByIdMember($id),'id_team');
+
+            if(empty($coachs) || $currentCoachs!=$coachs) {
+                $this->coachm->where('id_member', $member->id)->delete();
+                foreach ($coachs as $coach) {
+                    $dataCoach = [
+                        'id_member' => $member->id,
+                        'id_team' => intval($coach),
+                    ];
+
+                    $this->coachm->insert($dataCoach);
                 }
             }
 
@@ -174,5 +195,25 @@ class Member extends AdminController
                 ]);
             }
         }
+    }
+
+    public function searchMember(){
+        $request = $this->request;
+
+        //Vérification Ajax
+        if(!$request->isAJAX()) {
+            return $this->response->setJSON(['error'=> 'Requête non autorisée']);
+        }
+
+        //Paramètres de recherche
+        $search = $request->getget('search') ?? '';
+        $page = (int) $request->getget('page') ?? 1;
+        $limit = 25;
+
+        //Utilisation de la méthode du Model (via le trait)
+        $result = $this->mm->quickSearchForSelect2($search, $page, $limit, 'last_name', 'ASC');
+
+        //Réponse JSON
+        return $this->response->setJSON($result);
     }
 }
