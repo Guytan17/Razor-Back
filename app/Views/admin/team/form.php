@@ -127,7 +127,31 @@
                                     </div>
                                     <div class="row mb-3 overflow-auto">
                                         <div class="col" id="zone-player-list">
-
+                                            <?php if(isset($team->players)){
+                                                $cpt_players = 0 ;
+                                                foreach ($team->players as $player) :
+                                                    $cpt_players ++ ?>
+                                                    <div class="row row-player">
+                                                        <div class="col">
+                                                            <div class="card card-player">
+                                                                <div class="card-body p-1 d-flex align-items-center">
+                                                                    <div class="row">
+                                                                        <div class="col-auto">
+                                                                            <span class="fs-4" id="delete-player-<?= $cpt_players ?>"><i class="fas fa-trash-alt text-danger
+                                                                            delete-player-button"></i></span>
+                                                                        </div>
+                                                                        <div class="col d-flex align-items-center">
+                                                                            <span class="fw-semibold"><?= $player['player_first_name'].' '.$player['player_last_name'].' - '?> <span
+                                                                                        class="fst-italic"><?=$player['player_license_number'??'Pas de licence']?></span></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <input type="hidden" name="players[]" value="<?= $player['id_member'] ?>">
+                                                    </div>
+                                                <?php endforeach;
+                                            } ?>
                                         </div>
                                     </div>
                                 </div>

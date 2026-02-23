@@ -47,6 +47,7 @@ class Team extends AdminController
             $this->addBreadcrumb($title);
             $team = $this->tm->find($id);
             $team->coachs = $this->coachm->getCoachesByIdTeam($id);
+            $team->players = $this->playerm->getPlayersByIdTeam($id);
 
         } else {
             $title = 'Ajouter une équipe';
@@ -112,6 +113,7 @@ class Team extends AdminController
             //Récupération des coachs actuels
             $currentCoachs = array_column($this->coachm->getCoachesByIdTeam($id),'id_member');
 
+            //Suppression des coachs actuels et enregistrement des nouveaux
             if(empty($coachs) || $currentCoachs!=$coachs) {
                 $this->coachm->where('id_team', $team->id)->delete();
                 foreach ($coachs as $coach) {
@@ -126,13 +128,20 @@ class Team extends AdminController
 
             //Gestion des joueurs
             //Récupération des joueurs actuels
-            foreach ($players as $player) {
-                $dataPlayer = [
-                    'id_member'=>intval($player),
-                    'id_team' => $team->id,
-                ];
-                $this->playerm->insert($dataPlayer);
+            $currentPlayers = array_column($this->playerm->getPlayersByIdTeam($id),'id_member');
+
+            //Suppression des joueurs actuels et enregistrement des nouveaux
+            if(empty($players) || $currentPlayers!=$players) {
+                $this->playerm->where('id_team', $team->id)->delete();
+                foreach ($players as $player) {
+                    $dataPlayer = [
+                        'id_member'=>intval($player),
+                        'id_team' => $team->id,
+                    ];
+                    $this->playerm->insert($dataPlayer);
+                }
             }
+
 
             //Récupération ID et gestion des messages de validation
             if($newTeam) {

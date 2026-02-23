@@ -29,4 +29,18 @@ class PlayerModel extends Model
             'integer' => 'L\'ID de l\'équipe doit être un entier',
         ],
     ];
+
+    public function getPlayersByIdTeam($id) {
+        $this->select('player.*,member.first_name as player_first_name,member.last_name as player_last_name, member.license_number as player_license_number');
+        $this->where('player.id_team',$id);
+        $this->join('member', 'player.id_member = member.id');
+        return $this->findAll();
+    }
+
+    public function getPlayersByIdMember($id) {
+        $this->select('player.*,team.name as team_name');
+        $this->where('player.id_member',$id);
+        $this->join('team', 'player.id_team = team.id');
+        return $this->findAll();
+    }
 }
