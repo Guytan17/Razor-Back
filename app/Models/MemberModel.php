@@ -20,7 +20,7 @@ class MemberModel extends Model
     protected $returnType       = Member::class;
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['first_name', 'last_name', 'slug', 'date_of_birth', 'license_number', 'id_license_code','license_status','balance'];
+    protected $allowedFields    = ['first_name', 'last_name', 'slug', 'date_of_birth', 'license_number', 'id_license_code','license_status','balance','overqualified','available','details'];
     // Dates
     protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
@@ -38,6 +38,9 @@ class MemberModel extends Model
         'id_license_code' => 'permit_empty|integer',
         'license_status'=> 'integer|in_list[0,1]',
         'balance' => 'permit_empty|integer',
+        'overqualified' => 'required|in_list[0,1,2]',
+        'available' => 'required|in_list[0,1]',
+        'details' => 'permit_empty',
 
     ];
     protected $validationMessages   = [
@@ -69,6 +72,14 @@ class MemberModel extends Model
         'balance' => [
             'integer' => 'Le montant doit être un nombre entier'
         ],
+        'overqualified' => [
+            'required' => 'Le niveau du surclassement est obligatoire',
+            'in_list' => 'Le niveau du surclassement doit être 0(pas de surclassement), 1(suclassement simple) ou 2 (surclassement double)',
+        ],
+        'available' => [
+            'required' => 'La disponibilité est obligatoire',
+            'in_list' => 'La disponibilité doit être 0(indisponible) ou 1 (disponible)',
+        ]
     ];
     // Callbacks
     protected $beforeInsert   = ['prepareName','generateUniqueSlugName','unsetVirtualName'];

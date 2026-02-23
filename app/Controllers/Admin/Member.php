@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\MemberModel;
+use App\Models\PlayerModel;
 use App\Models\RoleModel;
 use App\Models\LicenseCodeModel;
 use App\Models\RoleMemberModel;
@@ -19,6 +20,7 @@ class Member extends AdminController
     protected $lcm;
     protected $rmm;
     protected $coachm;
+    protected $playerm;
 
     public function __construct(){
         $this->mm = new MemberModel();
@@ -26,6 +28,7 @@ class Member extends AdminController
         $this->lcm = new LicenseCodeModel();
         $this->rmm = new RoleMemberModel();
         $this->coachm = new CoachModel();
+        $this->playerm = new PlayerModel();
     }
     public function index()
     {
@@ -47,6 +50,7 @@ class Member extends AdminController
             $member = $this->mm->withDeleted()->find($id);
             $member->roles = $this->rmm->getRoleMember($id);
             $member->coach_teams = $this->coachm->getCoachesByIdMember($id);
+            $member->player_teams = $this->playerm->getPlayersByIdMember($id);
         } else {
             $title = 'Ajouter un membre';
             $this->addBreadcrumb('Ajouter un membre');
@@ -70,6 +74,8 @@ class Member extends AdminController
                 'date_of_birth' => $this->request->getPost('date_of_birth'),
                 'id_license_code' => $this->request->getPost('license_code'),
                 'balance' => $this->request->getPost('balance'),
+                'overqualified' => $this->request->getPost('overqualified'),
+                'details' => $this->request->getPost('availability_details'),
             ];
             //Gestion du statut de la licence
              $license_status = $this->request->getPost('license_status');
@@ -77,6 +83,14 @@ class Member extends AdminController
                  $dataMember['license_status'] = 1;
              } else {
                  $dataMember['license_status'] = 0;
+             }
+
+             //Gestion de la disponibilité du membre
+            $available = $this->request->getPost('available');
+             if($available === "on"){
+                 $dataMember['available'] = 1;
+             } else {
+                 $dataMember['available'] = 0;
              }
 
             //Récupération des rôles
@@ -89,12 +103,14 @@ class Member extends AdminController
 
             //Gérer Équipes (coach et joueurs)
             $coachs = $this->request->getPost('coachs') ?? [];
+            $players = $this->request->getPost('players') ?? [];
 
             //préparation de la variable pour savoir si c'est une création
             $newMember = empty($dataMember['id']);
 
             //Création de l'objet member
             $member = $newMember ? new \App\Entities\Member() : $this->mm->withDeleted()->find($id);
+
 
 
             //Si je n'ai pas de membre et que je ne suis pas en mode création
@@ -145,6 +161,22 @@ class Member extends AdminController
                     ];
 
                     $this->coachm->insert($dataCoach);
+                }
+            }
+
+            //Gestion des joueurs
+            //Récupération des joueurs actuels
+            $currentPlayers = array_column($this->playerm->getPlayersByIdMember($id),'id_team');
+
+            if(empty($players) || $currentPlayers!=$players) {
+                $this->playerm->where('id_member', $member->id)->delete();
+                foreach ($players as $player) {
+                    $dataPlayer = [
+                        'id_member' => $member->id,
+                        'id_team' => intval($player),
+                    ];
+
+                    $this->playerm->insert($dataPlayer);
                 }
             }
 
