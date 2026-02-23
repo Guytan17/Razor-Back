@@ -97,9 +97,8 @@ class Member extends AdminController
             $roles = $this->request->getPost('roles');
 
             // Récupération des données de contact
-            $dataContact = [
-
-            ];
+            $contacts = $this->request->getPost('contacts');
+            dd($contacts);
 
             //Gérer Équipes (coach et joueurs)
             $coachs = $this->request->getPost('coachs') ?? [];
