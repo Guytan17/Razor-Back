@@ -63,39 +63,40 @@
                     <!-- END : ZONE POUR AJOUTER UN CONTACT -->
                     <!-- START : ZONE CONCERNANT LA LICENCE -->
                     <div class="row">
-                        <div class="col-md-6 hstack">
-                            <div class="col-auto">
-                                <label class="form-label ms-2">Statut de la licence</label>
-                                <div class="form-check form-switch m-2">
-                                    <input class="form-check-input form-switch" type="checkbox" role="switch" name="license_status" id="license_status">
-                                    <label class="form-check-label mx-2" for="license_status"> Non-validée</label>
-                                </div>
-                            </div>
-                            <div class="col mx-2">
-                                <label class="form-label" for="license_code">Code licence</label>
-                                <select class="form-select" name="license_code" id="license_code" required>
-                                    <?php foreach($license_codes as $license_code): ?>
-                                        <option value=<?=esc($license_code['id'])?> <?= isset($member) && $license_code['id'] == $member->id_license_code ? 'selected' : '' ?>><?=esc($license_code['code'])
-                                            ?> -
-                                            <?=
-                                            esc($license_code['explanation']) ?></option>
-                                    <?php endforeach; ?>
-                                </select>
+                        <div class="col-md-6 d-inline-flex align-items-center mb-3">
+                            <label class="form-label m-2">Statut de la licence</label>
+                            <div class="form-check form-switch mx-2">
+                                <input class="form-check-input form-switch" type="checkbox" role="switch" name="license_status" id="license_status" <?= isset($member->license_status) &&
+                                $member->license_status == 1 ? 'checked' : '' ?>>
+                                <label class="form-check-label mx-2" for="license_status" id="license_status_label">
+                                    <?= isset($member->license_status) && $member->license_status == 1 ? 'Validée' : 'Non-validée' ?>
+                                </label>
                             </div>
                         </div>
-                        <div class="col-md-6 hstack">
-                            <div class="col-auto mx-2">
-                                <label class="form-label" for="overqualified">Surclassement</label>
-                                <select class="form-select" name="overqualified" id="overqualified">
-                                    <option value="0" selected>Aucun</option>
-                                    <option value="1">Simple</option>
-                                    <option value="2">Double</option>
-                                </select>
-                            </div>
-                            <div class="col m-2">
-                                <label class="form-label" for="license_number">Numéro de licence</label>
-                                <input class="form-control" type="text" name="license_number" id="license_number" value="<?= esc($member->license_number ?? '') ?>">
-                            </div>
+                        <div class="col-md-6 d-inline-flex align-items-center mb-3">
+                            <label class="form-label text-nowrap mx-2" for="license_code">Code licence</label>
+                            <select class="form-select" name="license_code" id="license_code" required>
+                                <?php foreach($license_codes as $license_code): ?>
+                                    <option value=<?=esc($license_code['id'])?> <?= isset($member) && $license_code['id'] == $member->id_license_code ? 'selected' : '' ?>><?=esc($license_code['code'])
+                                        ?> -
+                                        <?=
+                                        esc($license_code['explanation']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 d-inline-flex align-items-center mb-3">
+                            <label class="form-label text-nowrap mx-2" for="overqualified">Surclassement</label>
+                            <select class="form-select" name="overqualified" id="overqualified">
+                                <option value="0" <?= isset($member->overqualified) && $member->overqualified == 0 ? 'selected' : '' ?>>Aucun</option>
+                                <option value="1" <?= isset($member->overqualified) && $member->overqualified == 1 ? 'selected' : '' ?>>Simple</option>
+                                <option value="2" <?= isset($member->overqualified) && $member->overqualified == 2 ? 'selected' : '' ?>>Double</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 d-inline-flex align-items-center mb-3">
+                            <label class="form-label text-nowrap mx-2" for="license_number">Numéro de licence</label>
+                            <input class="form-control" type="text" name="license_number" id="license_number" value="<?= esc($member->license_number ?? '') ?>">
                         </div>
                     </div>
                     <!-- END : ZONE CONCERNANT LA LICENCE -->
@@ -169,19 +170,19 @@
                     <div class="col-md-6 hstack">
                         <div class="col mb-2">
                             <label class="form-label" for="balance">Dette (en €)</label>
-                            <input class="form-control" type="number" name="balance" id="balance" min="0" step="0.5">
+                            <input class="form-control" type="number" name="balance" id="balance" min="0" step="0.5" value="<?= $member->balance ?? 0 ?>">
                         </div>
                         <div class="col-md-auto ms-2">
                             <label class="form-label ms-2">Disponibilité</label>
                             <div class="form-check form-switch m-2">
-                                <input class="form-check-input form-switch" type="checkbox" role="switch" name="available" id="available">
-                                <label class="form-check-label mx-2" for="available"> Non-disponible</label>
+                                <input class="form-check-input form-switch" type="checkbox" role="switch" name="available" id="available" <?= isset($member->available) && $member->available == 1 ? 'checked' : '' ?>>
+                                <label class="form-check-label mx-2" for="available"><?= isset($member->available) && $member->available == 1 ? 'Disponible' : 'Indisponible' ?></label>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label" for="availability_details">Détails de l'indisponibilité</label>
-                        <textarea class="form-control" name="availability_details" id="availability_details" rows="3"></textarea>
+                        <textarea class="form-control" name="availability_details" id="availability_details" rows="3"><?= $member->details ?? '' ?></textarea>
                     </div>
                 </div>
                 <!-- START : STATS DU JOUEUR -->
@@ -225,6 +226,15 @@ $(document).ready(function () {
 
     //initialisation select-coach
     initAjaxSelect2(`#select-coach`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher un équipe'});
+
+    //Gestion du clic sur le switch pour le statut de la licence
+    $('#license_status').on('change', function(){
+        if($(this).is(':checked')){
+            $('#license_status_label').text('Validée');
+        } else {
+            $('#license_status_label').text('Non-validée');
+        }
+    });
 
     //Gestion de l'ajout d'une équipe
     $('#add-coach').on('click', function(){
