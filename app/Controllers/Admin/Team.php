@@ -5,6 +5,7 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Models\CategoryModel;
 use App\Models\CoachModel;
+use App\Models\PlayerModel;
 use App\Models\TeamModel;
 use App\Models\SeasonModel;
 use App\Models\ClubModel;
@@ -17,6 +18,7 @@ class Team extends AdminController
     protected $cm;
     protected $catm;
     protected $coachm;
+    protected $playerm;
 
     public function __construct(){
         $this->tm = new TeamModel();
@@ -24,6 +26,7 @@ class Team extends AdminController
         $this->catm = new CategoryModel();
         $this->sm = new SeasonModel();
         $this->coachm = new CoachModel();
+        $this->playerm = new PlayerModel();
     }
     public function index()
     {
@@ -75,6 +78,7 @@ class Team extends AdminController
             ];
 
             $coachs = $this->request->getPost('coachs') ?? [];
+            $players= $this->request->getPost('players') ?? [];
 
             //Préparation de la variable pour savoir si c'est une création
             $newTeam = empty($dataTeam['id']);
@@ -118,6 +122,16 @@ class Team extends AdminController
 
                     $this->coachm->insert($dataCoach);
                 }
+            }
+
+            //Gestion des joueurs
+            //Récupération des joueurs actuels
+            foreach ($players as $player) {
+                $dataPlayer = [
+                    'id_member'=>intval($player),
+                    'id_team' => $team->id,
+                ];
+                $this->playerm->insert($dataPlayer);
             }
 
             //Récupération ID et gestion des messages de validation

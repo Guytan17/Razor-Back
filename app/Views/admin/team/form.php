@@ -261,7 +261,7 @@
         });
 
         // Gestion suppression joueur
-        $('#zone-player').on('click' , '.delete-player-button', function(){
+        $('#zone-player').on('click','.delete-player-button',function(){
             nbPlayers --;
             $(this).closest('.row-player').remove();
         })

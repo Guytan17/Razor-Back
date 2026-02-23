@@ -70,6 +70,8 @@ class Member extends AdminController
                 'date_of_birth' => $this->request->getPost('date_of_birth'),
                 'id_license_code' => $this->request->getPost('license_code'),
                 'balance' => $this->request->getPost('balance'),
+                'overqualified' => $this->request->getPost('overqualified'),
+                'details' => $this->request->getPost('availability_details'),
             ];
             //Gestion du statut de la licence
              $license_status = $this->request->getPost('license_status');
@@ -77,6 +79,14 @@ class Member extends AdminController
                  $dataMember['license_status'] = 1;
              } else {
                  $dataMember['license_status'] = 0;
+             }
+
+             //Gestion de la disponibilité du membre
+            $available = $this->request->getPost('available');
+             if($available === "on"){
+                 $dataMember['available'] = 1;
+             } else {
+                 $dataMember['available'] = 0;
              }
 
             //Récupération des rôles
@@ -95,6 +105,7 @@ class Member extends AdminController
 
             //Création de l'objet member
             $member = $newMember ? new \App\Entities\Member() : $this->mm->withDeleted()->find($id);
+
 
 
             //Si je n'ai pas de membre et que je ne suis pas en mode création
