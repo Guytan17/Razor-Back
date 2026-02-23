@@ -141,8 +141,7 @@
                                                                             delete-player-button"></i></span>
                                                                         </div>
                                                                         <div class="col d-flex align-items-center">
-                                                                            <span class="fw-semibold"><?= $player['player_first_name'].' '.$player['player_last_name'].' - '?> <span
-                                                                                        class="fst-italic"><?=$player['player_license_number'??'Pas de licence']?></span></span>
+                                                                            <span class="fw-semibold"><?= $player['player_first_name'].' '.$player['player_last_name'].' - '?> <span class="fst-italic"><?=$player['player_license_number'??'Pas de licence']?></span></span>
                                                                         </div>
                                                                     </div>
                                                                 </div>

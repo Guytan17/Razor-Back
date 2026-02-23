@@ -111,7 +111,42 @@
                                 <span class="card-title"><span class="fw-bold h5">Équipes</span> <span class="fw-semibold h6">(joueur)</span></span>
                             </div>
                             <div class="card-body" id="zone-player">
-
+                                <div class="row mb-3">
+                                    <div class="col p-3">
+                                        <div class="input-group">
+                                            <select class="form-select select-player" id="select-player">
+                                            </select>
+                                            <span class="input-group-text btn btn-sm btn-primary d-flex align-items-center" id="add-player"><i class="fas fa-plus"></i> Ajouter</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3 overflow-auto">
+                                    <div class="col" id="zone-player-list">
+                                        <?php if(isset($member->player_teams)){
+                                            $cpt_teams = 0 ;
+                                            foreach ($member->player_teams as $team) :
+                                                $cpt_teams ++ ?>
+                                                <div class="row row-player">
+                                                    <div class="col">
+                                                        <div class="card card-player">
+                                                            <div class="card-body p-1 d-flex align-items-center">
+                                                                <div class="row">
+                                                                    <div class="col-auto">
+                                                                        <span class="fs-4" id="delete-player-<?= $cpt_teams ?>"><i class="fas fa-trash-alt text-danger delete-player-button"></i></span>
+                                                                    </div>
+                                                                    <div class="col d-flex align-items-center">
+                                                                        <span class="fw-semibold"><?= $team['team_name'] ?></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <input type="hidden" name="players[]" value="<?= $team['id_team'] ?>">
+                                                </div>
+                                            <?php endforeach;
+                                        } ?>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -222,10 +257,14 @@
 <script>
 $(document).ready(function () {
     let nbCoachs = $('#zone-coach .card-coach').length ;
-    console.log(nbCoachs);
+    let nbPlayers = $('#zone-player .card-player').length ;
+    console.log(nbCoachs, nbPlayers);
 
     //initialisation select-coach
     initAjaxSelect2(`#select-coach`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher un équipe'});
+
+    //initialisation select-player
+    initAjaxSelect2(`#select-player`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher un équipe'});
 
     //Gestion du clic sur le switch pour le statut de la licence
     $('#license_status').on('change', function(){
@@ -236,7 +275,7 @@ $(document).ready(function () {
         }
     });
 
-    //Gestion de l'ajout d'une équipe
+    //Gestion de l'ajout d'une équipe (coach)
     $('#add-coach').on('click', function(){
         let selectedTeam = $('#select-coach').select2('data');
         console.log(selectedTeam);
@@ -277,6 +316,48 @@ $(document).ready(function () {
         nbCoachs --;
         $(this).closest('.row-coach').remove();
     })
+
+    //Gestion de l'ajout d'une équipe (joueur)
+    $('#add-player').on('click', function(){
+        let selectedTeam = $('#select-player').select2('data');
+        console.log(selectedTeam);
+
+        // si aucune équipe n'est sélectionnée lors du clic, on bloque la création de la row
+        if (!selectedTeam.length) {
+            return;
+        }
+
+        //Si une équipe est sélectionnée
+        nbPlayers++;
+        let team=selectedTeam[0] ;
+        let row=`
+            <div class="row row-player">
+                <div class="col">
+                    <div class="card card-player">
+                        <div class="card-body p-1 d-flex align-items-center">
+                            <div class="row">
+                               <div class="col-auto">
+                                   <span class="fs-4" id="delete-player-${nbPlayers}"><i class="fas fa-trash-alt text-danger delete-player-button"></i></span>
+                               </div>
+                                <div class="col d-flex align-items-center">
+                                    <span class="fw-semibold" >${team.text}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="players[]" value="${team.id}">
+            </div>
+        `;
+        $('#zone-player-list').prepend(row);
+        $('#select-player').empty();
+    });
+
+    // Gestion suppression joueur
+    $('#zone-player').on('click' , '.delete-player-button', function(){
+        nbPlayers --;
+        $(this).closest('.row-player').remove();
+    })
 })
 </script>
 <style>
@@ -288,7 +369,7 @@ $(document).ready(function () {
         margin-bottom: 1rem;
     }
 
-    .delete-coach-button:hover {
+    .delete-coach-button:hover,.delete-player-button:hover {
         scale:1.20;
         cursor: pointer;
     }
