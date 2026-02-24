@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Models\ContactModel;
 use App\Models\MemberModel;
 use App\Models\PlayerModel;
 use App\Models\RoleModel;
@@ -21,6 +22,7 @@ class Member extends AdminController
     protected $rmm;
     protected $coachm;
     protected $playerm;
+    protected $contactm;
 
     public function __construct(){
         $this->mm = new MemberModel();
@@ -29,6 +31,7 @@ class Member extends AdminController
         $this->rmm = new RoleMemberModel();
         $this->coachm = new CoachModel();
         $this->playerm = new PlayerModel();
+        $this->contactm = new ContactModel();
     }
     public function index()
     {
@@ -98,7 +101,6 @@ class Member extends AdminController
 
             // Récupération des données de contact
             $contacts = $this->request->getPost('contacts');
-            dd($contacts);
 
             //Gérer Équipes (coach et joueurs)
             $coachs = $this->request->getPost('coachs') ?? [];
@@ -144,6 +146,22 @@ class Member extends AdminController
                         'id_role' => intval($role)
                     ];
                     $this->rmm->insert($dataRole);
+                }
+            }
+
+            //Gestion des contacts
+            if(isset($contacts)) {
+                foreach($contacts as $contact) {
+                    $dataContact = [
+                        'entity_type' => 'member',
+                        'entity_id' => $member->id,
+                        'phone_number' => $contact['phone_number'],
+                        'mail' => $contact['mail'],
+                        'details' => $contact['details']
+                    ];
+                    if(!$this->contactm->insert($dataContact)){
+                        $this->error(implode('<br>',$this->contactm->errors()));
+                    }
                 }
             }
 

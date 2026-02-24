@@ -58,31 +58,37 @@
                         </div>
                     </div>
                     <div class="zone-contact">
-                        <div class="row mb-3 row-contact">
-                            <div class="col-md-6 mb-3">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label class="form-label" for="phone_number">Numéro de telephone</label>
-                                        <input class="form-control" type="text" id="phone_number" name="contacts[phone_number]">
+                        <?php if(isset($member->contacts)){
+                            foreach ($member->contacts as $contact) { ?>
+                                <div class="row mb-3 row-contact">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label class="form-label" for="phone_number">Numéro de telephone</label>
+                                                <input class="form-control" type="text" id="phone_number" name="contacts[phone_number]">
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label" for="mail">Adresse e-mail</label>
+                                                <input class="form-control" type="text" id="mail" name="contacts[mail]">
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-6">
-                                        <label class="form-label" for="mail">Adresse e-mail</label>
-                                        <input class="form-control" type="text" id="mail" name="contacts[mail]">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="row">
+                                            <div class="col">
+                                                <label class="form-label" for="details">Détails du contact <span class="fw-lighter fst-italic">(optionnel, max. 255 caractères)</span></label>
+                                                <textarea class="form-control" name="contacts[details]}" id="details" rows="2"></textarea>
+                                            </div>
+                                            <div class="col-auto d-flex align-items-center">
+                                                <span class="fs-4" id="delete-contact-"><i class="fas fa-trash-alt text-danger delete-contact-button"></i></span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="form-label" for="details">Détails du contact <span class="fw-lighter fst-italic">(optionnel, max. 255 caractères)</span></label>
-                                        <textarea class="form-control" name="contacts[details]}" id="details" rows="2"></textarea>
-                                    </div>
-                                    <div class="col-auto d-flex align-items-center">
-                                        <span class="fs-4" id="delete-contact-"><i class="fas fa-trash-alt text-danger delete-contact-button"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                            <?php }
+                        } ?>
+
+
                     </div>
                     <!-- END : ZONE POUR AJOUTER UN CONTACT -->
                     <!-- START : ZONE CONCERNANT LA LICENCE -->
