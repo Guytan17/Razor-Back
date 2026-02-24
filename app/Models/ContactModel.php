@@ -42,4 +42,11 @@ class ContactModel extends Model
             'max_length' => 'Les détails concernant le contact ne peuvent pas excéder 255 caractères'
         ]
     ];
+
+    public function getContactsById($entity_id,$entity_type){
+        $this->select('contact.*');
+        $this->where('entity_id',$entity_id);
+        $this->where('entity_type',$entity_type);
+        return $this->findAll();
+    }
 }

@@ -54,6 +54,7 @@ class Member extends AdminController
             $member->roles = $this->rmm->getRoleMember($id);
             $member->coach_teams = $this->coachm->getCoachesByIdMember($id);
             $member->player_teams = $this->playerm->getPlayersByIdMember($id);
+            $member->contacts = $this->contactm->getContactsById($member->id,'member');
         } else {
             $title = 'Ajouter un membre';
             $this->addBreadcrumb('Ajouter un membre');
