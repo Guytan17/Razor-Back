@@ -63,7 +63,7 @@ class Member extends AdminController
             'title' => $title,
             'roles' => $roles,
             'license_codes' => $license_codes,
-            'member' => $member??null,
+            'member' => $member ?? null,
         ];
         return $this->render('admin/member/form',$data);
     }
@@ -102,6 +102,7 @@ class Member extends AdminController
 
             // Récupération des données de contact
             $contacts = $this->request->getPost('contacts');
+            $removedContacts = $this->request->getPost('removed-contacts') ?? [];
 
             //Gérer Équipes (coach et joueurs)
             $coachs = $this->request->getPost('coachs') ?? [];
@@ -112,8 +113,6 @@ class Member extends AdminController
 
             //Création de l'objet member
             $member = $newMember ? new \App\Entities\Member() : $this->mm->withDeleted()->find($id);
-
-
 
             //Si je n'ai pas de membre et que je ne suis pas en mode création
             if(!$member && !$newMember) {
@@ -150,17 +149,25 @@ class Member extends AdminController
                 }
             }
 
-            //Gestion des contacts
+            //Gestion suppression des contacts
+            if(isset($removedContacts)) {
+                foreach($removedContacts as $removedContact) {
+                    $this->contactm->where('id',$removedContact)->delete();
+                }
+            }
+
+            //Gestion ajout et mise à jour des contacts
             if(isset($contacts)) {
                 foreach($contacts as $contact) {
                     $dataContact = [
+                        'id' => $contact['id'] ?? null,
                         'entity_type' => 'member',
                         'entity_id' => $member->id,
                         'phone_number' => $contact['phone_number'],
                         'mail' => $contact['mail'],
                         'details' => $contact['details']
                     ];
-                    if(!$this->contactm->insert($dataContact)){
+                    if(!$this->contactm->save($dataContact)){
                         $this->error(implode('<br>',$this->contactm->errors()));
                     }
                 }

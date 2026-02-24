@@ -57,19 +57,21 @@
                         </span>
                         </div>
                     </div>
-                    <div class="zone-contact">
+                    <div id="zone-contact">
                         <?php if(isset($member->contacts)){
-                            foreach ($member->contacts as $contact) { ?>
+                            $nbContacts = 0;
+                            foreach ($member->contacts as $contact) {
+                                $nbContacts++;?>
                                 <div class="row mb-3 row-contact">
                                     <div class="col-md-6 mb-3">
                                         <div class="row">
                                             <div class="col-6">
                                                 <label class="form-label" for="phone_number">Numéro de telephone</label>
-                                                <input class="form-control" type="text" id="phone_number" name="contacts[phone_number]" value="<?= esc($contact['phone_number']) ?>">
+                                                <input class="form-control" type="text" id="phone_number" name="contacts[<?=$nbContacts?>][phone_number]" value="<?= esc($contact['phone_number']) ?>">
                                             </div>
                                             <div class="col-6">
                                                 <label class="form-label" for="mail">Adresse e-mail</label>
-                                                <input class="form-control" type="text" id="mail" name="contacts[mail]"value="<?= esc($contact['mail']) ?>">
+                                                <input class="form-control" type="text" id="mail" name="contacts[<?=$nbContacts?>][mail]" value="<?= esc($contact['mail']) ?>">
                                             </div>
                                         </div>
                                     </div>
@@ -77,18 +79,21 @@
                                         <div class="row">
                                             <div class="col">
                                                 <label class="form-label" for="details">Détails du contact <span class="fw-lighter fst-italic">(optionnel, max. 255 caractères)</span></label>
-                                                <textarea class="form-control" name="contacts[details]}" id="details" rows="2" ><?= esc($contact['details']) ?></textarea>
+                                                <textarea class="form-control" name="contacts[<?=$nbContacts?>][details]}" id="details" rows="2" ><?= esc($contact['details']) ?></textarea>
                                             </div>
                                             <div class="col-auto d-flex align-items-center">
                                                 <span class="fs-4" id="delete-contact-"><i class="fas fa-trash-alt text-danger delete-contact-button"></i></span>
                                             </div>
                                         </div>
                                     </div>
+                                    <input type="hidden" id="contact-id-input" name="contacts[<?=$nbContacts?>][id]" value="<?= $contact['id'] ?>">
+                                </div>
+                                <!-- START : ZONE HTML POUR STOCKER LES ID DES CONTACTS SUPPRIMES -->
+                                <div id="zone-removed-contacts">
+
                                 </div>
                             <?php }
                         } ?>
-
-
                     </div>
                     <!-- END : ZONE POUR AJOUTER UN CONTACT -->
                     <!-- START : ZONE CONCERNANT LA LICENCE -->
@@ -288,7 +293,8 @@
 $(document).ready(function () {
     let nbCoachs = $('#zone-coach .card-coach').length ;
     let nbPlayers = $('#zone-player .card-player').length ;
-    let nbContacts = 0
+    let nbContacts = $('#zone-contact .row-contact').length ;
+
 
     //Gestion de l'ajout d'un contact
     $('#add-contact').on('click',function(){
@@ -320,8 +326,20 @@ $(document).ready(function () {
                 </div>
             </div>
         `;
+        $('#zone-contact').append(row);
+    })
 
-        $('.zone-contact').append(row);
+    //Gestion de la suppression d'un contact
+    $('#zone-contact').on('click', '.delete-contact-button' ,function(){
+        nbContacts --;
+        let rowContact = $(this).closest('.row-contact');
+        let idRemovedContact = rowContact.find('#contact-id-input').val();
+        console.log(idRemovedContact);
+        rowContact.remove();
+        let inputRemovedContacts = `
+        <input type="hidden" name="removed-contacts[]" value="${idRemovedContact}">
+        `;
+        $('#zone-removed-contacts').append(inputRemovedContacts);
     })
 
     //initialisation select-coach
@@ -378,6 +396,7 @@ $(document).ready(function () {
     $('#zone-coach').on('click' , '.delete-coach-button', function(){
         nbCoachs --;
         $(this).closest('.row-coach').remove();
+
     })
 
     //Gestion de l'ajout d'une équipe (joueur)
