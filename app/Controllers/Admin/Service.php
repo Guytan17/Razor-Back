@@ -15,7 +15,7 @@ class Service extends AdminController
     }
     public function index()
     {
-        $title = 'Liste des services';
+        $title = 'Services';
         $this->addBreadcrumb($title);
 
         $data = [

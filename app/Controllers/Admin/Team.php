@@ -31,7 +31,7 @@ class Team extends AdminController
     public function index()
     {
         $data = [
-            'title' => 'Liste des équipes',
+            'title' => 'Équipes',
         ];
         return $this->render('admin/team/index',$data);
     }

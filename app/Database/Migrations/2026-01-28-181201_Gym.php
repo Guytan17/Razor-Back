@@ -24,6 +24,12 @@ class Gym extends Migration
                 'constraint' => 255,
                 'null' => false,
             ],
+            'slug' => [
+                'type' => 'VARCHAR',
+                'constraint' => 255,
+                'null' => false,
+                'unique' => true,
+            ],
             'id_address' => [
                 'type' => 'INT',
                 'constraint' => 11,
