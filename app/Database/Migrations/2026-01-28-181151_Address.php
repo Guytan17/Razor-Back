@@ -24,6 +24,11 @@ class Address extends Migration
                 'constraint' => '255',
                 'null' => true,
             ],
+            'gps_location' => [
+                'type' => 'VARCHAR',
+                'constraint' => '255',
+                'null' => true,
+            ],
             'id_city' => [
                 'type' => 'INT',
                 'constraint' => 11,

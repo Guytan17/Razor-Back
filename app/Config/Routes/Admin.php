@@ -35,7 +35,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('switch-active/(:num)', 'Club::switchActiveClub/$1');
     });
 
-    //Routes pour les gestion des gymnases
+    //Routes pour la gestion des gymnases
     $routes->group('gym',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Gym::index');
         $routes->get('/', 'Gym::index');

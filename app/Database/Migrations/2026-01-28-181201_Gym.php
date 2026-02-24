@@ -14,15 +14,15 @@ class Gym extends Migration
                 'constraint' => 11,
                 'auto_increment' => true,
             ],
-            'fbi_code' => [
-                'type' => 'INT',
-                'constraint' => 11,
-                'null' => true,
-            ],
             'name' => [
                 'type' => 'VARCHAR',
                 'constraint' => 255,
                 'null' => false,
+            ],
+            'fbi_code' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'null' => true,
             ],
             'slug' => [
                 'type' => 'VARCHAR',
