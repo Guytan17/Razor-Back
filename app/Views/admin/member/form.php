@@ -50,15 +50,50 @@
                     </div>
                     <!-- END : ZONE AVEC INFOS GÉNÉRALES DU MEMBRE -->
                     <!-- START : ZONE POUR AJOUTER UN CONTACT -->
-                    <div class="m-2">
-                        <span class="btn btn-sm btn-secondary">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <span class="btn btn-sm btn-secondary" id="add-contact">
                             <i class="fas fa-plus"></i> Ajouter un contact
                         </span>
-                    </div>
-                    <div class="row">
-                        <div class="">
-
                         </div>
+                    </div>
+                    <div id="zone-contact">
+                        <?php if(isset($member->contacts)){
+                            $nbContacts = 0;
+                            foreach ($member->contacts as $contact) {
+                                $nbContacts++;?>
+                                <div class="row mb-3 row-contact">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label class="form-label" for="phone_number">Numéro de telephone</label>
+                                                <input class="form-control" type="text" id="phone_number" name="contacts[<?=$nbContacts?>][phone_number]" value="<?= esc($contact['phone_number']) ?>">
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label" for="mail">Adresse e-mail</label>
+                                                <input class="form-control" type="text" id="mail" name="contacts[<?=$nbContacts?>][mail]" value="<?= esc($contact['mail']) ?>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="row">
+                                            <div class="col">
+                                                <label class="form-label" for="details">Détails du contact <span class="fw-lighter fst-italic">(optionnel, max. 255 caractères)</span></label>
+                                                <textarea class="form-control" name="contacts[<?=$nbContacts?>][details]}" id="details" rows="2" ><?= esc($contact['details']) ?></textarea>
+                                            </div>
+                                            <div class="col-auto d-flex align-items-center">
+                                                <span class="fs-4" id="delete-contact-"><i class="fas fa-trash-alt text-danger delete-contact-button"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="contact-id-input" name="contacts[<?=$nbContacts?>][id]" value="<?= $contact['id'] ?>">
+                                </div>
+                                <!-- START : ZONE HTML POUR STOCKER LES ID DES CONTACTS SUPPRIMES -->
+                                <div id="zone-removed-contacts">
+
+                                </div>
+                            <?php }
+                        } ?>
                     </div>
                     <!-- END : ZONE POUR AJOUTER UN CONTACT -->
                     <!-- START : ZONE CONCERNANT LA LICENCE -->
@@ -258,7 +293,54 @@
 $(document).ready(function () {
     let nbCoachs = $('#zone-coach .card-coach').length ;
     let nbPlayers = $('#zone-player .card-player').length ;
-    console.log(nbCoachs, nbPlayers);
+    let nbContacts = $('#zone-contact .row-contact').length ;
+
+
+    //Gestion de l'ajout d'un contact
+    $('#add-contact').on('click',function(){
+        nbContacts ++;
+        let row = `
+            <div class="row mb-3 row-contact">
+                <div class="col-md-6 mb-3">
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label" for="phone_number">Numéro de telephone</label>
+                            <input class="form-control" type="text" id="phone_number" name="contacts[${nbContacts}][phone_number]">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label" for="mail">Adresse e-mail</label>
+                            <input class="form-control" type="text" id="mail" name="contacts[${nbContacts}][mail]">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="row">
+                        <div class="col">
+                            <label class="form-label" for="details">Détails du contact <span class="fw-lighter fst-italic">(optionnel, max. 255 caractères)</span></label>
+                            <textarea class="form-control" name="contacts[${nbContacts}][details]" id="details" rows="2"></textarea>
+                        </div>
+                        <div class="col-auto d-flex align-items-center">
+                            <span class="fs-4" id="delete-contact-"><i class="fas fa-trash-alt text-danger delete-contact-button"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        $('#zone-contact').append(row);
+    })
+
+    //Gestion de la suppression d'un contact
+    $('#zone-contact').on('click', '.delete-contact-button' ,function(){
+        nbContacts --;
+        let rowContact = $(this).closest('.row-contact');
+        let idRemovedContact = rowContact.find('#contact-id-input').val();
+        console.log(idRemovedContact);
+        rowContact.remove();
+        let inputRemovedContacts = `
+        <input type="hidden" name="removed-contacts[]" value="${idRemovedContact}">
+        `;
+        $('#zone-removed-contacts').append(inputRemovedContacts);
+    })
 
     //initialisation select-coach
     initAjaxSelect2(`#select-coach`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher un équipe'});
@@ -278,7 +360,6 @@ $(document).ready(function () {
     //Gestion de l'ajout d'une équipe (coach)
     $('#add-coach').on('click', function(){
         let selectedTeam = $('#select-coach').select2('data');
-        console.log(selectedTeam);
 
         // si aucune équipe n'est sélectionnée lors du clic, on bloque la création de la row
         if (!selectedTeam.length) {
@@ -315,12 +396,12 @@ $(document).ready(function () {
     $('#zone-coach').on('click' , '.delete-coach-button', function(){
         nbCoachs --;
         $(this).closest('.row-coach').remove();
+
     })
 
     //Gestion de l'ajout d'une équipe (joueur)
     $('#add-player').on('click', function(){
         let selectedTeam = $('#select-player').select2('data');
-        console.log(selectedTeam);
 
         // si aucune équipe n'est sélectionnée lors du clic, on bloque la création de la row
         if (!selectedTeam.length) {
@@ -369,7 +450,7 @@ $(document).ready(function () {
         margin-bottom: 1rem;
     }
 
-    .delete-coach-button:hover,.delete-player-button:hover {
+    .delete-coach-button:hover,.delete-player-button:hover, .delete-contact-button:hover {
         scale:1.20;
         cursor: pointer;
     }

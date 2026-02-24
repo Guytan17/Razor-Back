@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Models\ContactModel;
 use App\Models\MemberModel;
 use App\Models\PlayerModel;
 use App\Models\RoleModel;
@@ -21,6 +22,7 @@ class Member extends AdminController
     protected $rmm;
     protected $coachm;
     protected $playerm;
+    protected $contactm;
 
     public function __construct(){
         $this->mm = new MemberModel();
@@ -29,6 +31,7 @@ class Member extends AdminController
         $this->rmm = new RoleMemberModel();
         $this->coachm = new CoachModel();
         $this->playerm = new PlayerModel();
+        $this->contactm = new ContactModel();
     }
     public function index()
     {
@@ -51,6 +54,7 @@ class Member extends AdminController
             $member->roles = $this->rmm->getRoleMember($id);
             $member->coach_teams = $this->coachm->getCoachesByIdMember($id);
             $member->player_teams = $this->playerm->getPlayersByIdMember($id);
+            $member->contacts = $this->contactm->getContactsById($member->id,'member');
         } else {
             $title = 'Ajouter un membre';
             $this->addBreadcrumb('Ajouter un membre');
@@ -59,7 +63,7 @@ class Member extends AdminController
             'title' => $title,
             'roles' => $roles,
             'license_codes' => $license_codes,
-            'member' => $member??null,
+            'member' => $member ?? null,
         ];
         return $this->render('admin/member/form',$data);
     }
@@ -97,9 +101,8 @@ class Member extends AdminController
             $roles = $this->request->getPost('roles');
 
             // Récupération des données de contact
-            $dataContact = [
-
-            ];
+            $contacts = $this->request->getPost('contacts');
+            $removedContacts = $this->request->getPost('removed-contacts') ?? [];
 
             //Gérer Équipes (coach et joueurs)
             $coachs = $this->request->getPost('coachs') ?? [];
@@ -110,8 +113,6 @@ class Member extends AdminController
 
             //Création de l'objet member
             $member = $newMember ? new \App\Entities\Member() : $this->mm->withDeleted()->find($id);
-
-
 
             //Si je n'ai pas de membre et que je ne suis pas en mode création
             if(!$member && !$newMember) {
@@ -145,6 +146,30 @@ class Member extends AdminController
                         'id_role' => intval($role)
                     ];
                     $this->rmm->insert($dataRole);
+                }
+            }
+
+            //Gestion suppression des contacts
+            if(isset($removedContacts)) {
+                foreach($removedContacts as $removedContact) {
+                    $this->contactm->where('id',$removedContact)->delete();
+                }
+            }
+
+            //Gestion ajout et mise à jour des contacts
+            if(isset($contacts)) {
+                foreach($contacts as $contact) {
+                    $dataContact = [
+                        'id' => $contact['id'] ?? null,
+                        'entity_type' => 'member',
+                        'entity_id' => $member->id,
+                        'phone_number' => $contact['phone_number'],
+                        'mail' => $contact['mail'],
+                        'details' => $contact['details']
+                    ];
+                    if(!$this->contactm->save($dataContact)){
+                        $this->error(implode('<br>',$this->contactm->errors()));
+                    }
                 }
             }
 
