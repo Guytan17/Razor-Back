@@ -85,4 +85,25 @@ class Gym extends AdminController
         }
 
     }
+
+    public function deleteGym($id) {
+        try {
+            if($this->gymModel->delete($id)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Le gymnase a bien été supprimé'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $this->gymModel->errors(),
+                ]);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
 }

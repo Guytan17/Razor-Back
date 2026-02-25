@@ -22,7 +22,7 @@ class GymModel extends Model
     protected $allowedFields = ['fbi_code', 'name', 'id_address', 'created_at', 'updated_at'];
 
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat = 'datetime';
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
@@ -52,5 +52,34 @@ class GymModel extends Model
     // Callbacks
     protected $beforeInsert = ['generateUniqueSlugName'];
     protected $beforeUpdate = ['generateUniqueSlugName'];
+    public function getDataTableConfig(): array
+    {
+        return [
+            'searchable_fields' => [
+                'id',
+                'name',
+                'fbi_code',
+                'gym_city'
+            ],
+            'joins' => [
+                [
+                    'table' => 'address',
+                    'condition' => 'gym.id_address = address.id',
+                    'type' => 'left'
+                ],
+                [
+                    'table' => 'city',
+                    'condition' => 'address.id_city = city.id',
+                    'type' => 'inner'
+                ]
+            ],
+            'select' =>
+                'gym.id,
+                gym.name,
+                gym.fbi_code,
+                city.label as gym_city'
+        ];
+    }
+
 }
 

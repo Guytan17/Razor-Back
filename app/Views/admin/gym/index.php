@@ -42,9 +42,9 @@
                         <tr>
                             <th>Actions</th>
                             <th>ID</th>
-                            <th>Nom</th>
                             <th>Code FBI</th>
-                            <th>Adresse</th>
+                            <th>Nom</th>
+                            <th>Ville</th>
                             <!--                        <th>Club(s)</th>-->
                         </tr>
                         </thead>
@@ -61,58 +61,40 @@
         var baseUrl = "<?= base_url();?>" ;
 
         $(document).ready(function() {
-            table = $('#clubsTable').DataTable({
+            table = $('#gymsTable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
                     url: baseUrl + 'datatable/searchdatatable',
                     type: 'POST',
                     data: {
-                        model: 'ClubModel'
+                        model: 'GymModel'
                     },
                 },
-                columns: [{
-                    data: null,
-                    defaultContent: '',
-                    orderable: false,
-                    width: '100px',
-                    render: function (data, type, row) {
-                        const isActive = row.deleted_at === null;
-                        const toggleButton = isActive
-                            ?
-                            `
-                                <button
-                                    class="btn btn-sm btn-success btn-toggleActive-club"
-                                    title="Désactiver"
-                                    data-id="${row.id}">
-                                        <i class="fas fa-toggle-on"></i>
-                                </button>
-                            `
-                            :
-                            `
-                            <button
-                                    class="btn btn-sm btn-danger btn-toggleActive-club"
-                                    title="Activer"
-                                    data-id="${row.id}">
-                                        <i class="fas fa-toggle-off"></i>
-                                </button>
-                            `
-                        return `
+                columns: [
+                    {
+                        data: null,
+                        defaultContent: '',
+                        orderable: false,
+                        width: '100px',
+                        render: function (data, type, row) {
+                            return `
                             <div class="btn-group" role="group">
-                                <a  href="${baseUrl}/admin/club/form/${row.id}" class="btn btn-sm btn-warning btn-edit-club" title="Modifier">
+                                <a href="${baseUrl}/admin/gym/form/${row.id}" class="btn btn-sm btn-warning btn-edit-gym" title="Modifier">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                               ${toggleButton}
+                                <button class="btn btn-sm btn-danger btn-delete-gym" title="Supprimer" data-id="${row.id}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
                             </div>
                         `
-                            ;
-                    }
-                },
-                    {data : 'id'},
-                    {data : 'name'},
-                    {data: 'code'},
-                    {data : 'colors'},
-
+                                ;
+                        }
+                    },
+                    {data: 'id'},
+                    {data: 'fbi_code'},
+                    {data: 'name'},
+                    {data: 'gym_city'}
                 ],
                 language: {
                     url: baseUrl + 'assets/js/datatable/datatable-2.3.5-fr-FR.json',
@@ -125,13 +107,58 @@
             window.refreshTable = function () {
                 table.ajax.reload(null, false); // false pour garder la pagination
             };
-        });
 
-        //Fonction pour appeler la fonction de désactivation/activation
-        $(document).on('click','.btn-toggleActive-club', function(){
-            toggleActive($(this).data('id'));
-        });
+            //Fonction pour appeler la fonction de suppression
+            $(document).on('click', '.btn-delete-gym', function () {
+                deleteGym($(this).data('id'));
+            });
 
+            //fonction de suppression d'un gymnase
+            function deleteGym(id) {
+                Swal.fire({
+                    title: `Êtes-vous sûr ?`,
+                    text: `Voulez-vous vraiment supprimer ce gymnase ?`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#28a745",
+                    cancelButtonColor: "#6c757d",
+                    confirmButtonText: `Oui !`,
+                    cancelButtonText: "Annuler",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '<?= base_url('/admin/gym/delete/') ?>' + id,
+                            type: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            data: {
+                                [csrfName]: csrfHash
+                            },
+                            dataType: 'json',
+                            success: function (response) {
+                                if (response.success) {
+                                    Swal.fire({
+                                        title: 'Succès !',
+                                        text: response.message,
+                                        icon: 'success',
+                                        timer: 2000,
+                                        showConfirmButton: false
+                                    });
+                                    refreshTable();
+                                } else {
+                                    Swal.fire({
+                                        title: 'Erreur !',
+                                        text: 'Une erreur est survenue',
+                                        icon: 'error'
+                                    });
+                                }
+                            }
+                        })
+                    }
+                });
+            }
+        });
 
     </script>
     <?php $this->endSection() ?>

@@ -38,11 +38,11 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
     //Routes pour la gestion des gymnases
     $routes->group('gym',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Gym::index');
-        $routes->get('/', 'Gym::index');
         $routes->get('form', 'Gym::form'); //accès au formulaire de création
         $routes->get('form/(:num)', 'Gym::form/$1'); // accès au formulaire d'édition
         $routes->post('save', 'Gym::saveGym'); // sauvegarde création
         $routes->post('save/(:num)', 'Gym::saveGym/$1'); //sauvegarde édition
+        $routes->post('delete/(:num)', 'Gym::deleteGym/$1'); //Suppression d'un gymanse
     });
 
     //Routes pour les villes
