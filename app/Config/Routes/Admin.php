@@ -44,7 +44,12 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('save', 'Gym::saveGym'); // sauvegarde création
         $routes->post('save/(:num)', 'Gym::saveGym/$1'); //sauvegarde édition
     });
-    
+
+    //Routes pour les villes
+    $routes->group('city',['filter' => 'group:admin'], function($routes) {
+        $routes->get('search', 'City::searchCity');
+    });
+
     //Routes pour la gestion des codes licences
     $routes->group('license-code', ['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'LicenseCode::index');

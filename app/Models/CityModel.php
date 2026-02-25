@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\Select2Searchable;
 use CodeIgniter\Model;
 
 class CityModel extends Model
 {
+    use Select2Searchable;
+
     protected $table            = 'city';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
@@ -46,4 +49,8 @@ class CityModel extends Model
         ]
     ];
 
+
+    protected $select2SearchFields = ['label','zip_code'];
+    protected $select2DisplayField = 'label,zip_code';
+    protected $select2AdditionalFields = ['department_number','department_name'];
 }
