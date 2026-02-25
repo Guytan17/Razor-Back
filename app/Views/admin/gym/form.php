@@ -23,8 +23,8 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
-                                    <label class="form-label" for="fbi_number">Code FBI</label>
-                                    <input class="form-control" type="text" name="fbi_number" id="fbi_number">
+                                    <label class="form-label" for="fbi_code">Code FBI</label>
+                                    <input class="form-control" type="text" name="fbi_code" id="fbi_code">
                                 </div>
                             </div>
                             <div class="row mb-3">

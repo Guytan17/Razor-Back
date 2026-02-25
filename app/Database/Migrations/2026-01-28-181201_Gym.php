@@ -20,8 +20,8 @@ class Gym extends Migration
                 'null' => false,
             ],
             'fbi_code' => [
-                'type' => 'INT',
-                'constraint' => 11,
+                'type' => 'VARCHAR',
+                'constraint' => 255,
                 'null' => true,
             ],
             'slug' => [
@@ -45,7 +45,7 @@ class Gym extends Migration
             ]
         ]);
         $this->forge->addKey('id',true);
-        $this->forge->addForeignKey('id_address','address','id','CASCADE','RESTRICT');
+        $this->forge->addForeignKey('id_address','address','id','CASCADE','CASCADE');
         $this->forge->createTable('gym',true);
     }
 

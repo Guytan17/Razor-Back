@@ -12,7 +12,7 @@ class AddressModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['address_1','address_2','id_city','created_at','updated_at'];
+    protected $allowedFields    = ['address_1','address_2','id_city','gps_location','created_at','updated_at'];
 
     // Dates
     protected $useTimestamps = true;
@@ -25,6 +25,7 @@ class AddressModel extends Model
         'address_1' => 'required|max_length[255]',
         'address_2' => 'permit_empty|max_length[255]',
         'id_city' => 'required|integer',
+        'gps_location' => 'permit_empty|max_length[255]',
     ];
     protected $validationMessages   = [
         'address_1' => [
@@ -37,6 +38,9 @@ class AddressModel extends Model
         'id_city' => [
             'required' => 'L\'ID de la ville est obligatoire',
             'integer' => 'L\'ID de la ville doit être un entier'
+        ],
+        'gps_location' => [
+            'max_length' => 'Les coordonnées GPS ne peut pas excéder 255 caractères.'
         ]
     ];
 

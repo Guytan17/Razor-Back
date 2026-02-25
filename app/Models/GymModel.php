@@ -29,12 +29,13 @@ class GymModel extends Model
 
     // Validation
     protected $validationRules = [
-        'fbi_code' => 'is_unique[gym.fbi_code]',
+        'fbi_code' => 'max_length[255]|is_unique[gym.fbi_code]',
         'name' => 'required|max_length[255]',
         'id_address' => 'integer',
     ];
     protected $validationMessages = [
         'fbi_code' => [
+            'max_length' => 'Le code FBI ne peut pas excéder 255 caractères',
             'is_unique' => 'Le code FBI existe déjà',
         ],
         'name' => [

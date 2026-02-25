@@ -143,7 +143,7 @@ class Team extends AdminController
             }
 
 
-            //Récupération ID et gestion des messages de validation
+            //Gestion des messages de validation
             if($newTeam) {
                 $this->success('Équipe créée avec succès');
             } else {
