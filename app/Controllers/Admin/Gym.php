@@ -25,10 +25,19 @@ class Gym extends AdminController
     }
 
     public function form($id = null) {
-
         $this->addBreadcrumb('Listes des gymnases', '/admin/gym');
+
+        if ($id != null) {
+            $title = 'Ajout d\'un gymnase';
+            $this->addBreadcrumb('Ajouter un gymnase');
+            $gym = $this->gymModel->getGymById($id);
+        } else {
+            $title = 'Modification d\'un gymnase';
+            $this->addBreadcrumb('Modifier un gymnase');
+        }
         $data = [
-            'title' => 'Ajout d\'un gymnase',
+            'title' => $title,
+            'gym' => $gym ?? null,
         ];
 
         return $this->render('admin/gym/form', $data);
@@ -39,6 +48,7 @@ class Gym extends AdminController
             //Récupération des données
             //Données concernant le gymnase
             $dataGym = [
+                'id' => $id,
                 'fbi_code' => $this->request->getPost('fbi_code'),
                 'name' => $this->request->getPost('name'),
                 'id_address' => $this->request->getPost('id_address') ?? null,
@@ -54,20 +64,20 @@ class Gym extends AdminController
             ];
 
             //Variable pour savoir si c'est un nouveau gymnase
-            $newGym = empty($dataGym['id_address']);
+            $newGym = empty($dataGym['id']);
 
             //Enregistrement de l'adresse et récupération de l'ID de la nouvelle adresse
             if(!$this->addressModel->save($dataAddress)){
                 $this->error(implode('<br>',$this->addressModel->errors()));
-                return $this->redirect('/admin/gym/form');
+                return $this->redirect('/admin/gym');
             } elseif ($newGym){
                 $dataGym['id_address'] = $this->addressModel->getInsertID();
             }
 
             //Enregistrement du gymnase
-            if(!$this->gymModel->save($dataGym)){
+            if(!$this->gymModel->saveGym($dataGym)){
                 $this->error(implode('<br>',$this->gymModel->errors()));
-                return $this->redirect('/admin/gym/form');
+                return $this->redirect('/admin/gym');
             }
 
             //Gestion des messages de validation

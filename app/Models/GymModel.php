@@ -28,11 +28,7 @@ class GymModel extends Model
     protected $updatedField = 'updated_at';
 
     // Validation
-    protected $validationRules = [
-        'fbi_code' => 'max_length[255]|is_unique[gym.fbi_code]',
-        'name' => 'required|max_length[255]',
-        'id_address' => 'integer',
-    ];
+
     protected $validationMessages = [
         'fbi_code' => [
             'max_length' => 'Le code FBI ne peut pas excéder 255 caractères',
@@ -79,6 +75,37 @@ class GymModel extends Model
                 gym.fbi_code,
                 city.label as gym_city'
         ];
+    }
+
+    public function getGymById(int $id) {
+        $this->select('gym.*, address.address_1,address.address_2,address.id_city,address.gps_location,city.zip_code,city.label,city.department_name,city.department_number,city.region_name');
+        $this->join('address', 'gym.id_address = address.id');
+        $this->join('city', 'address.id_city = city.id');
+        $this->where('gym.id', $id);
+        return $this->first();
+    }
+
+    //fonction save personnalisée pour gérer la règle d'unicité du fbi_code
+    public function saveGym(array $dataGym){
+        $idGym = $dataGym['id'] ?? null;
+
+        //définition règles de validation
+        $rules = [
+            'name' => 'required|max_length[255]',
+            'id_address' => 'integer',
+        ];
+
+        $rules['fbi_code'] =
+            $idGym != null
+            ? 'max_length[255]'
+            : 'max_length[255]|is_unique[gym.fbi_code]'
+        ;
+
+        //Mise en place des règles de validation
+        $this->setValidationRules($rules);
+
+        //Enregistrement des données
+        return $this->save($dataGym);
     }
 
 }
