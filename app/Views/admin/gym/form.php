@@ -2,7 +2,7 @@
 
 <?php $this->section('content') ; ?>
 
-<?php echo form_open('admin/gym/save'. (isset($gym) ? '/'.$gym['id'] : '')) ?>
+<?php echo form_open('admin/gym/save'. (isset($gym) && $gym ? '/'.$gym['id'] : '')) ?>
 <div class="container-fluid">
     <div class="row">
         <div class="col">
@@ -23,26 +23,26 @@
                             <div class="row mb-3">
                                 <div class="col">
                                     <label class="form-label" for="name">Nom du Gymnase</label>
-                                    <input class="form-control" type="text" name="name" id="name" value="<?=(esc($gym['name']) ?? '' ) ;?>">
+                                    <input class="form-control" type="text" name="name" id="name" value="<?=esc($gym['name'] ?? '') ;?>">
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
                                     <label class="form-label" for="fbi_code">Code FBI</label>
-                                    <input class="form-control" type="text" name="fbi_code" id="fbi_code" value="<?=(esc($gym['fbi_code']) ?? '' ) ;?>">
+                                    <input class="form-control" type="text" name="fbi_code" id="fbi_code" value="<?=esc($gym['fbi_code'] ?? '') ;?>">
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
-                                    <input type="hidden" name="id_address" value="<?=(esc($gym['id_address']) ?? '' ) ;?>">
+                                    <input type="hidden" name="id_address" value="<?=(esc(isset($gym['id_address']))) ;?>">
                                     <label class="form-label" for="address_1">Adresse</label>
-                                    <input class="form-control" type="text" name="address_1" id="address_1" value="<?=(esc($gym['address_1']) ?? '' ) ;?>">
+                                    <input class="form-control" type="text" name="address_1" id="address_1" value="<?=esc($gym['address_1'] ?? '');?>">
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
                                     <label class="form-label" for="address_2">Complément d'adresse <span class="fst-italic">(facultatif)</span></label>
-                                    <input class="form-control" type="text" name="address_2" id="address_2" value="<?=(esc($gym['address_2']) ?? '' ) ;?>">
+                                    <input class="form-control" type="text" name="address_2" id="address_2" value="<?=esc($gym['address_2'] ?? '');?>">
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -69,11 +69,17 @@
                                                 height="100%"
                                                 frameborder="0" style="border:0"
                                                 referrerpolicy="no-referrer-when-downgrade"
-                                                <?php if (!empty($gym['gps_location'])) { ?>
-                                                src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCsBJYByuOScPSGFRTFh9Xeu07lQXzGoPY&q=<?= esc($gym['gps_location']) ?>"
+                                                <?php if (isset($gym) && !empty($gym['gps_location'])) { ?>
+                                                src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCsBJYByuOScPSGFRTFh9Xeu07lQXzGoPY
+                                                    &q=<?= esc($gym['gps_location']) ?>"
+                                                <?php } elseif (isset($gym) && empty($gym['gps_location'])) { ?>
+                                                    src="https://www.google.com/maps/embed/v1/search?key=AIzaSyCsBJYByuOScPSGFRTFh9Xeu07lQXzGoPY
+                                                        &q=<?=(esc(isset($gym['name']))).'+'.(esc(isset($gym['address_1']))).'+'.(esc(isset($gym['zip_code']))).'+'.(esc(isset($gym['label'])))?>"
                                                 <?php } else { ?>
-                                                    src="https://www.google.com/maps/embed/v1/search?key=AIzaSyCsBJYByuOScPSGFRTFh9Xeu07lQXzGoPY&q=<?=esc($gym['name']).'+'.esc(($gym['address_1']
-                                                            ?? '')).'+'.esc(($gym['zip_code'] ?? '')).'+'.esc($gym['label'])?>"
+                                                    src="https://www.google.com/maps/embed/v1/search?key=AIzaSyCsBJYByuOScPSGFRTFh9Xeu07lQXzGoPY
+                                                    &q=+
+                                                    &center=46.14556311478873,-1.140210252809791
+                                                    &zoom=10"
                                                 <?php } ?>
                                                 allowfullscreen>
                                         </iframe>
@@ -84,11 +90,11 @@
                                 <div class="col">
                                     <label class="form-label" for="gps_location">
                                         Coordonnées GPS
-                                        <?php if(empty($gym['gps_location'])) { ?>
+                                        <?php if(isset($gym) && empty($gym['gps_location'])) { ?>
                                             (⚠️ Point Google Map non-vérifié)
                                         <?php } ?>
                                     </label>
-                                    <input class="form-control" type="text" name="gps_location" id="gps_location" value="<?=(esc($gym['gps_location']) ?? '' ) ;?>">
+                                    <input class="form-control" type="text" name="gps_location" id="gps_location" value="<?=esc($gym['gps_location'] ?? '') ;?>">
                                 </div>
                             </div>
                         </div>
