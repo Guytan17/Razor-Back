@@ -69,7 +69,12 @@
                                                 height="100%"
                                                 frameborder="0" style="border:0"
                                                 referrerpolicy="no-referrer-when-downgrade"
-                                                src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCsBJYByuOScPSGFRTFh9Xeu07lQXzGoPY&q=46.14538102854302, -1.139879424291317"
+                                                <?php if (!empty($gym['gps_location'])) { ?>
+                                                src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCsBJYByuOScPSGFRTFh9Xeu07lQXzGoPY&q=<?= esc($gym['gps_location']) ?>"
+                                                <?php } else { ?>
+                                                    src="https://www.google.com/maps/embed/v1/search?key=AIzaSyCsBJYByuOScPSGFRTFh9Xeu07lQXzGoPY&q=<?=esc($gym['name']).'+'.esc(($gym['address_1']
+                                                            ?? '')).'+'.esc(($gym['zip_code'] ?? '')).'+'.esc($gym['label'])?>"
+                                                <?php } ?>
                                                 allowfullscreen>
                                         </iframe>
                                     </div>
@@ -77,7 +82,12 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
-                                    <label class="form-label" for="gps_location">Coordonnées GPS</label>
+                                    <label class="form-label" for="gps_location">
+                                        Coordonnées GPS
+                                        <?php if(empty($gym['gps_location'])) { ?>
+                                            (⚠️ Point Google Map non-vérifié)
+                                        <?php } ?>
+                                    </label>
                                     <input class="form-control" type="text" name="gps_location" id="gps_location" value="<?=(esc($gym['gps_location']) ?? '' ) ;?>">
                                 </div>
                             </div>
