@@ -64,7 +64,14 @@
                             <div class="row mb-3">
                                 <div class="col">
                                     <div class="location-map">
-
+                                        <iframe
+                                                width="100%"
+                                                height="100%"
+                                                frameborder="0" style="border:0"
+                                                referrerpolicy="no-referrer-when-downgrade"
+                                                src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCsBJYByuOScPSGFRTFh9Xeu07lQXzGoPY&q=46.14538102854302, -1.139879424291317"
+                                                allowfullscreen>
+                                        </iframe>
                                     </div>
                                 </div>
                             </div>
@@ -128,7 +135,7 @@
 </script>
 <style>
   .location-map {
-      min-height:328px;
+      height:328px;
       background-color: yellow;
   }
 
