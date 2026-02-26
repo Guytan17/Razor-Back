@@ -51,17 +51,18 @@ class Gym extends AdminController
                 'id' => $id,
                 'fbi_code' => $this->request->getPost('fbi_code'),
                 'name' => $this->request->getPost('name'),
-                'id_address' => $this->request->getPost('id_address') ?? null,
+                'id_address' => intval($this->request->getPost('id_address')) ?? null
             ];
 
             //Données concernant l'adresse
             $dataAddress = [
                 'id' => $dataGym['id_address'],
-                'address_1' => $this->request->getPost('address_1'),
-                'address_2' => $this->request->getPost('address_2'),
-                'id_city' => $this->request->getPost('city'),
-                'gps_location' => $this->request->getPost('gps_location') ?? null,
+                'address_1' => $this->request->getPost('address_1') ?? '',
+                'address_2' => $this->request->getPost('address_2') ?? '',
+                'id_city' => $this->request->getPost('city') ?? '',
+                'gps_location' => $this->request->getPost('gps_location') ?? '',
             ];
+
 
             //Variable pour savoir si c'est un nouveau gymnase
             $newGym = empty($dataGym['id']);

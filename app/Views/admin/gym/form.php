@@ -34,7 +34,7 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
-                                    <input type="hidden" name="id_address" value="<?=(esc(isset($gym['id_address']))) ;?>">
+                                    <input type="hidden" name="id_address" value="<?=esc($gym['id_address'] ?? '');?>"">
                                     <label class="form-label" for="address_1">Adresse</label>
                                     <input class="form-control" type="text" name="address_1" id="address_1" value="<?=esc($gym['address_1'] ?? '');?>">
                                 </div>
@@ -74,7 +74,7 @@
                                                     &q=<?= esc($gym['gps_location']) ?>"
                                                 <?php } elseif (isset($gym) && empty($gym['gps_location'])) { ?>
                                                     src="https://www.google.com/maps/embed/v1/search?key=AIzaSyCsBJYByuOScPSGFRTFh9Xeu07lQXzGoPY
-                                                        &q=<?=(esc(isset($gym['name']))).'+'.(esc(isset($gym['address_1']))).'+'.(esc(isset($gym['zip_code']))).'+'.(esc(isset($gym['label'])))?>"
+                                                        &q=<?=(esc($gym['name']) ?? '').'+'.(esc($gym['address_1']) ?? '').'+'.(esc($gym['zip_code']) ?? '').'+'.(esc($gym['label']) ?? '')?>"
                                                 <?php } else { ?>
                                                     src="https://www.google.com/maps/embed/v1/search?key=AIzaSyCsBJYByuOScPSGFRTFh9Xeu07lQXzGoPY
                                                     &q=+
