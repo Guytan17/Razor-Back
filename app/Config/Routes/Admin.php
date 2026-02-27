@@ -33,6 +33,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('save', 'Club::saveClub'); // sauvegarde création
         $routes->post('save/(:num)', 'Club::saveClub/$1'); //sauvegarde édition
         $routes->post('switch-active/(:num)', 'Club::switchActiveClub/$1');
+        $routes->get('search', 'Club::searchClub');
     });
 
     //Routes pour la gestion des gymnases

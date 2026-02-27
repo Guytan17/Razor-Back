@@ -109,8 +109,54 @@
                                 <div class="card-header text-center">
                                     <span class="card-title fw-bold h5">Clubs utilisant ce gymnase</span>
                                 </div>
-                                <div class="card-body">
-
+                                <div class="card-body" id="zone-club">
+                                    <div class="row mb-3">
+                                        <div class="col p-3">
+                                            <div class="input-group">
+                                                <select class="form-select select-club" id="select-club">
+                                                </select>
+                                                <span class="input-group-text btn btn-sm btn-primary d-flex align-items-center" id="add-club"><i class="fas fa-plus"></i> Ajouter</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 overflow-auto">
+                                        <div class="col" id="zone-club-list">
+                                            <?php if(isset($gym['clubs'])){
+                                                $cpt_clubs = 0 ;
+                                                foreach ($gym['clubs'] as $club) :
+                                                    $cpt_clubs ++ ?>
+                                                    <div class="row row-club">
+                                                        <div class="col">
+                                                            <div class="card card-club">
+                                                                <div class="card-body p-1 d-flex align-items-center">
+                                                                    <div class="row">
+                                                                        <div class="col-auto">
+                                                                            <span class="fs-4" id="delete-club-<?= $cpt_clubs ?>"><i class="fas fa-trash-alt text-danger
+                                                                            delete-club-button"></i></span>
+                                                                        </div>
+                                                                        <div class="col d-flex align-items-center">
+                                                                            <span class="fw-semibold">
+                                                                                <?= $club['name']?> -
+                                                                                <span class="fst-italic"><?=$club['code']?></span>
+                                                                            </span>
+                                                                        </div>
+                                                                        <div class="col-auto d-flex align-items-center">
+                                                                            <div class="form-check">
+                                                                                <label class="form-label m-0" for="main-gym-<?= $cpt_clubs ?>">Principal</label>
+                                                                                <input class="form-check-input main-club-check" type="checkbox" name="clubs[<?= $cpt_clubs ?>][main_gym]"
+                                                                                       id="main-gym-<?= $cpt_clubs ?>" <?= $club['main_gym'] == 1 ? 'checked' : '' ?>>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <input type="hidden" name="clubs[<?= $cpt_clubs ?>][id]" value="<?= $club['id_club'] ?>">
+                                                    </div>
+                                                <?php endforeach;
+                                            } ?>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -121,7 +167,7 @@
                                 <div class="card-header text-center">
                                     <span class="card-title fw-bold h5">Matchs récents</span>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body" id="zone-game">
 
                                 </div>
                             </div>
@@ -141,23 +187,79 @@
 <script>
     $(document).ready(function () {
         baseUrl = "<?= base_url(); ?>";
-
-        //Initialisation du select des codes postaux
+        let nbClubs = $('#zone-club .card-club').length ;
 
         //Initialisation du select des villes
-        initAjaxSelect2(`#select-city`, {url:'/admin/city/search',searchFields:'label,zip_code',additionalFields:['department_number','department_name'],placeholder:'Rechercher une ville'});
+        initAjaxSelect2(`#select-club`, {url:'/admin/club/search',searchFields:'label,zip_code',additionalFields:['department_number','department_name'],placeholder:'Rechercher une ville'});
+
+        //Initialisation du select des clubs
+        initAjaxSelect2('#select-club', {url:'/admin/club/search',searchFields:'name',additionalFields:['code'],placeholder:'Rechercher un club'});
+
+        //Gestion ajout coach
+        $('#add-club').on('click', function(){
+            let selectedClub = $('#select-club').select2('data');
+
+            // si aucun club n'est sélectionné lors du clic, on bloque la création de la row
+            if (!selectedClub.length) {
+                return;
+            }
+
+            //Si un membre est sélectionné, on
+            nbClubs ++;
+            let club = selectedClub[0];
+            console.log('club:'+club);
+            let row = `
+            <div class="row row-club">
+                <div class="col">
+                    <div class="card card-club">
+                        <div class="card-body p-1 d-flex align-items-center">
+                            <div class="row">
+                               <div class="col-auto">
+                                   <span class="fs-4" id="delete-club-${nbClubs}"><i class="fas fa-trash-alt text-danger delete-club-button"></i></span>
+                               </div>
+                                <div class="col d-flex align-items-center">
+                                    <span class="fw-semibold" >${club.text} - <span class="fst-italic">${club.code}</span></span>
+                                </div>
+                                <div class="col-auto d-flex align-items-center">
+                                    <div class="form-check">
+                                        <label class="form-label m-0" for="main-gym-${nbClubs}">Principal</label>
+                                        <input class="form-check-input main-club-check" type="checkbox" name="clubs[${nbClubs}][main_gym]" id="main-gym-${nbClubs}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="clubs[${nbClubs}][id]" value="${club.id}">
+            </div>
+            `;
+
+            $('#zone-club-list').prepend(row);
+            $('#select-club').empty();
+        });
+
+        // Gestion suppression club
+        $('#zone-club').on('click' , '.delete-club-button', function(){
+            nbClubs --;
+            $(this).closest('.row-club').remove();
+        })
+
 
     });
 </script>
 <style>
   .location-map {
       height:328px;
-      background-color: yellow;
   }
 
   .select2-result-item__additionalFields {
       font-size: 0.85em;
       font-style: italic;
+  }
+
+  .delete-club-button:hover,.delete-game-button:hover {
+      scale:1.2;
+      cursor: pointer;
   }
 </style>
 <?php $this->endSection() ; ?>

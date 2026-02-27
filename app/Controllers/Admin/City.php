@@ -27,7 +27,7 @@ class City extends AdminController
         $limit = 25;
 
         //Utilisation de la méthode du Model (via le trait)
-        $result = $this->cm->quickSearchForSelect2($search, $page, $limit, 'label', 'ASC');
+        $result = $this->cm->quickSearchForSelect2($search, $page, $limit, 'zip_code', 'ASC');
 
         //Réponse JSON
         return $this->response->setJSON($result);
