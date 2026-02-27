@@ -125,22 +125,22 @@
                                                 $cpt_clubs = 0 ;
                                                 foreach ($gym['clubs'] as $club) :
                                                     $cpt_clubs ++ ?>
-                                                    <div class="row row-club">
+                                                    <div class="row mb-3 row-club">
                                                         <div class="col">
                                                             <div class="card card-club">
                                                                 <div class="card-body p-1 d-flex align-items-center">
-                                                                    <div class="row">
-                                                                        <div class="col-auto">
+                                                                    <div class="row w-100">
+                                                                        <div class="col-auto g-start-1">
                                                                             <span class="fs-4" id="delete-club-<?= $cpt_clubs ?>"><i class="fas fa-trash-alt text-danger
                                                                             delete-club-button"></i></span>
                                                                         </div>
-                                                                        <div class="col d-flex align-items-center">
+                                                                        <div class="col d-flex align-items-center g-start-2">
                                                                             <span class="fw-semibold">
                                                                                 <?= $club['name']?> -
                                                                                 <span class="fst-italic"><?=$club['code']?></span>
                                                                             </span>
                                                                         </div>
-                                                                        <div class="col-auto d-flex align-items-center">
+                                                                        <div class="col-auto d-flex align-items-center" >
                                                                             <div class="form-check">
                                                                                 <label class="form-label m-0" for="main-gym-<?= $cpt_clubs ?>">Principal</label>
                                                                                 <input class="form-check-input main-club-check" type="checkbox" name="clubs[<?= $cpt_clubs ?>][main_gym]"
@@ -209,11 +209,11 @@
             let club = selectedClub[0];
             console.log('club:'+club);
             let row = `
-            <div class="row row-club">
+            <div class="row mb-3 row-club">
                 <div class="col">
                     <div class="card card-club">
                         <div class="card-body p-1 d-flex align-items-center">
-                            <div class="row">
+                            <div class="row w-100">
                                <div class="col-auto">
                                    <span class="fs-4" id="delete-club-${nbClubs}"><i class="fas fa-trash-alt text-danger delete-club-button"></i></span>
                                </div>
