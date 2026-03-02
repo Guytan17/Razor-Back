@@ -17,7 +17,7 @@ class Season extends AdminController
     public function index()
     {
         $data = [
-            'title' => 'Saison',
+            'title' => 'Saisons',
         ];
         $this->addBreadcrumb('Saison','');
         return $this->render('admin/season',$data);

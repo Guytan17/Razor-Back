@@ -31,7 +31,7 @@ class Team extends AdminController
     public function index()
     {
         $data = [
-            'title' => 'Liste des équipes',
+            'title' => 'Équipes',
         ];
         return $this->render('admin/team/index',$data);
     }
@@ -143,7 +143,7 @@ class Team extends AdminController
             }
 
 
-            //Récupération ID et gestion des messages de validation
+            //Gestion des messages de validation
             if($newTeam) {
                 $this->success('Équipe créée avec succès');
             } else {

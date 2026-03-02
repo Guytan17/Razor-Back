@@ -9,11 +9,13 @@ class MasterSeeder extends Seeder
     public function run()
     {
         $this->call('SettingsSeeder');
+        $this->call('CitySeed');
         $this->call('RoleSeeder');
         $this->call('LicenseCodeSeeder');
         $this->call('CategorySeeder');
         $this->call('MemberSeeder');
         $this->call('RoleMemberSeeder');
+        $this->call('ClubSeeder');
         $this->call('MediaSeeder');
     }
 }

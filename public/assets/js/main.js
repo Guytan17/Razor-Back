@@ -76,7 +76,7 @@ function initAjaxSelect2(selector, options) {
         placeholder: 'Rechercher...', // Texte affiché quand rien n'est sélectionné
         allowClear: true,            // Permet de vider la sélection avec un "X"
         theme: 'bootstrap-5',        // Utilise le thème Bootstrap 5 (si disponible)
-        minimumInputLength: 0,       // 0 = charge dès l'ouverture, 1+ = attend X caractères
+        minimumInputLength: 0, // 0 = charge dès l'ouverture, 1+ = attend X caractères
         delay: 300,                  // Délai en ms avant de lancer la recherche (évite trop de requêtes)
         url: '',                     // URL pour la recherche AJAX (OBLIGATOIRE)
         searchFields: '',            // Champs à rechercher (optionnel, pour info)
@@ -161,10 +161,29 @@ function initAjaxSelect2(selector, options) {
                 "</div>";
 
             //Ajout du champ additionnel si configuré
-            if (config.additionalFields && item[config.additionalFields]) {
-                html += "<div class='select2-result-item__additionalFields'>" +
-                    item[config.additionalFields] +
-                    "</div>";
+            if (config.additionalFields) {
+                var fields = Array.isArray(config.additionalFields)
+                    ? config.additionalFields
+                    : config.additionalFields.split(',');
+
+                let additionalParts = [];
+
+                fields.forEach(function(field) {
+                    field = field.trim();
+
+                    if (item.hasOwnProperty(field)
+                        && item[field] !== null
+                        && item[field] !== undefined
+                        && item[field] !== '') {
+                        additionalParts.push(item[field]);
+                    }
+                });
+
+                if (additionalParts.length > 0) {
+                    html += "<span class='select2-result-item__additionalFields'>" +
+                        additionalParts.join(' - ') +
+                        "</span>";
+                }
             }
 
             // Ajout de la description si elle existe et si configurée

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\DataTableTrait;
+use App\Traits\Select2Searchable;
 use App\Traits\SlugTrait;
 use CodeIgniter\Model;
 
@@ -10,6 +11,7 @@ class ClubModel extends Model
 {
     use DataTableTrait;
     use SlugTrait;
+    use Select2Searchable;
 
     protected $table            = 'club';
     protected $primaryKey       = 'id';
@@ -81,6 +83,10 @@ class ClubModel extends Model
             ]
         ];
     }
+
+    protected $select2SearchFields = ['name'];
+    protected $select2DisplayField = 'name';
+    protected $select2AdditionalFields = ['code'];
 
     public function reactiveClub($id) : bool{
         return $this->builder()

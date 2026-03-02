@@ -204,7 +204,6 @@
         //Gestion ajout coach
         $('#add-coach').on('click', function(){
             let selectedMember = $('#select-coach').select2('data');
-            console.log(selectedMember);
 
             // si aucun membre n'est sélectionné lors du clic, on bloque la création de la row
             if (!selectedMember.length) {
@@ -214,7 +213,7 @@
             //Si un membre est sélectionné, on
             nbCoachs ++;
             let coach = selectedMember[0];
-            console.log('coach:'+coach);
+
             let row = `
             <div class="row row-coach">
                 <div class="col">

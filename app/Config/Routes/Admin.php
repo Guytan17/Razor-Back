@@ -14,16 +14,6 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->get('search', 'Member::searchMember');
     });
 
-    //Routes pour la gestion des clubs
-    $routes->group('club',['filter' => 'group:admin'], function($routes) {
-        $routes->get('/', 'Club::index');
-        $routes->get('form', 'Club::form'); //accès au formulaire de création
-        $routes->get('form/(:num)', 'Club::form/$1'); // accès au formulaire d'édition
-        $routes->post('save', 'Club::saveClub'); // sauvegarde création
-        $routes->post('save/(:num)', 'Club::saveClub/$1'); //sauvegarde édition
-        $routes->post('switch-active/(:num)', 'Club::switchActiveClub/$1');
-    });
-
     //Routes pour la gestion des équipes
     $routes->group('team',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Team::index');
@@ -33,6 +23,32 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('save/(:num)', 'Team::saveTeam/$1'); //sauvegarde édition
         $routes->post('switch-active/(:num)', 'Team::switchActiveTeam/$1');
         $routes->get('search', 'Team::searchTeam');
+    });
+
+    //Routes pour la gestion des clubs
+    $routes->group('club',['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'Club::index');
+        $routes->get('form', 'Club::form'); //accès au formulaire de création
+        $routes->get('form/(:num)', 'Club::form/$1'); // accès au formulaire d'édition
+        $routes->post('save', 'Club::saveClub'); // sauvegarde création
+        $routes->post('save/(:num)', 'Club::saveClub/$1'); //sauvegarde édition
+        $routes->post('switch-active/(:num)', 'Club::switchActiveClub/$1');
+        $routes->get('search', 'Club::searchClub');
+    });
+
+    //Routes pour la gestion des gymnases
+    $routes->group('gym',['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'Gym::index');
+        $routes->get('form', 'Gym::form'); //accès au formulaire de création
+        $routes->get('form/(:num)', 'Gym::form/$1'); // accès au formulaire d'édition
+        $routes->post('save', 'Gym::saveGym'); // sauvegarde création
+        $routes->post('save/(:num)', 'Gym::saveGym/$1'); //sauvegarde édition
+        $routes->post('delete/(:num)', 'Gym::deleteGym/$1'); //Suppression d'un gymanse
+    });
+
+    //Routes pour les villes
+    $routes->group('city',['filter' => 'group:admin'], function($routes) {
+        $routes->get('search', 'City::searchCity');
     });
 
     //Routes pour la gestion des codes licences

@@ -36,6 +36,11 @@
     "url" : "/admin/club",
     "icon" : "fas fa-people-roof"
   },
+  "Gyms" : {
+    "title" : "Gymnases",
+    "url" : "/admin/gym",
+    "icon" : "fas fa-building"
+  },
   "administration" : {
     "title" : "Administration",
     "url" : "/",
