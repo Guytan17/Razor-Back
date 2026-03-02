@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use CodeIgniter\Model;
 use App\Models\AddressModel;
 use App\Models\GymClubModel;
 use App\Models\GymModel;
@@ -94,6 +95,10 @@ class Gym extends AdminController
             $existingClubsIndexed = array_column($existingClubs, null,'id_club');
             $clubsIds = array_column($clubs,'id');
 
+            //Création de la transaction
+            $db = $this->gymClubModel->db;
+            $db->transStart();
+
             //On supprime les clubs qui ont été retirés
             foreach ($existingClubs as $existingClub){
                 if(!in_array($existingClub['id_club'], $clubsIds)){
@@ -126,6 +131,9 @@ class Gym extends AdminController
                     }
                 }
             }
+
+            //Fermeture de la transaction
+            $db->transComplete();
 
 //            if (isset ($existingClubs)) {
 //                foreach ($existingClubs as $existingClub) {

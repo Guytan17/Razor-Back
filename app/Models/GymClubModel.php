@@ -41,4 +41,5 @@ class GymClubModel extends Model
         $this->where('gym_club.id_gym', $id_gym);
         return $this->findAll();
     }
+
 }
