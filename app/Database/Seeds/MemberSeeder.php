@@ -915,7 +915,8 @@ class MemberSeeder extends Seeder
         $memberModel = model('MemberModel');
 
         foreach ($data as $member) {
-            $memberModel->save($member);
+
+            $memberModel->skipValidation(true)->save($member);
         }
     }
 }

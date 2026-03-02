@@ -85,6 +85,14 @@ class GymModel extends Model
         return $this->first();
     }
 
+    public function getAddressByGym($id_gym) {
+        $this->select('gym.id_address');
+        $this->where('gym.id', $id_gym);
+        $result = $this->first();
+        return $result ? $result['id_address'] : null;
+
+    }
+
     //fonction save personnalisée pour gérer la règle d'unicité du fbi_code
     public function saveGym(array $dataGym){
         $idGym = $dataGym['id'] ?? null;

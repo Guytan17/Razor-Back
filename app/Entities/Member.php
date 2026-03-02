@@ -10,8 +10,8 @@ class Member extends Entity
     protected $dates   = ['created_at', 'updated_at', 'deleted_at'];
 
     protected $attributes = [
-        'firstName' => null,
-        'lastName' => null,
+        'first_name' => null,
+        'last_name' => null,
         'slug'=> null,
         'date_of_birth' => null,
         'license_number' => null,

@@ -190,7 +190,7 @@
         let nbClubs = $('#zone-club .card-club').length ;
 
         //Initialisation du select des villes
-        initAjaxSelect2(`#select-club`, {url:'/admin/club/search',searchFields:'label,zip_code',additionalFields:['department_number','department_name'],placeholder:'Rechercher une ville'});
+        initAjaxSelect2(`#select-city`, {url:'/admin/city/search',searchFields:'label,zip_code',additionalFields:['department_number','department_name'],placeholder:'Rechercher une ville'});
 
         //Initialisation du select des clubs
         initAjaxSelect2('#select-club', {url:'/admin/club/search',searchFields:'name',additionalFields:['code'],placeholder:'Rechercher un club'});
@@ -242,7 +242,7 @@
         $('#zone-club').on('click' , '.delete-club-button', function(){
             nbClubs --;
             $(this).closest('.row-club').remove();
-        })
+        });
 
 
     });

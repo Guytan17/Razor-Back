@@ -56,12 +56,12 @@ class Gym extends AdminController
                 'id' => $id,
                 'fbi_code' => $this->request->getPost('fbi_code'),
                 'name' => $this->request->getPost('name'),
-                'id_address' => intval($this->request->getPost('id_address')) ?? null
+                'id_address' => intval($this->request->getPost('id_address'))
             ];
 
             //Données concernant l'adresse
             $dataAddress = [
-                'id' => $dataGym['id_address'],
+                'id' => $dataGym['id_address'] != null ? $dataGym['id_address'] : '',
                 'address_1' => $this->request->getPost('address_1') ?? '',
                 'address_2' => $this->request->getPost('address_2') ?? '',
                 'id_city' => $this->request->getPost('city') ?? '',
@@ -108,6 +108,7 @@ class Gym extends AdminController
                             'id_club'=>$existingClub['id_club']
                         ])
                     ->delete();
+
                 }
             }
 
@@ -169,10 +170,12 @@ class Gym extends AdminController
 
     public function deleteGym($id) {
         try {
+            $idAddress = $this->gymModel->getAddressByGym($id);
             if($this->gymModel->delete($id)){
+                $this->addressModel->delete($idAddress);
                 return $this->response->setJSON([
                     'success' => true,
-                    'message' => 'Le gymnase a bien été supprimé'
+                    'message' => 'Le gymnase a bien été supprimé',
                 ]);
             } else {
                 return $this->response->setJSON([

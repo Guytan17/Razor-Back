@@ -25,8 +25,8 @@ class GymClub extends Migration
             ]
         ]);
         $this->forge->addKey(['id_club','id_gym'],true,true);
-        $this->forge->addForeignKey('id_club','club','id','CASCADE','RESTRICT');
-        $this->forge->addForeignKey('id_gym','gym','id','CASCADE','RESTRICT');
+        $this->forge->addForeignKey('id_club','club','id','CASCADE','CASCADE');
+        $this->forge->addForeignKey('id_gym','gym','id','CASCADE','CASCADE');
         $this->forge->createTable('gym_club',true);
     }
 

@@ -15,6 +15,7 @@ class MasterSeeder extends Seeder
         $this->call('CategorySeeder');
         $this->call('MemberSeeder');
         $this->call('RoleMemberSeeder');
+        $this->call('ClubSeeder');
         $this->call('MediaSeeder');
     }
 }

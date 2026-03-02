@@ -33,7 +33,7 @@ class Gym extends Migration
             'id_address' => [
                 'type' => 'INT',
                 'constraint' => 11,
-                'null' => false,
+                'null' => true,
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -45,7 +45,7 @@ class Gym extends Migration
             ]
         ]);
         $this->forge->addKey('id',true);
-        $this->forge->addForeignKey('id_address','address','id','CASCADE','CASCADE');
+        $this->forge->addForeignKey('id_address','address','id','CASCADE','RESTRICT');
         $this->forge->createTable('gym',true);
     }
 
