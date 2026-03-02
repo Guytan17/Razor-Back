@@ -68,8 +68,7 @@ class Gym extends AdminController
             ];
 
             //Données concernant le club
-            $clubs = $this->request->getPost('clubs');
-
+            $clubs = $this->request->getPost('clubs') ?? [];
             //Variable pour savoir si c'est un nouveau gymnase
             $newGym = empty($dataGym['id']);
 
@@ -92,37 +91,38 @@ class Gym extends AdminController
             //Enregistrement du club
             //Création des variables
             $existingClubs = $this->gymClubModel->where('id_gym', $dataGym['id'])->findAll();
-            $existingClubsIds = array_column($existingClubs, 'id_club');
-            $clubsIds = array_column($clubs, 'id');
-//            dd($clubs,$clubsIds,$existingClubs,$existingClubsIds);
+            $existingClubsIndexed = array_column($existingClubs, null,'id_club');
+            $clubsIds = array_column($clubs,'id');
+
             //On supprime les clubs qui ont été retirés
             foreach ($existingClubs as $existingClub){
                 if(!in_array($existingClub['id_club'], $clubsIds)){
-                    $this->gymClubModel->delete($existingClub['id_club']);
+                    $this->gymClubModel
+                        ->where([
+                            'id_gym'=>$dataGym['id'],
+                            'id_club'=>$existingClub['id_club']
+                        ])
+                    ->delete();
                 }
             }
 
             //On boucle sur les clubs envoyés dans le formulaire
-            if (isset($clubs)) {
-                foreach ($clubs as $club) {
-                    //Variable du club envoyé dans le formulaire
-                    $dataGymClub = [
-                        'id_club' => $club['id'],
-                        'id_gym' => $dataGym['id'],
-                        'main_gym' => isset($club['main_gym']) == 'on' ? 1 : 0,
-                    ];
+            foreach ($clubs as $club) {
+                //Variable du club envoyé dans le formulaire
+                $dataGymClub = [
+                    'id_club' => $club['id'],
+                    'id_gym' => $dataGym['id'],
+                    'main_gym' => isset($club['main_gym']) ? 1 : 0,
+                ];
 
-                    //Enregistrement du club s'il n'existe pas déjà
-                    if(!in_array($club['id'], $existingClubsIds,true)){
-                        $this->gymClubModel->insert($dataGymClub);
-                    }
-                    //sinon, s'il existe, on compare le champ main_gym et le met à jour si besoin
-                    elseif (in_array($club['id'], $existingClubsIds,true)) {
-                        foreach ($existingClubs as $existingClub) {
-                            if ($club['id'] == $existingClub['id_club'] && $dataGymClub['main_gym'] !== $existingClub['main_gym']) {
-                                $this->gymClubModel->where('id_club',$dataGymClub['id_club'])->where('id_gym',$dataGymClub['id_gym'])->update(null, $dataGymClub);
-                            }
-                        }
+                //Enregistrement du club s'il n'existe pas déjà
+                if(!isset($existingClubsIndexed[$club['id']])){
+                    $this->gymClubModel->insert($dataGymClub);
+                }
+                //sinon, s'il existe, on compare le champ main_gym et le met à jour si besoin
+                else {
+                    if($existingClubsIndexed[$club['id']]['main_gym'] != $dataGymClub['main_gym']){
+                        $this->gymClubModel->where('id_club',$dataGymClub['id_club'])->where('id_gym',$dataGymClub['id_gym'])->update(null, $dataGymClub);
                     }
                 }
             }
