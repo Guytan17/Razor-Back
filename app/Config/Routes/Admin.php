@@ -51,6 +51,14 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->get('search', 'City::searchCity');
     });
 
+    //Routes pour les sponsors
+    $routes->group('sponsor',['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'Sponsor::index');
+        $routes->post('save', 'Sponsor::saveSponsor'); //sauvegarde création
+        $routes->post('save/(:num)', 'Sponsor::saveSponsor/$1'); //sauvegarde édition
+        $routes->post('delete/(:num)', 'Sponsor::deleteSponsor/$1'); // suppression sponsor
+    });
+
     //Routes pour la gestion des codes licences
     $routes->group('license-code', ['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'LicenseCode::index');
