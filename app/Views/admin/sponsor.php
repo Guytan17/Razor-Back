@@ -107,8 +107,8 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <label class="form-label" for="modalInputSpecifications">Caractéristiques et instructions</label>
-                            <textarea class="form-control" name="specifications" id="modalInputSpecifications" rows="3"></textarea>
+                            <label class="form-label" for="modalSpecificationsInput">Caractéristiques et instructions</label>
+                            <textarea class="form-control" name="specifications" id="modalSpecificationsInput" rows="3"></textarea>
                         </div>
                     </div>
                 </div>
@@ -166,7 +166,6 @@
                 {data: 'id'},
                 {data: 'name'},
                 {data: 'rank'},
-
             ],
             language: {
                 url: baseUrl + 'assets/js/datatable/datatable-2.3.5-fr-FR.json',
