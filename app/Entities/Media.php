@@ -62,7 +62,7 @@ class Media extends Entity
      */
     public function isValidEntityType(): bool
     {
-        $validTypes = ['user', 'recipe', 'recipe_mea', 'step', 'ingredient', 'brand', 'settings'];
+        $validTypes = ['user', 'sponsor', 'club', 'settings'];
         return in_array($this->entity_type, $validTypes);
     }
 

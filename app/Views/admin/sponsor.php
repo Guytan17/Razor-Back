@@ -17,7 +17,7 @@
                         <div class="row mb-3">
                             <div class="col">
                                 <img class="img-thumbnail mb-3" src="" alt="image de ">
-                                <input class="form-control" type="file">
+                                <input class="form-control" type="file" name="logo" id="logo">
                             </div>
                         </div>
                         <!-- NOM DU SPONSOR -->
@@ -88,6 +88,12 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <img class="img-thumbnail mb-3" src="" alt="image de ">
+                            <input class="form-control" type="file" name="modalLogoInput" id="modalLogoInput">
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col">
                             <label class="form-label" for="modalNameInput">Nom du sponsor <span class="text-danger">*</span></label>
@@ -201,26 +207,39 @@
         let id = $(this).data('id');
         console.log(id);
         deleteSponsor(id);
-    })
+    });
 
     function saveSponsor() {
         let name = $('#modalNameInput').val();
         let id = $('#modalNameInput').data('id');
         let rank = $('#modalRankInput').val() || null;
         let specifications = $('#modalSpecificationsInput').val() || null;
+        let logoFile = $('#modalLogoInput')[0].files[0];
+
+        //FormData pour envoyer le logo
+        let formData = new FormData();
+        formData.append('id', id);
+        formData.append('name', name);
+        formData.append('rank', rank);
+        formData.append('specifications', specifications);
+        formData.append(csrfName,csrfHash);
+
+        //ajout du logo que s'il y en a un
+        if(logoFile) {
+            formData.append('logo', logoFile);
+        }
+
         $.ajax({
             url: baseUrl + 'admin/sponsor/update/' + id,
             type: 'POST',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             },
-            data: {
-                name: name,
-                rank: rank,
-                specifications: specifications,
-                [csrfName]: csrfHash
-            },
+            data: formData,
             dataType: 'json',
+            //indispensable avec FormData
+            processData: false, // empeche que les données soient traduites en string
+            contentType: false, // laisse le navigateur gérer le type de formulaire
             success: function (response) {
                 if (response.success) {
                     myModal.hide();

@@ -30,6 +30,7 @@ class Sponsor extends AdminController
                 'rank' => $this->request->getPost('rank'),
                 'specifications' => $this->request->getPost('specifications'),
             ];
+            $logo = $this->request->getFile('logo');
 
             if(!$this->sponsorModel->insert($dataSponsor)){
                 $this->success('Sponsor créé avec succès');
@@ -47,13 +48,31 @@ class Sponsor extends AdminController
 
     public function updateSponsor($id){
         try {
+            //récupération des données
             $dataSponsor = [
                 'name' => $this->request->getPost('name'),
                 'rank' => $this->request->getPost('rank'),
                 'specifications' => $this->request->getPost('specifications'),
             ];
+            //récupération de l'image
+            $logo = $this->request->getFile('logo');
+           log_message('debug', 'print_r de logo : '.print_r($logo,true));
+
             //si les specifications sont supprimées, on les force en null
             $dataSponsor['specifications'] = empty($dataSponsor['specifications']) ? null : $dataSponsor['specifications'];
+
+            //Gestion du logo
+            $dataLogo = [
+                'entity_id' => $id,
+                'entity_type' => 'sponsor',
+                'title' => 'Logo de ' . $dataSponsor['name'],
+                'alt' => 'Logo de ' . $dataSponsor['name'],
+            ];
+            $uploadResultLogo = upload_file($logo,'logos/sponsor/'.$id, $logo->getName(),$dataLogo,false);
+            if(is_array($uploadResultLogo) && isset($uploadResultLogo['status']) && $uploadResultLogo['status'] == 'error'){
+                $this->error("Erreur lors de l'upload du logo :".$uploadResultLogo['message']);
+            }
+
             if($this->sponsorModel->update($id,$dataSponsor)){
                 return $this->response->setJSON([
                     'success' => true,
