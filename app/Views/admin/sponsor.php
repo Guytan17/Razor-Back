@@ -197,6 +197,13 @@
         myModal.show();
     });
 
+    //action au clic sur le bouton de suppression d'un sponsor
+    $(document).on('click', '.btn-delete-sponsor', function () {
+        let id = $(this).data('id');
+        console.log(id);
+        deleteSponsor(id);
+    })
+
     function saveSponsor() {
         let name = $('#modalNameInput').val();
         let id = $('#modalNameInput').data('id');
@@ -238,5 +245,49 @@
         })
     }
 
+    function deleteSponsor(id) {
+        Swal.fire({
+            title: `Êtes-vous sûr ?`,
+            text: `Voulez-vous vraiment supprimer ce sponsor ?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#28a745",
+            cancelButtonColor: "#6c757d",
+            confirmButtonText: `Oui !`,
+            cancelButtonText: "Annuler",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '<?= base_url('/admin/sponsor/delete/') ?>'+id,
+                    type: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    data: {
+                        [csrfName]: csrfHash
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Succès !',
+                                text: response.message,
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                            refreshTable();
+                        } else {
+                            Swal.fire({
+                                title: 'Erreur !',
+                                text: 'Une erreur est survenue',
+                                icon: 'error'
+                            });
+                        }
+                    }
+                })
+            }
+        });
+    }
 </script>
 <?php $this->endSection();

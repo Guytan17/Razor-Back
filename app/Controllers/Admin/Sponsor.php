@@ -72,4 +72,25 @@ class Sponsor extends AdminController
             ]);
         }
     }
+
+    public function deleteSponsor($id) {
+        try {
+            if($this->sponsorModel->delete($id)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Le sponsor a bien été supprimé'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $this->sponsorModel->errors(),
+                ]);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
 }
