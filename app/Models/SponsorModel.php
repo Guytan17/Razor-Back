@@ -43,4 +43,18 @@ class SponsorModel extends Model
 
     protected $beforeInsert   = ['generateUniqueSlugName'];
     protected $beforeUpdate   = ['generateUniqueSlugName'];
+
+    public function getDataTableConfig(){
+        return [
+            'searchable_fields' => [
+                'id',
+                'name',
+                'rank',
+            ],
+            'joins' => [
+
+            ],
+            'select' => 'id,name, rank'
+        ];
+    }
 }
