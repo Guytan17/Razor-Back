@@ -54,8 +54,6 @@ class Season extends AdminController
             //si les dates de début/fin sont supprimées, on les force en null
             $dataSeason['start_date'] = empty($dataSeason['start_date']) ? null : $dataSeason['start_date'];
             $dataSeason['end_date'] = empty($dataSeason['end_date']) ? null : $dataSeason['end_date'];
-            log_message('debug', print_r($dataSeason, true));
-            log_message('debug', 'Updating season id: '.$id);
             if($this->sm->update($id,$dataSeason)){
                 return $this->response->setJSON([
                     'success' => true,

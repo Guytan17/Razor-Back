@@ -44,4 +44,32 @@ class Sponsor extends AdminController
             return redirect()->back()->withInput();
         }
     }
+
+    public function updateSponsor($id){
+        try {
+            $dataSponsor = [
+                'name' => $this->request->getPost('name'),
+                'rank' => $this->request->getPost('rank'),
+                'specifications' => $this->request->getPost('specifications'),
+            ];
+            //si les specifications sont supprimées, on les force en null
+            $dataSponsor['specifications'] = empty($dataSponsor['specifications']) ? null : $dataSponsor['specifications'];
+            if($this->sponsorModel->update($id,$dataSponsor)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Sponsor modifié avec succès'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $this->sponsorModel->errors()
+                ]);
+            }
+        } catch (\Exception $e){
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 }

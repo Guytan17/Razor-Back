@@ -79,6 +79,47 @@
         </div>
         <!-- END : ZONE INDEX -->
     </div>
+    <!-- START : MODAL POUR LES MODIFICATIONS -->
+    <div class="modal" id="modalSponsor" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modifier le sponsor </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <label class="form-label" for="modalNameInput">Nom du sponsor <span class="text-danger">*</span></label>
+                            <input class="form-control" id="modalNameInput" type="text">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <label class="form-label" for="modalRankInput">Niveau d'importance du sponsor <span class="text-danger">*</span></label>
+                            <select class="form-select" name="rank" id="modalRankInput" required>
+                                <?php for ($i = 1; $i <= 9; $i++): ?>
+                                    <option value="<?= $i ?>">Rang <?= $i ?></option>
+                                <?php endfor; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label class="form-label" for="modalInputSpecifications">Caractéristiques et instructions</label>
+                            <textarea class="form-control" name="specifications" id="modalInputSpecifications" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button onclick="saveSponsor()" type="button" class="btn btn-primary">Sauvegarder</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END : MODAL POUR LES MODIFICATIONS -->
 </div>
 <script>
     var baseUrl = "<?=base_url();?>";
@@ -108,7 +149,8 @@
                                     title="Modifier"
                                     data-id='${row.id}'
                                     data-name='${escapeHtml(row.name)}'
-                                    data-rank='${escapeHtml(row.rank)}'>
+                                    data-rank='${escapeHtml(row.rank)}'
+                                    data-specifications='${escapeHtml(row.specifications)}'>
                                         <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="btn btn-sm btn-danger btn-delete-sponsor"
@@ -139,5 +181,62 @@
             table.ajax.reload(null, false); // false pour garder la pagination
         };
     })
+
+    //Définition de la modal
+    const myModal = new bootstrap.Modal('#modalSponsor');
+
+    //Fonction pour ouvrir la modal avec les données préremplies
+    $(document).on('click','.btn-edit-sponsor', function() {
+        const btn = $(this);
+
+        $('#modalNameInput').val(btn.data('name'));
+        $('#modalNameInput').data('id',btn.data('id'));
+        $('#modalRankInput').val(btn.data('rank'));
+        $('#modalSpecificationsInput').val(btn.data('specifications'));
+
+        myModal.show();
+    });
+
+    function saveSponsor() {
+        let name = $('#modalNameInput').val();
+        let id = $('#modalNameInput').data('id');
+        let rank = $('#modalRankInput').val() || null;
+        let specifications = $('#modalSpecificationsInput').val() || null;
+        $.ajax({
+            url: baseUrl + 'admin/sponsor/update/' + id,
+            type: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            data: {
+                name: name,
+                rank: rank,
+                specifications: specifications,
+                [csrfName]: csrfHash
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    myModal.hide();
+                    Swal.fire({
+                        title: 'Succès !',
+                        text: response.message,
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    //Actualiser la table
+                    refreshTable();
+                } else {
+                    Swal.fire({
+                        title: 'Erreur !',
+                        html: getAjaxErrorMessage(response),
+                        icon: 'error'
+                    });
+                }
+            }
+        })
+    }
+
 </script>
 <?php $this->endSection();

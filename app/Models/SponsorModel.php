@@ -50,11 +50,12 @@ class SponsorModel extends Model
                 'id',
                 'name',
                 'rank',
+                'specifications'
             ],
             'joins' => [
 
             ],
-            'select' => 'id,name, rank'
+            'select' => 'id, name, rank, specifications'
         ];
     }
 }
