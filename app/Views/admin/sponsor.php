@@ -17,7 +17,7 @@
                         <div class="row mb-3">
                             <div class="col">
                                 <img class="img-thumbnail mb-3" src="" alt="image de ">
-                                <input class="form-input" type="file">
+                                <input class="form-control" type="file">
                             </div>
                         </div>
                         <!-- NOM DU SPONSOR -->
