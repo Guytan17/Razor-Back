@@ -91,7 +91,7 @@
                     <!-- START : IMAGE -->
                     <div class="row mb-3 d-flex justify-content-center">
                         <div class="col-auto position-relative logo-hover m-0 p-0">
-                            <div class="position-absolute img-thumbnail " style="height:100%;width:100%;background-color:rgb(0,0,0,0.3);display:none;">
+                            <div class="position-absolute img-thumbnail " style="height:100%;width:100%;background-color:rgb(0,0,0,0.3);display:none;" id="logoPreviewGreyDiv">
                                 <div class="d-flex justify-content-center align-items-center h-100">
                                     <div class="btn btn-danger text-white delete-logo">
                                         <i class="fas fa-trash-alt"></i>
@@ -246,7 +246,6 @@
     function saveSponsor() {
         let name = $('#modalNameInput').val();
         let id = $('#modalNameInput').data('id');
-        console.log(id);
         let rank = $('#modalRankInput').val() || null;
         let specifications = $('#modalSpecificationsInput').val() || null;
         let logoFile = $('#modalLogoInput')[0].files[0];
