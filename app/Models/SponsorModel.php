@@ -47,15 +47,20 @@ class SponsorModel extends Model
     public function getDataTableConfig(){
         return [
             'searchable_fields' => [
-                'id',
+                'sponsor.id',
                 'name',
                 'rank',
-                'specifications'
+                'specifications',
+                'logo_url'
             ],
             'joins' => [
-
+                [
+                    'table' => 'media',
+                    'condition' => 'sponsor.id = media.entity_id AND media.entity_type = \'sponsor\'',
+                    'type' => 'left'
+                ],
             ],
-            'select' => 'id, name, rank, specifications'
+            'select' => 'sponsor.id as sponsor_id, name, rank, specifications,media.file_path as logo_url'
         ];
     }
 }

@@ -32,12 +32,27 @@ class Sponsor extends AdminController
             ];
             $logo = $this->request->getFile('logo');
 
-            if(!$this->sponsorModel->insert($dataSponsor)){
+
+            if($this->sponsorModel->insert($dataSponsor)){
                 $this->success('Sponsor créé avec succès');
+                $id = $this->sponsorModel->getInsertID();
             } else {
                 foreach ($this->sponsorModel->errors() as $error) {
                     $this->error($error);
                 }
+            }
+
+            //Gestion du logo
+            $dataLogo = [
+                'entity_id' => $id,
+                'entity_type' => 'sponsor',
+                'title' => 'Logo de ' . $dataSponsor['name'],
+                'alt' => 'Logo de ' . $dataSponsor['name'],
+            ];
+
+            $uploadResultLogo = upload_file($logo,'logos/sponsor/'.$id, $logo->getName(),$dataLogo,false);
+            if(is_array($uploadResultLogo) && isset($uploadResultLogo['status']) && $uploadResultLogo['status'] == 'error'){
+                $this->error("Erreur lors de l'upload du logo :".$uploadResultLogo['message']);
             }
             return $this->redirect('admin/sponsor');
         } catch (\Exception $e) {
@@ -56,7 +71,6 @@ class Sponsor extends AdminController
             ];
             //récupération de l'image
             $logo = $this->request->getFile('logo');
-           log_message('debug', 'print_r de logo : '.print_r($logo,true));
 
             //si les specifications sont supprimées, on les force en null
             $dataSponsor['specifications'] = empty($dataSponsor['specifications']) ? null : $dataSponsor['specifications'];

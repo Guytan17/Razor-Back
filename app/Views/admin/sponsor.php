@@ -16,7 +16,7 @@
                         <!-- IMAGE DU SPONSOR -->
                         <div class="row mb-3">
                             <div class="col">
-                                <img class="img-thumbnail mb-3" src="" alt="image de ">
+                                <img class="img-thumbnail mb-3" src="" alt="image de " id="logoPreview">
                                 <input class="form-control" type="file" name="logo" id="logo">
                             </div>
                         </div>
@@ -90,7 +90,7 @@
                 <div class="modal-body">
                     <div class="row mb-3">
                         <div class="col">
-                            <img class="img-thumbnail mb-3" src="" alt="image de ">
+                            <img class="img-thumbnail mb-3" src="" alt="image de " id="modalLogoPreview">
                             <input class="form-control" type="file" name="modalLogoInput" id="modalLogoInput">
                         </div>
                     </div>
@@ -131,6 +131,9 @@
     var baseUrl = "<?=base_url();?>";
 
     $(document).ready(function() {
+        // Initialiser l'aperçu du logo
+        initImagePreview('#logo', '#logoPreview', '<?= esc(base_url('/assets/img/default.png'),'js') ?>', 2);
+
         table = $('#sponsorsTable').DataTable({
             processing: true,
             serverSide: true,
@@ -153,15 +156,16 @@
                                 <button
                                     class="btn btn-sm btn-warning btn-edit-sponsor"
                                     title="Modifier"
-                                    data-id='${row.id}'
+                                    data-id='${row.sponsor_id}'
                                     data-name='${escapeHtml(row.name)}'
                                     data-rank='${escapeHtml(row.rank)}'
-                                    data-specifications='${escapeHtml(row.specifications)}'>
+                                    data-specifications='${escapeHtml(row.specifications)}'
+                                    data-logo-url='${escapeHtml(row.logo_url)}'>
                                         <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="btn btn-sm btn-danger btn-delete-sponsor"
                                     title="Supprimer"
-                                    data-id="${row.id}">
+                                    data-id="${row.sponsor_id}">
                                         <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>
@@ -169,7 +173,7 @@
                             ;
                     }
                 },
-                {data: 'id'},
+                {data: 'sponsor_id'},
                 {data: 'name'},
                 {data: 'rank'},
             ],
@@ -185,7 +189,9 @@
         window.refreshTable = function () {
             table.ajax.reload(null, false); // false pour garder la pagination
         };
-    })
+
+    });
+
 
     //Définition de la modal
     const myModal = new bootstrap.Modal('#modalSponsor');
@@ -198,6 +204,10 @@
         $('#modalNameInput').data('id',btn.data('id'));
         $('#modalRankInput').val(btn.data('rank'));
         $('#modalSpecificationsInput').val(btn.data('specifications'));
+        let logoUrl = btn.data('logo-url');
+        $('#modalLogoPreview').attr('src', logoUrl || '/assets/img/default.png');
+
+        initImagePreview('#modalLogoInput', '#modalLogoPreview', '<?= esc(base_url('/assets/img/default.png'),'js') ?>', 2);
 
         myModal.show();
     });
@@ -205,13 +215,13 @@
     //action au clic sur le bouton de suppression d'un sponsor
     $(document).on('click', '.btn-delete-sponsor', function () {
         let id = $(this).data('id');
-        console.log(id);
         deleteSponsor(id);
     });
 
     function saveSponsor() {
         let name = $('#modalNameInput').val();
         let id = $('#modalNameInput').data('id');
+        console.log(id);
         let rank = $('#modalRankInput').val() || null;
         let specifications = $('#modalSpecificationsInput').val() || null;
         let logoFile = $('#modalLogoInput')[0].files[0];
