@@ -41,6 +41,11 @@
     "url" : "/admin/gym",
     "icon" : "fas fa-building"
   },
+  "Sponsors" : {
+    "title" : "Sponsors",
+    "url" : "/admin/sponsor",
+    "icon" : "fas fa-hand-holding-dollar"
+  },
   "administration" : {
     "title" : "Administration",
     "url" : "/",

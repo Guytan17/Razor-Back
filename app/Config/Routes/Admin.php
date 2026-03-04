@@ -43,12 +43,20 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->get('form/(:num)', 'Gym::form/$1'); // accès au formulaire d'édition
         $routes->post('save', 'Gym::saveGym'); // sauvegarde création
         $routes->post('save/(:num)', 'Gym::saveGym/$1'); //sauvegarde édition
-        $routes->post('delete/(:num)', 'Gym::deleteGym/$1'); //Suppression d'un gymanse
+        $routes->post('delete/(:num)', 'Gym::deleteGym/$1'); //Suppression d'un gymnase
     });
 
     //Routes pour les villes
     $routes->group('city',['filter' => 'group:admin'], function($routes) {
         $routes->get('search', 'City::searchCity');
+    });
+
+    //Routes pour les sponsors
+    $routes->group('sponsor',['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'Sponsor::index');
+        $routes->post('insert', 'Sponsor::insertSponsor'); //sauvegarde création
+        $routes->post('update/(:num)', 'Sponsor::updateSponsor/$1'); //sauvegarde édition
+        $routes->post('delete/(:num)', 'Sponsor::deleteSponsor/$1'); // suppression sponsor
     });
 
     //Routes pour la gestion des codes licences
