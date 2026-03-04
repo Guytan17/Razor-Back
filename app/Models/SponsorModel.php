@@ -51,7 +51,8 @@ class SponsorModel extends Model
                 'name',
                 'rank',
                 'specifications',
-                'logo_url'
+                'logo_url',
+                'logo_id'
             ],
             'joins' => [
                 [
@@ -60,7 +61,7 @@ class SponsorModel extends Model
                     'type' => 'left'
                 ],
             ],
-            'select' => 'sponsor.id as sponsor_id, name, rank, specifications,media.file_path as logo_url'
+            'select' => 'sponsor.id as sponsor_id, name, rank, specifications,media.file_path as logo_url,media.id as logo_id'
         ];
     }
 }

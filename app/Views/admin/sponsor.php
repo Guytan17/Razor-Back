@@ -15,8 +15,8 @@
                     <div class="card-body">
                         <!-- IMAGE DU SPONSOR -->
                         <div class="row mb-3">
-                            <div class="col">
-                                <img class="img-thumbnail mb-3" src="" alt="image de " id="logoPreview">
+                            <div class="col text-center">
+                                <img class="img-thumbnail mb-3" src="<?= esc(base_url('/assets/img/default.png')) ; ?>" title="image du sponsor" alt="image du sponsor " id="logoPreview">
                                 <input class="form-control" type="file" name="logo" id="logo">
                             </div>
                         </div>
@@ -88,19 +88,28 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row mb-3">
-                        <div class="col">
-                            <img class="img-thumbnail mb-3" src="" alt="image de " id="modalLogoPreview">
-                            <input class="form-control" type="file" name="modalLogoInput" id="modalLogoInput">
+                    <!-- START : IMAGE -->
+                    <div class="row mb-3 d-flex justify-content-center">
+                        <div class="col-auto position-relative logo-hover m-0 p-0">
+                            <div class="position-absolute img-thumbnail " style="height:100%;width:100%;background-color:rgb(0,0,0,0.3);display:none;">
+                                <div class="d-flex justify-content-center align-items-center h-100">
+                                    <div class="btn btn-danger text-white delete-logo">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <img class="img-thumbnail" src="" id="modalLogoPreview">
                         </div>
                     </div>
+                    <input class="form-control" type="file" name="modalLogoInput" id="modalLogoInput">
+                    <!-- END : IMAGE -->
+                    <!-- START : DONNEES TEXTUELLES -->
                     <div class="row">
                         <div class="col">
                             <label class="form-label" for="modalNameInput">Nom du sponsor <span class="text-danger">*</span></label>
                             <input class="form-control" id="modalNameInput" type="text">
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col">
                             <label class="form-label" for="modalRankInput">Niveau d'importance du sponsor <span class="text-danger">*</span></label>
@@ -117,6 +126,7 @@
                             <textarea class="form-control" name="specifications" id="modalSpecificationsInput" rows="3"></textarea>
                         </div>
                     </div>
+                    <!-- END : DONNEES TEXTUELLES -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
@@ -160,7 +170,8 @@
                                     data-name='${escapeHtml(row.name)}'
                                     data-rank='${escapeHtml(row.rank)}'
                                     data-specifications='${escapeHtml(row.specifications)}'
-                                    data-logo-url='${escapeHtml(row.logo_url)}'>
+                                    data-logo-url='${escapeHtml(row.logo_url)}'
+                                    data-logo-id='${escapeHtml(row.logo_id)}'>
                                         <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="btn btn-sm btn-danger btn-delete-sponsor"
@@ -190,6 +201,18 @@
             table.ajax.reload(null, false); // false pour garder la pagination
         };
 
+        //Apparition du bouton de suppression de l'image
+        $('.logo-hover').on('mouseenter mouseleave', function(){
+            $(this).find('.position-absolute').fadeToggle(50);
+        });
+
+        // Action du clic sur le bouton de suppression d'une image
+        $('.delete-logo').on('click', function(e){
+            e.preventDefault();
+            let logoId = $(this).data('logo-id');
+            $(this).append(`<input type="hidden" name="delete-logo" value="${logoId}" id='delete-logo' />`);
+            $('#modalLogoPreview').attr('src', "<?= base_url('/assets/img/default.png') ?>");
+        });
     });
 
 
@@ -199,13 +222,15 @@
     //Fonction pour ouvrir la modal avec les données préremplies
     $(document).on('click','.btn-edit-sponsor', function() {
         const btn = $(this);
+        let name = btn.data('name');
 
-        $('#modalNameInput').val(btn.data('name'));
+        $('#modalNameInput').val(name);
         $('#modalNameInput').data('id',btn.data('id'));
         $('#modalRankInput').val(btn.data('rank'));
         $('#modalSpecificationsInput').val(btn.data('specifications'));
         let logoUrl = btn.data('logo-url');
-        $('#modalLogoPreview').attr('src', logoUrl || '/assets/img/default.png');
+        $('#modalLogoPreview').attr('src', logoUrl || '/assets/img/default.png').attr('title',`logo de ${name} ` ).attr('alt', `logo de ${name} `);
+        $('.delete-logo').data('logo-id',btn.data('logo-id'));
 
         initImagePreview('#modalLogoInput', '#modalLogoPreview', '<?= esc(base_url('/assets/img/default.png'),'js') ?>', 2);
 
@@ -225,6 +250,7 @@
         let rank = $('#modalRankInput').val() || null;
         let specifications = $('#modalSpecificationsInput').val() || null;
         let logoFile = $('#modalLogoInput')[0].files[0];
+        let deleteLogo = $('#delete-logo').val() || null;
 
         //FormData pour envoyer le logo
         let formData = new FormData();
@@ -232,6 +258,7 @@
         formData.append('name', name);
         formData.append('rank', rank);
         formData.append('specifications', specifications);
+        formData.append('delete-logo', deleteLogo);
         formData.append(csrfName,csrfHash);
 
         //ajout du logo que s'il y en a un
@@ -318,4 +345,9 @@
         });
     }
 </script>
+<style>
+     #modalLogoPreview,#logoPreview {
+    max-height: 250px;
+    }
+</style>
 <?php $this->endSection();

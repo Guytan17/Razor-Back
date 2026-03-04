@@ -3,15 +3,18 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Models\MediaModel;
 use App\Models\SponsorModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Sponsor extends AdminController
 {
     protected $sponsorModel;
+    protected $mediaModel;
 
     public function __construct() {
         $this->sponsorModel = new SponsorModel();
+        $this->mediaModel = new MediaModel();
     }
     public function index()
     {
@@ -75,16 +78,25 @@ class Sponsor extends AdminController
             //si les specifications sont supprimées, on les force en null
             $dataSponsor['specifications'] = empty($dataSponsor['specifications']) ? null : $dataSponsor['specifications'];
 
+            //Si logo supprimé mais pas remplacé
+            $deleteLogo = $this->request->getPost('delete-logo');
+            log_message('debug', 'delete-logo :'.print_r($deleteLogo,true));
+            if(!empty($deleteLogo && !isset($logo))){
+                $this->mediaModel->delete($deleteLogo);
+            }
+
             //Gestion du logo
-            $dataLogo = [
-                'entity_id' => $id,
-                'entity_type' => 'sponsor',
-                'title' => 'Logo de ' . $dataSponsor['name'],
-                'alt' => 'Logo de ' . $dataSponsor['name'],
-            ];
-            $uploadResultLogo = upload_file($logo,'logos/sponsor/'.$id, $logo->getName(),$dataLogo,false);
-            if(is_array($uploadResultLogo) && isset($uploadResultLogo['status']) && $uploadResultLogo['status'] == 'error'){
-                $this->error("Erreur lors de l'upload du logo :".$uploadResultLogo['message']);
+            if(isset($logo)){
+                $dataLogo = [
+                    'entity_id' => $id,
+                    'entity_type' => 'sponsor',
+                    'title' => 'Logo de ' . $dataSponsor['name'],
+                    'alt' => 'Logo de ' . $dataSponsor['name'],
+                ];
+                $uploadResultLogo = upload_file($logo,'logos/sponsor/'.$id, $logo->getName(),$dataLogo,false);
+                if(is_array($uploadResultLogo) && isset($uploadResultLogo['status']) && $uploadResultLogo['status'] == 'error'){
+                    $this->error("Erreur lors de l'upload du logo :".$uploadResultLogo['message']);
+                }
             }
 
             if($this->sponsorModel->update($id,$dataSponsor)){
