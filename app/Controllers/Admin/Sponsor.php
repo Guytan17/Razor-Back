@@ -66,6 +66,7 @@ class Sponsor extends AdminController
 
     public function updateSponsor($id){
         try {
+
             //récupération des données
             $dataSponsor = [
                 'name' => $this->request->getPost('name'),
@@ -74,18 +75,17 @@ class Sponsor extends AdminController
             ];
             //récupération de l'image
             $logo = $this->request->getFile('logo');
-
+            log_message('debug', 'print_r du logo :'. (print_r($logo,true)));
             //si les specifications sont supprimées, on les force en null
             $dataSponsor['specifications'] = empty($dataSponsor['specifications']) ? null : $dataSponsor['specifications'];
 
+
+            //Gestion du logo
             //Si logo supprimé mais pas remplacé
             $deleteLogo = $this->request->getPost('delete-logo');
-            log_message('debug', 'delete-logo :'.print_r($deleteLogo,true));
             if(!empty($deleteLogo && !isset($logo))){
                 $this->mediaModel->delete($deleteLogo);
             }
-
-            //Gestion du logo
             if(isset($logo)){
                 $dataLogo = [
                     'entity_id' => $id,

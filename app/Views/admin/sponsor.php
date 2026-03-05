@@ -93,7 +93,7 @@
                         <div class="col-auto position-relative logo-hover m-0 p-0">
                             <div class="position-absolute img-thumbnail " style="height:100%;width:100%;background-color:rgb(0,0,0,0.3);display:none;" id="logoPreviewGreyDiv">
                                 <div class="d-flex justify-content-center align-items-center h-100">
-                                    <div class="btn btn-danger text-white delete-logo">
+                                    <div class="btn btn-danger text-white delete-logo" id="delete-logo-btn">
                                         <i class="fas fa-trash-alt"></i>
                                     </div>
                                 </div>
@@ -212,6 +212,7 @@
             let logoId = $(this).data('logo-id');
             $(this).append(`<input type="hidden" name="delete-logo" value="${logoId}" id='delete-logo' />`);
             $('#modalLogoPreview').attr('src', "<?= base_url('/assets/img/default.png') ?>");
+            $('#modalLogoInput').val('');
         });
     });
 
@@ -230,7 +231,7 @@
         $('#modalSpecificationsInput').val(btn.data('specifications'));
         let logoUrl = btn.data('logo-url');
         $('#modalLogoPreview').attr('src', logoUrl || '/assets/img/default.png').attr('title',`logo de ${name} ` ).attr('alt', `logo de ${name} `);
-        $('.delete-logo').data('logo-id',btn.data('logo-id'));
+        $('#delete-logo-btn').data('logo-id',btn.data('logo-id'));
 
         initImagePreview('#modalLogoInput', '#modalLogoPreview', '<?= esc(base_url('/assets/img/default.png'),'js') ?>', 2);
 

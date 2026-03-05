@@ -4,14 +4,17 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\ClubModel;
+use App\Models\MediaModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Club extends AdminController
 {
     protected $cm;
+    protected $mediaModel;
 
     public function __construct(){
         $this->cm = new ClubModel();
+        $this->mediaModel = new MediaModel();
     }
 
     public function index()
@@ -28,7 +31,7 @@ class Club extends AdminController
         if($id != null) {
             $title = 'Modifier un club';
             $this->addBreadcrumb('Modifier un club');
-            $club = $this->cm->find($id);
+            $club = $this->cm->getFullClub($id);
         } else {
             $title = 'Ajouter un club';
             $this->addBreadcrumb('Ajouter un club');
@@ -50,6 +53,9 @@ class Club extends AdminController
                 'color_1' => $this->request->getPost('color_1'),
                 'color_2' => $this->request->getPost('color_2'),
             ];
+            //Récupération du logo
+            $logo = $this->request->getFile('logo');
+            $deletedLogo = $this->request->getPost('delete-logo');
 
             //Préparation de la variable pour savoir si c'est une création
             $newClub = empty($dataClub['id']);
@@ -66,6 +72,25 @@ class Club extends AdminController
                 $this->success('Club créé avec succès');
             } else {
                 $this->success('Club modifié avec succès');
+            }
+
+            // Gestion du logo
+            //si logo supprimé et pas remplacé
+            if(!empty($deletedLogo) && !$logo->isValid()){
+                $this->mediaModel->delete($deletedLogo);
+            }
+            //enregistrement du logo
+            if($logo->isValid() && !$logo->hasMoved()){
+                $dataLogo = [
+                    'entity_id' => $id,
+                    'entity_type' => 'club',
+                    'title' => 'Logo de ' . $dataClub['name'],
+                    'alt' => 'Logo de ' . $dataClub['name'],
+                ];
+                $uploadResultLogo = upload_file($logo,'logos/club/'.$id, $logo->getName(),$dataLogo,false);
+                if(is_array($uploadResultLogo) && isset($uploadResultLogo['status']) && $uploadResultLogo['status'] == 'error'){
+                    $this->error("Erreur lors de l'upload du logo :".$uploadResultLogo['message']);
+                }
             }
 
             return $this->redirect('/admin/club');
