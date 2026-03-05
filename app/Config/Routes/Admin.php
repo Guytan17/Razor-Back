@@ -25,6 +25,15 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->get('search', 'Team::searchTeam');
     });
 
+    //Routes pour les matchs
+    $routes->group('game',['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'Game::index');
+        $routes->get('form', 'Game::form');
+        $routes->get('form/(:num)', 'Game::form/$1');
+        $routes->post('save', 'Game::saveGame');
+        $routes->post('save/(:num)', 'Game::saveGame/$1');
+    });
+
     //Routes pour la gestion des clubs
     $routes->group('club',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Club::index');
