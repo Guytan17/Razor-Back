@@ -15,8 +15,13 @@ class Game extends Migration
                 'auto_increment' => true,
             ],
             'fbi_number' => [
-                'type' => 'INT',
-                'constraint' => 11,
+                'type' => 'VARCHAR',
+                'constraint' => 10,
+                'null' => true,
+            ],
+            'e_marque_code' => [
+                'type' => 'VARCHAR',
+                'constraint' => 10,
                 'null' => true,
             ],
             'id_gym' => [
