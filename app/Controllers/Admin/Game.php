@@ -16,4 +16,18 @@ class Game extends AdminController
         ];
         return $this->render('admin/game/index', $data);
     }
+
+    public function form($id = null) {
+        $this->addBreadcrumb('Liste des matchs', '/admin/game');
+        if ($id != null) {
+            $title = 'Modifier un match';
+        } else {
+            $title = 'Ajouter un match';
+        }
+        $this->addBreadcrumb($title);
+        $data = [
+            'title' => $title,
+        ];
+        return $this->render('admin/game/form', $data);
+    }
 }
