@@ -14,6 +14,7 @@ trait DataTableTrait
             'joins' => [],
             'select' => '*',
             'with_deleted' => false, // Inclure les enregistrements soft deleted
+            'where' => [],
             'groupBy' => null,
         ];
     }
@@ -31,6 +32,37 @@ trait DataTableTrait
                 $join['condition'],
                 $join['type'] ?? 'left'
             );
+        }
+    }
+
+    /**
+     * Applique les conditions WHERE
+     * Supporte 3 formats :
+     * - ['field', 'value'] : égalité simple
+     * - ['field operator', 'value'] : avec opérateur (ex: 'created_at >', '2024-01-01')
+     * - function($builder) {} : callback pour conditions complexes
+     *
+     * @param \CodeIgniter\Database\BaseBuilder $builder
+     * @param array|null $where
+     */
+    protected function applyWhere($builder, ?array $where = null): void
+    {
+        $where = $where ?? $this->getConfigValue('where', []);
+
+        foreach ($where as $condition) {
+            if (is_array($condition)) {
+                $count = count($condition);
+                if ($count === 2) {
+                    // Format simple : ['field', 'value']
+                    $builder->where($condition[0], $condition[1]);
+                } elseif ($count === 3) {
+                    // Format avec opérateur : ['field', 'operator', 'value']
+                    $builder->where($condition[0] . ' ' . $condition[1], $condition[2]);
+                }
+            } elseif (is_callable($condition)) {
+                // Format callback pour conditions complexes
+                $condition($builder);
+            }
         }
     }
 
@@ -76,6 +108,11 @@ trait DataTableTrait
         // Applique la sélection
         if (!empty($config['select'])) {
             $builder->select($config['select']);
+        }
+
+        //Applique le where
+        if (!empty($config['where'])) {
+            $this->applyWhere($builder,$config['where']);
         }
 
         // Applique le GROUP BY
