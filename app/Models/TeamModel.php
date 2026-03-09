@@ -85,6 +85,9 @@ class TeamModel extends Model
                     'type' => 'INNER'
                 ]
             ],
+            'where' => [
+                ['team.id_club','1']
+            ],
 
             'select' =>'
             team.id,
