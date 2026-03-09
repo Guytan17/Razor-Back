@@ -3,10 +3,17 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Models\ClubModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Game extends AdminController
 {
+    protected $clubModel;
+
+    public function __construct(){
+        $this->clubModel = new ClubModel();
+    }
+
     public function index()
     {
         $title = 'Matchs';
@@ -19,6 +26,7 @@ class Game extends AdminController
 
     public function form($id = null) {
         $this->addBreadcrumb('Liste des matchs', '/admin/game');
+        $clubs = $this->clubModel->findAll();
         if ($id != null) {
             $title = 'Modifier un match';
         } else {
@@ -27,6 +35,7 @@ class Game extends AdminController
         $this->addBreadcrumb($title);
         $data = [
             'title' => $title,
+            'clubs' => $clubs,
         ];
         return $this->render('admin/game/form', $data);
     }
