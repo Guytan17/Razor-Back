@@ -44,6 +44,7 @@
                     <!-- END : CHAMPIONNAT ET INFOS FBI -->
                     <!-- START : CHOIX DES ÉQUIPES ET SCORE -->
                     <div class="row">
+                        <!-- START : ÉQUIPE À DOMICILE -->
                         <div class="col-md-6 mb-3">
                             <div class="card">
                                 <div class="card-body" id="zone-home-team">
@@ -63,17 +64,28 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- END : ÉQUIPE À DOMICILE -->
+                        <!-- START : ÉQUIPE À L'EXTÉRIEUR -->
                         <div class="col-md-6 mb-3">
                             <div class="card">
-                                <div class="card-body text-center">
-                                    <div class="row">
+                                <div class="card-body" id="zone-away-team">
+                                    <div class="row mb-3 text-center">
                                         <div class="col">
                                             <span class="card-title h5">Équipe à l'extérieur</span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col">
+                                            <label for="away_club">Club de l'équipe à l'extérieur</label>
+                                            <select class="form-select" name="away_club" id="select-away-club">
+
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <!-- END : ÉQUIPE À L'EXTÉRIEUR -->
                     </div>
                 </div>
             </div>
@@ -108,6 +120,32 @@
 
             //Initialisation du nouveau select2
             initAjaxSelect2(`#select-home-team`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher un équipe',extraParams: {id_club:selectedClubId}})
+        })
+
+        //GESTION DE L'ÉQUIPE À L'EXTÉRIEUR
+
+        //Initialisation du select des clubs
+        initAjaxSelect2('#select-away-club', {url:'/admin/club/search',searchFields:'name',additionalFields:['code'],placeholder:'Rechercher un club'});
+
+        //On commence par la sélection du club
+        $('#select-away-club').on('change', function(){
+            let selectedClub = $(this).select2('data');
+            let selectedClubId = selectedClub[0].id;
+            console.log(selectedClubId);
+
+            //création et apparition d'un select pour choisir l'équipe du club sélectionné
+            let row = `
+                <div class="row mb-3">
+                    <div class="col">
+                        <label class="form-label" for="">Équipe de ${selectedClub[0]['text']} </label>
+                        <select class="form-control" name="away_team" id="select-away-team"></select>
+                    </div>
+                </div>
+            `;
+            $('#zone-away-team').append(row);
+
+            //Initialisation du nouveau select2
+            initAjaxSelect2(`#select-away-team`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher un équipe',extraParams: {id_club:selectedClubId}})
         })
 
     })
