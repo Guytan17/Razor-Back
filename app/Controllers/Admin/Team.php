@@ -206,8 +206,22 @@ class Team extends AdminController
         $page = (int) $request->getget('page') ?? 1;
         $limit = 25;
 
+        // Récupération des conditions dynamiques
+        $conditions = [];
+        $idClub = $request->getGet('id_club');
+
+        log_message('debug', 'id club ='.print_r($idClub,true));
+        if ($idClub !== null) {
+            $conditions['id_club'] = (int) $idClub;
+        }
+
         //Utilisation de la méthode du Model (via le trait)
-        $result = $this->tm->quickSearchForSelect2($search, $page, $limit, 'name', 'ASC');
+        $result = $this->tm->searchForSelect2(
+            search: $search,
+            page: $page,
+            limit: $limit,
+            conditions: $conditions
+        );
 
         //Réponse JSON
         return $this->response->setJSON($result);
