@@ -69,7 +69,7 @@ class Game extends AdminController
             $newGame=empty($dataGame['id']);
 
             //Enregistrement en BDD
-            if($this->gameModel->save($dataGame)){
+            if(!$this->gameModel->save($dataGame)){
                 $this->error(implode('<br>',$this->gameModel->errors()));
                 return $this->redirect('/admin/game');
             }

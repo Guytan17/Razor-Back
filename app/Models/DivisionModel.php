@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\DataTableTrait;
+use App\Traits\Select2Searchable;
 use App\Traits\SlugTrait;
 use CodeIgniter\Model;
 
@@ -10,6 +11,7 @@ class DivisionModel extends Model
 {
     use DataTableTrait;
     use SlugTrait;
+    use Select2Searchable;
 
     protected $table = 'division';
     protected $primaryKey = 'id';
@@ -82,6 +84,24 @@ class DivisionModel extends Model
             ],
             'select' => 'division.id,division.name,division.id_season,division.id_category,season.name as season_name,category.name as category_name,division.deleted_at',
         ];
+    }
+
+    protected $select2SearchFields = ['name'];
+    protected $select2DisplayField = 'name';
+    protected $select2AdditionalFields = ['season_name'];
+
+    //On surcharge le model avec la fonction permettant de rajouter le nom du club dans le select
+    public function searchWithSeasonName($search='',$page=1,$limit=20){
+        //jointure pour avoir le nom du club
+        $this->select('division.*,season.name as season_name');
+        $this->join('season', 'division.id_season = season.id');
+
+        return $this->searchForSelect2(
+            search:$search,
+            page:$page,
+            limit:$limit,
+            additionalFields: $this->select2AdditionalFields,
+        );
     }
 
     public function reactiveDivision($id) : bool{

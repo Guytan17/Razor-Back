@@ -29,8 +29,8 @@
                     <div class="row d-flex">
                         <div class="col-md-4 mb-3">
                             <label class="form-label mx-3" for="id_division">Championnat</label>
-                            <select class="form-select" name="id_division" id="id_division">
-                                <option value="1">Championnat 1</option>
+                            <select class="form-select" name="id_division" id="select-division">
+
                             </select>
                         </div>
                         <div class="col-6 col-md-4 mb-3">
@@ -102,6 +102,9 @@
 
         //Initialisation Select Gym
         initAjaxSelect2('#select-gym', {url:'/admin/gym/search',searchFields:'name',additionalFields:['fbi_code','club_name'],placeholder:'Rechercher un gymnase'});
+
+        //Initialisation Select Division
+        initAjaxSelect2('#select-division', {url:'/admin/division/search',searchFields:'name',additionalFields:['season_name'],placeholder:'Rechercher un championnat'});
 
         //GESTION DE L'ÉQUIPE À DOMICILE
 
