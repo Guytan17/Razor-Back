@@ -5,21 +5,22 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col">
+            <?= form_open('admin/game/save') ?>
             <div class="card">
                 <div class="card-header text-center">
                     <span class="card-title h3">Création d'un match</span>
                 </div>
                 <div class="card-body">
                     <!-- START : CHOIX DE L'HORAIRE ET DU GYMNASE -->
-                    <div class="row mb-3 d-flex justify-content-center">
-                        <div class="col-auto hstack">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-md-6 hstack mb-3">
                             <label class="form-label mx-3" for="schedule">Horaire</label>
                             <input class="form-control" type="datetime-local" name="schedule" id="schedule">
                         </div>
-                        <div class="col-auto hstack">
-                            <label class="form-label mx-3" for="id_gym">Gymnase</label>
-                            <select class="form-select" name="id_gym" id="id_gym">
-                                <option value="1">Gymnase 1</option>
+                        <div class="col-md-6 hstack mb-3">
+                            <label class="form-label mx-3" for="select-gym">Gymnase</label>
+                            <select class="form-select" name="id_gym" id="select-gym">
+
                             </select>
                         </div>
                     </div>
@@ -88,12 +89,19 @@
                         <!-- END : ÉQUIPE À L'EXTÉRIEUR -->
                     </div>
                 </div>
+                <div class="card-footer text-center">
+                    <button type="submit" class="btn btn-sm btn-primary mx-2"><i class="fas fa-save"></i> Valider</button>
+                </div>
             </div>
+            <?= form_close();?>
         </div>
     </div>
 </div>
 <script>
     $(document).ready(function () {
+
+        //Initialisation Select Gym
+        initAjaxSelect2('#select-gym', {url:'/admin/gym/search',searchFields:'name',additionalFields:['fbi_code','club_name'],placeholder:'Rechercher un gymnase'});
 
         //GESTION DE L'ÉQUIPE À DOMICILE
 

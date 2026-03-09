@@ -53,6 +53,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('save', 'Gym::saveGym'); // sauvegarde création
         $routes->post('save/(:num)', 'Gym::saveGym/$1'); //sauvegarde édition
         $routes->post('delete/(:num)', 'Gym::deleteGym/$1'); //Suppression d'un gymnase
+        $routes->get('search', 'Gym::searchGym');
     });
 
     //Routes pour les villes
@@ -106,6 +107,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('insert', 'Division::insertDivision'); //Sauvegarde création
         $routes->post('update/(:num)', 'Division::updateLeague/$1'); //Sauvegarde édition
         $routes->post('switch-active/(:num)', 'Division::switchActiveDivision/$1');//Activation/désactivation d'un championnat
+        $routes->get('search', 'Division::searchDivision');
     });
 
     //Routes pour la gestion des services

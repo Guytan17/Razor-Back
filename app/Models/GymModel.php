@@ -77,6 +77,27 @@ class GymModel extends Model
         ];
     }
 
+    //paramétrage du Select2Searchable
+    protected $select2SearchFields = ['name'];
+    protected $select2DisplayField = 'name';
+    protected $select2AdditionalFields = ['fbi_code', 'club_name'];
+
+    //On surcharge le model avec la fonction permettant de rajouter le nom du club dans le select
+    public function searchWithClubName($search='',$page=1,$limit=20){
+        //jointure pour avoir le nom du club
+        $this->select('gym.*,club.name as club_name');
+        $this->join('gym_club', 'gym_club.id_gym = gym.id');
+        $this->join('club', 'gym_club.id_club = club.id');
+
+        return $this->searchForSelect2(
+            search:$search,
+            page:$page,
+            limit:$limit,
+            additionalFields: $this->select2AdditionalFields,
+        );
+    }
+
+
     public function getGymById(int $id) {
         $this->select('gym.*, address.address_1,address.address_2,address.id_city,address.gps_location,city.zip_code,city.label,city.department_name,city.department_number,city.region_name');
         $this->join('address', 'gym.id_address = address.id');
