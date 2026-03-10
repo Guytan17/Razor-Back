@@ -107,7 +107,7 @@ trait DataTableTrait
 
         // Applique la sélection
         if (!empty($config['select'])) {
-            $builder->select($config['select']);
+            $builder->select($config['select'],false);
         }
 
         //Applique le where

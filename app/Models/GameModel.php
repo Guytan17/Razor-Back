@@ -76,12 +76,14 @@ class GameModel extends Model
     public function getDataTableConfig() {
         return [
             'searchable_fields' => [
+                'id',
                 'fbi_number',
                 'category',
                 'division',
                 'opponent',
                 'schedule',
-                'place'
+                'place',
+                'game.deleted_at'
             ],
             'joins' => [
                 [
@@ -93,9 +95,65 @@ class GameModel extends Model
                     'table' => 'category',
                     'condition' => 'game.id_category = category.id',
                     'type' => 'left'
+                ],
+                [
+                    'table' => 'team as team_home',
+                    'condition' => 'team_home.id = game.home_team',
+                    'type' => 'inner'
+                ],
+                [
+                    'table' => 'team as team_away',
+                    'condition' => 'team_away.id = game.away_team',
+                    'type' => 'inner'
+                ],
+                [
+                    'table' => 'club as club_home',
+                    'condition' => 'team_home.id_club = club_home.id',
+                    'type' => 'inner'
+                ],
+                [
+                    'table' => 'club as club_away',
+                    'condition' => 'team_away.id_club = club_away.id',
+                    'type' => 'inner'
+                ],
+                [
+                    'table' => 'gym',
+                    'condition' => 'game.id_gym = gym.id',
+                    'type' => 'left'
+                ],
+                [
+                    'table' => 'address',
+                    'condition' => 'gym.id_address = address.id',
+                    'type' => 'left'
+                ],
+                [
+                    'table' => 'city',
+                    'condition' => 'address.id_city = city.id',
+                    'type' => 'left'
                 ]
-            ]
-
+            ],
+            'select' =>"
+            game.id,
+            game.fbi_number,
+            category.name as category,
+            division.name as division,
+            CONCAT (
+                CASE
+                    WHEN club_home.id=1 THEN club_away.name
+                    WHEN club_away.id=1 THEN club_home.name
+                    ELSE ''
+                END,
+                ' - ',
+                CASE
+                    WHEN team_home.id_club=1 THEN team_away.name
+                    WHEN team_away.id_club=1 THEN team_home.name
+                    ELSE ''
+                END)
+            AS opponent,
+            game.schedule,
+            city.label as place,
+            game.deleted_at
+            "
         ];
     }
 }

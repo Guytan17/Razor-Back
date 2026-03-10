@@ -30,8 +30,8 @@ class Game extends Migration
                 'null' => true,
             ],
             'schedule' => [
-                'type' => 'DATE',
-                'null' => true,
+                'type' => 'DATETIME',
+                'null' =>  true,
             ],
             'id_division' => [
                 'type' => 'INT',
