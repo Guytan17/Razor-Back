@@ -5,7 +5,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col">
-            <?= form_open('admin/game/save') ?>
+            <?= form_open('admin/game/save'. (isset($game) ? '/'.$game->id : '')) ?>
             <div class="card">
                 <div class="card-header text-center">
                     <span class="card-title h3">Création d'un match</span>
@@ -15,12 +15,14 @@
                     <div class="row d-flex justify-content-center">
                         <div class="col-md-6 hstack mb-3">
                             <label class="form-label mx-3" for="schedule">Horaire<span class="text-danger">*</span></label>
-                            <input class="form-control" type="datetime-local" name="schedule" id="schedule" required>
+                            <input class="form-control" type="datetime-local" name="schedule" id="schedule" required value="<?= esc($game->schedule ?? '') ?>">
                         </div>
                         <div class="col-md-6 hstack mb-3">
                             <label class="form-label mx-3" for="select-gym">Gymnase<span class="text-danger">*</span></label>
                             <select class="form-select" name="id_gym" id="select-gym" required>
-
+                                <?php if(isset($game->id_gym)): ?>
+                                <option value="<?=$game->id_gym?>" selected><?=$game->gym_name?></option>
+                                <?php endif; ?>
                             </select>
                         </div>
                     </div>
@@ -33,7 +35,9 @@
                                     <label class="form-label mx-3" for="id_category">Catégorie<span class="text-danger">*</span></label>
                                     <div class="input-group mx-0">
                                         <select class="form-select" name="id_category" id="select-category" required>
-
+                                            <?php if(isset($game->id_category)): ?>
+                                                <option value="<?=$game->id_category?>" selected><?=$game->category?></option>
+                                            <?php endif; ?>
                                         </select>
                                     </div>
                                 </div>
@@ -41,7 +45,9 @@
                                     <label class="form-label mx-3" for="id_division">Championnat</label>
                                     <div class="input-group mx-0">
                                         <select class="form-select" name="id_division" id="select-division">
-
+                                            <?php if(isset($game->id_division)): ?>
+                                                <option value="<?=$game->id_division?>" selected><?=$game->division?></option>
+                                            <?php endif; ?>
                                         </select>
                                     </div>
                                 </div>
@@ -51,11 +57,11 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label mx-3" for="fbi_number">Numéro FBI</label>
-                                    <input class="form-control" type="text" name="fbi_number" id="fbi_number">
+                                    <input class="form-control" type="text" name="fbi_number" id="fbi_number" value="<?= esc($game->fbi_number ?? '') ?>">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label mx-3" for="e_marque_code">Code E-Marque</label>
-                                    <input class="form-control" type="text" name="e_marque_code" id="e_marque_code">
+                                    <input class="form-control" type="text" name="e_marque_code" id="e_marque_code" value="<?= esc($game->e_marque_code ?? '') ?>">
                                 </div>
                             </div>
                         </div>
@@ -66,7 +72,7 @@
                         <!-- START : ÉQUIPE À DOMICILE -->
                         <div class="col-md-6 mb-3">
                             <div class="card">
-                                <div class="card-body" id="zone-home-team">
+                                <div class="card-body" >
                                     <div class="row mb-3 text-center">
                                         <div class="col">
                                             <span class="card-title h5">Équipe à domicile <span class="text-danger">*</span></span>
@@ -77,8 +83,22 @@
                                             <label for="home_club">Club de l'équipe à domicile</label>
                                             <div class="input-group">
                                                 <select class="form-select" name="home_club" id="select-home-club" required>
-
+                                                    <?php if(isset($game->home_club)): ?>
+                                                        <option value="<?=$game->home_club?>" selected><?=$game->home_club_name?></option>
+                                                    <?php endif; ?>
                                                 </select>
+                                            </div>
+                                            <div class="my-3" id="zone-home-team">
+                                                <?php if(isset($game->home_team)): ?>
+                                                    <div class="row mb-3">
+                                                        <div class="col">
+                                                            <label class="form-label" for="">Équipe de <?= $game->home_club_name ?></label>
+                                                            <select class="form-control" name="home_team" id="select-away-team" required>
+                                                                <option value="<?= $game->home_team ?>"><?= $game->home_team_name ?></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </div>
@@ -89,7 +109,7 @@
                         <!-- START : ÉQUIPE À L'EXTÉRIEUR -->
                         <div class="col-md-6 mb-3">
                             <div class="card">
-                                <div class="card-body" id="zone-away-team">
+                                <div class="card-body">
                                     <div class="row mb-3 text-center">
                                         <div class="col">
                                             <span class="card-title h5">Équipe à l'extérieur <span class="text-danger">*</span></span>
@@ -100,8 +120,22 @@
                                             <label for="away_club">Club de l'équipe à l'extérieur</label>
                                             <div class="input-group">
                                                 <select class="form-select" name="away_club" id="select-away-club" required>
-
+                                                    <?php if(isset($game->away_club)): ?>
+                                                        <option value="<?=$game->away_club?>" selected><?=$game->away_club_name?></option>
+                                                    <?php endif; ?>
                                                 </select>
+                                            </div>
+                                            <div class="my-3" id="zone-away-team">
+                                                <?php if(isset($game->away_team)): ?>
+                                                    <div class="row mb-3">
+                                                        <div class="col">
+                                                            <label class="form-label" for="">Équipe de <?= $game->away_club_name ?></label>
+                                                            <select class="form-control" name="away_team" id="select-away-team" required>
+                                                                <option value="<?= $game->away_team ?>"><?= $game->away_team_name ?></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </div>
@@ -111,8 +145,8 @@
                         <!-- END : ÉQUIPE À L'EXTÉRIEUR -->
                     </div>
                 </div>
-                <div class="card-footer text-center">
-                    <button type="submit" class="btn btn-sm btn-primary mx-2"><i class="fas fa-save"></i> Valider</button>
+                <div class="card-footer text-end">
+                    <button type="submit" class="btn btn-primary mx-2"><i class="fas fa-save"></i> Valider</button>
                 </div>
             </div>
             <?= form_close();?>
@@ -152,7 +186,7 @@
                     </div>
                 </div>
             `;
-            $('#zone-home-team').append(row);
+            $('#zone-home-team').empty().append(row);
 
             //Initialisation du nouveau select2
             initAjaxSelect2(`#select-home-team`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher un équipe',extraParams: {id_club:selectedClubId}})
@@ -178,7 +212,7 @@
                     </div>
                 </div>
             `;
-            $('#zone-away-team').append(row);
+            $('#zone-away-team').empty().append(row);
 
             //Initialisation du nouveau select2
             initAjaxSelect2(`#select-away-team`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher un équipe',extraParams: {id_club:selectedClubId}})

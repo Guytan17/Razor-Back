@@ -93,7 +93,7 @@
 
                 </div>
                 <div class="card-footer text-end">
-                    <button type="submit" class="btn btn-sm btn-primary mx-2"><i class="fas fa-save"></i> Valider</button>
+                    <button type="submit" class="btn btn-primary mx-2"><i class="fas fa-save"></i> Valider</button>
                 </div>
             </div>
         </div>

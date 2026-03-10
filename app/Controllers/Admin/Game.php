@@ -38,13 +38,15 @@ class Game extends AdminController
 
         if ($id != null) {
             $title = 'Modifier un match';
+            $game = $this->gameModel->getFullGame($id);
         } else {
             $title = 'Ajouter un match';
         }
         $this->addBreadcrumb($title);
         $data = [
             'title' => $title,
-        ];
+            'game' => $game ?? null,
+            ];
         return $this->render('admin/game/form', $data);
     }
 
@@ -74,10 +76,14 @@ class Game extends AdminController
                 $this->error(implode('<br>',$this->gameModel->errors()));
                 return $this->redirect('/admin/game');
             }
+            if($newGame){
+                $id=$this->gameModel->getInsertID();
+            }
+
+
 
             //Messages de validation et récupération nouvel ID
             if($newGame){
-                $id=$this->gameModel->getInsertID();
                 $this->success('Match créé avec succès');
             } else {
                 $this->success('Match modifié avec succès');

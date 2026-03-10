@@ -156,4 +156,27 @@ class GameModel extends Model
             "
         ];
     }
+
+    public function getFullGame($id) {
+        $this->select(
+            'game.*,
+            gym.name as gym_name,
+            category.name as category,
+            division.name as division,
+            team_home.name as home_team_name,
+            team_away.name as away_team_name,
+            club_home.id as home_club,
+            club_away.id as away_club,
+            club_home.name as home_club_name,
+            club_away.name as away_club_name');
+        $this->join('category', 'game.id_category = category.id');
+        $this->join('division', 'game.id_division = division.id');
+        $this->join('gym', 'game.id_gym = gym.id');
+        $this->join('team as team_home', 'game.home_team = team_home.id');
+        $this->join('team as team_away', 'game.away_team = team_away.id');
+        $this->join('club as club_home', 'team_home.id_club = club_home.id');
+        $this->join('club as club_away', 'team_away.id_club = club_away.id');
+        $this->where('game.id', $id);
+        return $this->first();
+    }
 }
