@@ -71,7 +71,7 @@
                     <div class="row">
                         <!-- START : ÉQUIPE À DOMICILE -->
                         <div class="col-md-6 mb-3">
-                            <div class="card">
+                            <div class="card h-100">
                                 <div class="card-body" >
                                     <div class="row mb-3 text-center">
                                         <div class="col">
@@ -80,15 +80,19 @@
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col">
-                                            <label for="home_club">Club de l'équipe à domicile</label>
-                                            <div class="input-group">
-                                                <select class="form-select" name="home_club" id="select-home-club" required>
-                                                    <?php if(isset($game->home_club)): ?>
-                                                        <option value="<?=$game->home_club?>" selected><?=$game->home_club_name?></option>
-                                                    <?php endif; ?>
-                                                </select>
+                                            <div class="row mb-3">
+                                                <div class="col">
+                                                    <label for="home_club">Club de l'équipe à domicile</label>
+                                                    <div class="input-group">
+                                                        <select class="form-select" name="home_club" id="select-home-club" required>
+                                                            <?php if(isset($game->home_club)): ?>
+                                                                <option value="<?=$game->home_club?>" selected><?=$game->home_club_name?></option>
+                                                            <?php endif; ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="my-3" id="zone-home-team">
+                                            <div id="zone-home-team">
                                                 <?php if(isset($game->home_team)): ?>
                                                     <div class="row mb-3">
                                                         <div class="col">
@@ -96,6 +100,19 @@
                                                             <select class="form-control" name="home_team" id="select-away-team" required>
                                                                 <option value="<?= $game->home_team ?>"><?= $game->home_team_name ?></option>
                                                             </select>
+                                                        </div>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
+                                            <div id="zone-home-team-score">
+                                                <?php if(isset($game->home_team)): ?>
+                                                    <div class="row mb-3 d-flex align-items-center">
+                                                        <div class="col-6 text-end">
+                                                            <label class="form-label me-3" for="home-score-input">Score de <?= $game->home_club_name ?></label>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <input class="form-control fw-bold fs-4 score-input" type="number" name="home_score" id="home-score-input" value="<?= esc
+                                                            ($game->score_home) ?? '' ?>">
                                                         </div>
                                                     </div>
                                                 <?php endif; ?>
@@ -108,7 +125,7 @@
                         <!-- END : ÉQUIPE À DOMICILE -->
                         <!-- START : ÉQUIPE À L'EXTÉRIEUR -->
                         <div class="col-md-6 mb-3">
-                            <div class="card">
+                            <div class="card h-100">
                                 <div class="card-body">
                                     <div class="row mb-3 text-center">
                                         <div class="col">
@@ -117,15 +134,19 @@
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col">
-                                            <label for="away_club">Club de l'équipe à l'extérieur</label>
-                                            <div class="input-group">
-                                                <select class="form-select" name="away_club" id="select-away-club" required>
-                                                    <?php if(isset($game->away_club)): ?>
-                                                        <option value="<?=$game->away_club?>" selected><?=$game->away_club_name?></option>
-                                                    <?php endif; ?>
-                                                </select>
+                                            <div class="row mb-3">
+                                                <div class="col">
+                                                    <label for="away_club">Club de l'équipe à l'extérieur</label>
+                                                    <div class="input-group">
+                                                        <select class="form-select" name="away_club" id="select-away-club" required>
+                                                            <?php if(isset($game->away_club)): ?>
+                                                                <option value="<?=$game->away_club?>" selected><?=$game->away_club_name?></option>
+                                                            <?php endif; ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="my-3" id="zone-away-team">
+                                            <div id="zone-away-team">
                                                 <?php if(isset($game->away_team)): ?>
                                                     <div class="row mb-3">
                                                         <div class="col">
@@ -133,6 +154,20 @@
                                                             <select class="form-control" name="away_team" id="select-away-team" required>
                                                                 <option value="<?= $game->away_team ?>"><?= $game->away_team_name ?></option>
                                                             </select>
+                                                        </div>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
+                                            <div id="zone-away-team-score">
+                                                <?php if(isset($game->away_team)): ?>
+                                                    <div class="row mb-3 d-flex align-items-center">
+                                                        <div class="col-6 text-end">
+                                                            <label class="form-label me-3" for="away-score-input">Score de <?= $game->away_club_name ?></label>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <input class="form-control fw-bold fs-4 score-input" type="number" name="away_score" id="away-score-input" value="<?= esc
+                                                            ($game->score_away) ?? ''
+                                                            ?>">
                                                         </div>
                                                     </div>
                                                 <?php endif; ?>
@@ -174,7 +209,6 @@
         $('#select-home-club').on('change', function(){
             let selectedClub = $(this).select2('data');
             let selectedClubId = selectedClub[0].id;
-            console.log(selectedClubId);
 
 
             //création et apparition d'un select pour choisir l'équipe du club sélectionné
@@ -192,6 +226,24 @@
             initAjaxSelect2(`#select-home-team`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher un équipe',extraParams: {id_club:selectedClubId}})
         })
 
+       //Une fois l'équipe choisie, apparition de l'input pour le score
+        $(document).on('change','#select-home-team', function(){
+            let selectedClub = $('#select-home-club').select2('data');
+
+            //création et apparition d'un input pour le score
+            let row = `
+                <div class="row mb-3 d-flex align-items-center">
+                    <div class="col-6 text-end">
+                        <label class="form-label me-3" for="home-score-input">Score de ${selectedClub[0]['text']}</label>
+                    </div>
+                    <div class="col-6">
+                        <input class="form-control fw-bold fs-4 score-input" type="number" name="home_score" id="home-score-input">
+                    </div>
+                </div>
+            `;
+            $('#zone-home-team-score').empty().append(row);
+        })
+
         //GESTION DE L'ÉQUIPE À L'EXTÉRIEUR
 
         //Initialisation du select des clubs
@@ -201,7 +253,7 @@
         $('#select-away-club').on('change', function(){
             let selectedClub = $(this).select2('data');
             let selectedClubId = selectedClub[0].id;
-            console.log(selectedClubId);
+
 
             //création et apparition d'un select pour choisir l'équipe du club sélectionné
             let row = `
@@ -215,12 +267,33 @@
             $('#zone-away-team').empty().append(row);
 
             //Initialisation du nouveau select2
-            initAjaxSelect2(`#select-away-team`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher un équipe',extraParams: {id_club:selectedClubId}})
+            initAjaxSelect2(`#select-away-team`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher un équipe',extraParams: {id_club:selectedClubId}});
+        })
+
+        //Une fois l'équipe choisie, apparition de l'input pour le score
+        $(document).on('change','#select-away-team', function(){
+            let selectedClub = $('#select-away-club').select2('data');
+
+            //création et apparition d'un input pour le score
+            let row = `
+                <div class="row mb-3 d-flex align-items-center">
+                    <div class="col-6 text-end">
+                        <label class="form-label me-3" for="away-score-input">Score de ${selectedClub[0]['text']}</label>
+                    </div>
+                    <div class="col-6">
+                        <input class="form-control fw-bold fs-4 score-input" type="number" name="away_score" id="away-score-input">
+                    </div>
+                </div>
+            `;
+            $('#zone-away-team-score').empty().append(row);
         })
 
     })
-
 </script>
 <style>
+    .score-input {
+
+        height: 50px ;
+    }
 </style>
 <?php $this->endSection(); ?>

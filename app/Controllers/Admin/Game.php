@@ -64,8 +64,8 @@ class Game extends AdminController
                 'mvp' => $this->request->getPost('mvp') ? intval($this->request->getPost('mvp')): null,
                 'home_team' => intval($this->request->getPost('home_team')),
                 'away_team' => intval($this->request->getPost('away_team')),
-                'home_score' => $this->request->getPost('home_score') ? intval($this->request->getPost('home_score')): null,
-                'away_score' => $this->request->getPost('away_score') ? intval($this->request->getPost('away_score')): null,
+                'score_home' => $this->request->getPost('home_score') ? intval($this->request->getPost('home_score')): null,
+                'score_away' => $this->request->getPost('away_score') ? intval($this->request->getPost('away_score')): null,
             ];
 
             //Variable pour savoir si c'est un nouveau match
@@ -94,6 +94,41 @@ class Game extends AdminController
         } catch (\Exception $e){
             $this->error($e->getMessage());
             return redirect()->back()->withInput();
+        }
+    }
+
+    public function switchActiveGame($idGame){
+
+        $game = $this->gameModel->withDeleted()->find($idGame);
+
+        //Test pour savoir si le match existe
+        if(!$game) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Match introuvable'
+            ]);
+        }
+
+        // Si le match est actif, on le désactive
+        if(empty($game->deleted_at)) {
+            $this->gameModel->delete($idGame);
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Match désactivé',
+            ]);
+        } else {
+            //S'il est inactif, on le réactive
+            if($this->gameModel->reactiveGame($idGame)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Match activé',
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Erreur lors de l\'activation',
+                ]);
+            }
         }
     }
 }

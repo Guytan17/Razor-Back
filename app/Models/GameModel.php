@@ -14,7 +14,7 @@ class GameModel extends Model
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = Game::class;
-    protected $useSoftDeletes   = false;
+    protected $useSoftDeletes   = true;
     protected $protectFields    = true;
     protected $allowedFields    = ['fbi_number','e_marque_code', 'id_gym','schedule','id_division','id_category','mvp','home_team','away_team','score_home','score_away'];
 
@@ -155,6 +155,12 @@ class GameModel extends Model
             game.deleted_at
             "
         ];
+    }
+
+    public function reactiveGame($id) : bool{
+        return $this->builder()
+            ->where('id', $id)
+            ->update(['deleted_at' => null, 'updated_at' => date('Y-m-d H:i:s')]);
     }
 
     public function getFullGame($id) {

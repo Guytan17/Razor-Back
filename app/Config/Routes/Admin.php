@@ -28,10 +28,11 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
     //Routes pour les matchs
     $routes->group('game',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Game::index');
-        $routes->get('form', 'Game::form');
-        $routes->get('form/(:num)', 'Game::form/$1');
-        $routes->post('save', 'Game::saveGame');
-        $routes->post('save/(:num)', 'Game::saveGame/$1');
+        $routes->get('form', 'Game::form');//formulaire de création
+        $routes->get('form/(:num)', 'Game::form/$1'); //formulaire d'édition
+        $routes->post('save', 'Game::saveGame'); //sauvegarde création
+        $routes->post('save/(:num)', 'Game::saveGame/$1'); //sauvegarde édition
+        $routes->post('switch-active/(:num)', 'Game::switchActiveGame/$1'); //activation/désactivation
     });
 
     //Routes pour la gestion des clubs
@@ -41,7 +42,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->get('form/(:num)', 'Club::form/$1'); // accès au formulaire d'édition
         $routes->post('save', 'Club::saveClub'); // sauvegarde création
         $routes->post('save/(:num)', 'Club::saveClub/$1'); //sauvegarde édition
-        $routes->post('switch-active/(:num)', 'Club::switchActiveClub/$1');
+        $routes->post('switch-active/(:num)', 'Club::switchActiveClub/$1'); //activation/désactivation
         $routes->get('search', 'Club::searchClub');
     });
 
