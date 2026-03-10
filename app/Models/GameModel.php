@@ -2,18 +2,21 @@
 
 namespace App\Models;
 
+use App\Traits\DataTableTrait;
 use CodeIgniter\Model;
 use App\Entities\Game;
 
 class GameModel extends Model
 {
+    use DataTableTrait;
+
     protected $table            = 'game';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = Game::class;
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['fbi_number','e_marque_code', 'id_gym','schedule','id_division','mvp','home_team','away_team','score_home','score_away'];
+    protected $allowedFields    = ['fbi_number','e_marque_code', 'id_gym','schedule','id_division','id_category','mvp','home_team','away_team','score_home','score_away'];
 
     protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
@@ -28,6 +31,7 @@ class GameModel extends Model
         'id_gym' => 'permit_empty|integer',
         'schedule' => 'permit_empty|valid_date',
         'id_division' => 'permit_empty|integer',
+        'id_category' => 'integer',
         'mvp' => 'permit_empty|integer',
         'home_team' => 'permit_empty|integer',
         'away_team' => 'permit_empty|integer',
@@ -50,6 +54,9 @@ class GameModel extends Model
         'id_division' => [
             'integer' => 'L\'ID du championnat doit être un nombre entier'
         ],
+        'id_category' => [
+            'integer' => 'L\'ID de la category doit être un nombre entier',
+        ],
         'mvp' => [
             'integer', 'Le MVP doit être l\'ID d\'un joueur'
         ],
@@ -66,4 +73,29 @@ class GameModel extends Model
             'integer' => 'Le score de l\'équipe à l\'extérieur doit être un entier'
         ]
     ];
+    public function getDataTableConfig() {
+        return [
+            'searchable_fields' => [
+                'fbi_number',
+                'category',
+                'division',
+                'opponent',
+                'schedule',
+                'place'
+            ],
+            'joins' => [
+                [
+                    'table' => 'division',
+                    'condition' => 'game.id_division = division.id',
+                    'type' => 'left'
+                ],
+                [
+                    'table' => 'category',
+                    'condition' => 'game.id_category = category.id',
+                    'type' => 'left'
+                ]
+            ]
+
+        ];
+    }
 }

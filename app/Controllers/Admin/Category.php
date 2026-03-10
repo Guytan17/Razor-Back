@@ -89,4 +89,24 @@ class Category extends AdminController
             ]);
         }
     }
+
+    public function searchCategory(){
+        $request = $this->request;
+
+        //Vérification Ajax
+        if(!$request->isAJAX()) {
+            return $this->response->setJSON(['error'=> 'Requête non autorisée']);
+        }
+
+        //Paramètres de recherche
+        $search = $request->getget('search') ?? '';
+        $page = (int) $request->getget('page') ?? 1;
+        $limit = 25;
+
+        //Utilisation de la méthode du Model (via le trait)
+        $result = $this->cm->quickSearchForSelect2($search, $page, $limit, 'id', 'ASC');
+
+        //Réponse JSON
+        return $this->response->setJSON($result);
+    }
 }

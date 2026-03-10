@@ -91,6 +91,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('insert', 'Category::insertCategory'); //Sauvegarde création
         $routes->post('update/(:num)', 'Category::updateCategory/$1'); //Sauvegarde édition
         $routes->post('delete/(:num)', 'Category::deleteCategory/$1'); //suppression d'une catégorie
+        $routes->get('search', 'Category::searchCategory');
     });
 
     //Routes pour la gestion des saisons

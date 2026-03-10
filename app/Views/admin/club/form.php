@@ -65,7 +65,7 @@
                     <!-- END : INFO GENERALES DU CLUB -->
                     <div class="row mb-3">
                         <!-- START : EQUIPES -->
-                        <div class="col-md-6">
+                        <div class="col-md-6 mb-3">
                             <div class="card">
                                 <div class="card-header text-center">
                                     <span class="card-title fw-bold h5">Équipes du club</span>

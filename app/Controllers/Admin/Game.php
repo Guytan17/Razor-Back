@@ -57,6 +57,7 @@ class Game extends AdminController
                 'e_marque_code' => $this->request->getPost('e_marque_code'),
                 'id_gym' => $this->request->getPost('id_gym') ? intval($this->request->getPost('id_gym')): null,
                 'schedule' => $this->request->getPost('schedule'),
+                'id_category' => $this->request->getPost('id_category') ? intval($this->request->getPost('id_category')) : null,
                 'id_division' => $this->request->getPost('id_division') ? intval($this->request->getPost('id_division')): null,
                 'mvp' => $this->request->getPost('mvp') ? intval($this->request->getPost('mvp')): null,
                 'home_team' => intval($this->request->getPost('home_team')),

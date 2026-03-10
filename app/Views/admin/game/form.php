@@ -14,35 +14,53 @@
                     <!-- START : CHOIX DE L'HORAIRE ET DU GYMNASE -->
                     <div class="row d-flex justify-content-center">
                         <div class="col-md-6 hstack mb-3">
-                            <label class="form-label mx-3" for="schedule">Horaire</label>
-                            <input class="form-control" type="datetime-local" name="schedule" id="schedule">
+                            <label class="form-label mx-3" for="schedule">Horaire<span class="text-danger">*</span></label>
+                            <input class="form-control" type="datetime-local" name="schedule" id="schedule" required>
                         </div>
                         <div class="col-md-6 hstack mb-3">
-                            <label class="form-label mx-3" for="select-gym">Gymnase</label>
-                            <select class="form-select" name="id_gym" id="select-gym">
+                            <label class="form-label mx-3" for="select-gym">Gymnase<span class="text-danger">*</span></label>
+                            <select class="form-select" name="id_gym" id="select-gym" required>
 
                             </select>
                         </div>
                     </div>
                     <!-- END : CHOIX DE L'HORAIRE ET DU GYMNASE -->
-                    <!-- START : CHAMPIONNAT ET INFOS FBI -->
+                    <!-- START : CATÉGORIE, CHAMPIONNAT ET INFOS FBI -->
                     <div class="row d-flex">
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label mx-3" for="id_division">Championnat</label>
-                            <select class="form-select" name="id_division" id="select-division">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label mx-3" for="id_category">Catégorie<span class="text-danger">*</span></label>
+                                    <div class="input-group mx-0">
+                                        <select class="form-select" name="id_category" id="select-category" required>
 
-                            </select>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label mx-3" for="id_division">Championnat</label>
+                                    <div class="input-group mx-0">
+                                        <select class="form-select" name="id_division" id="select-division">
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-6 col-md-4 mb-3">
-                            <label class="form-label mx-3" for="fbi_number">Numéro FBI</label>
-                            <input class="form-control" type="text" name="fbi_number" id="fbi_number">
-                        </div>
-                        <div class="col-6 col-md-4">
-                            <label class="form-label mx-3" for="e_marque_code">Code E-Marque</label>
-                            <input class="form-control" type="text" name="e_marque_code" id="e_marque_code">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label mx-3" for="fbi_number">Numéro FBI</label>
+                                    <input class="form-control" type="text" name="fbi_number" id="fbi_number">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label mx-3" for="e_marque_code">Code E-Marque</label>
+                                    <input class="form-control" type="text" name="e_marque_code" id="e_marque_code">
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <!-- END : CHAMPIONNAT ET INFOS FBI -->
+                    <!-- END : CATÉGORIE, CHAMPIONNAT ET INFOS FBI -->
                     <!-- START : CHOIX DES ÉQUIPES ET SCORE -->
                     <div class="row">
                         <!-- START : ÉQUIPE À DOMICILE -->
@@ -51,15 +69,17 @@
                                 <div class="card-body" id="zone-home-team">
                                     <div class="row mb-3 text-center">
                                         <div class="col">
-                                            <span class="card-title h5">Équipe à domicile</span>
+                                            <span class="card-title h5">Équipe à domicile <span class="text-danger">*</span></span>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col">
                                             <label for="home_club">Club de l'équipe à domicile</label>
-                                            <select class="form-select" name="home_club" id="select-home-club">
+                                            <div class="input-group">
+                                                <select class="form-select" name="home_club" id="select-home-club" required>
 
-                                            </select>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -72,15 +92,17 @@
                                 <div class="card-body" id="zone-away-team">
                                     <div class="row mb-3 text-center">
                                         <div class="col">
-                                            <span class="card-title h5">Équipe à l'extérieur</span>
+                                            <span class="card-title h5">Équipe à l'extérieur <span class="text-danger">*</span></span>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col">
                                             <label for="away_club">Club de l'équipe à l'extérieur</label>
-                                            <select class="form-select" name="away_club" id="select-away-club">
+                                            <div class="input-group">
+                                                <select class="form-select" name="away_club" id="select-away-club" required>
 
-                                            </select>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -103,6 +125,9 @@
         //Initialisation Select Gym
         initAjaxSelect2('#select-gym', {url:'/admin/gym/search',searchFields:'name',additionalFields:['fbi_code','club_name'],placeholder:'Rechercher un gymnase'});
 
+        //Initialisation Select Category
+        initAjaxSelect2('#select-category', {url:'/admin/category/search',searchFields:'name',placeholder:'Rechercher une catégorie'});
+
         //Initialisation Select Division
         initAjaxSelect2('#select-division', {url:'/admin/division/search',searchFields:'name',additionalFields:['season_name'],placeholder:'Rechercher un championnat'});
 
@@ -123,7 +148,7 @@
                 <div class="row mb-3">
                     <div class="col">
                         <label class="form-label" for="">Équipe de ${selectedClub[0]['text']} </label>
-                        <select class="form-control" name="home_team" id="select-home-team"></select>
+                        <select class="form-control" name="home_team" id="select-home-team" required></select>
                     </div>
                 </div>
             `;
@@ -149,7 +174,7 @@
                 <div class="row mb-3">
                     <div class="col">
                         <label class="form-label" for="">Équipe de ${selectedClub[0]['text']} </label>
-                        <select class="form-control" name="away_team" id="select-away-team"></select>
+                        <select class="form-control" name="away_team" id="select-away-team" required></select>
                     </div>
                 </div>
             `;

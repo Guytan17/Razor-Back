@@ -21,7 +21,7 @@ class Gym extends Migration
             ],
             'fbi_code' => [
                 'type' => 'VARCHAR',
-                'constraint' => 255,
+                'constraint' => 10,
                 'null' => true,
             ],
             'slug' => [

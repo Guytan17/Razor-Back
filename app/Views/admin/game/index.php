@@ -44,6 +44,7 @@
                             <th>ID</th>
                             <th>Numéro FBI</th>
                             <th>Catégorie</th>
+                            <th>Championnat</th>
                             <th>Adversaire</th>
                             <th>Horaire</th>
                             <th>Lieu</th>
