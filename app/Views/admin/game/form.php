@@ -182,6 +182,25 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <!--START : MVP -->
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <div class="row">
+                                                <div class="col text-center">
+                                                    <span class="card-title fw-bold h5">MVP</span>
+                                                </div>
+                                                <div class="col-auto ms-auto">
+                                                    <span class="btn btn-sm btn-primary ms-auto" id="btn-add-mvp"><i class="fas fa-star"></i> Choisir le MVP </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body" id="zone-mvp">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <!--END : MVP -->
                             <!--START : FAUTES TECHNIQUES -->
                             <!--END : FAUTES TECHNIQUES -->
@@ -322,7 +341,27 @@
             $('#zone-away-team-score').empty().append(row);
         })
 
-        //Gestion de l'ajout de services
+        //GESTION DU CHOIX DU MVP
+        $('#btn-add-mvp').on('click', function(){
+            let row=`
+                <div class="row mb-3">
+                    <div class="col">
+                        <select class="form-select" name="mvp" id="select-mvp">
+
+                        </select>
+                    </div>
+                </div>
+
+            `;
+
+            $('#zone-mvp').append(row);
+
+            //Initialisation du select2 du mvp
+            initAjaxSelect2(`#select-mvp`, {url:'/admin/player/search', searchFields: 'first_name, last_name', placeholder:'Choisir le joueur', extraParams:{id_team:TasdonTeam}});
+
+        });
+
+        //GESTION DE L'AJOUT DE SERVICES
         let nbServices = $('#zone-services .row').length;
         let services = <?= json_encode($services) ?>;
         console.log(services);
@@ -356,9 +395,7 @@
             selectServiceType.html(services.map(service=>{return `<option class="form-control" value="${service.id}">${service.label}</option>`}).join(""));
 
             //Initialisation du select2 du membre qui rend ce service
-            initAjaxSelect2(`#service_member_${nbServices}`, {url:'/admin/player/search', searchFields: 'first_name, last_name', placeholder:'Rechercher un membre',
-                extraParams:{id_team:TasdonTeam}});
-
+            initAjaxSelect2(`#service_member_${nbServices}`, {url:'/admin/player/search', searchFields: 'first_name, last_name', placeholder:'Rechercher un joueur', extraParams:{id_team:TasdonTeam}});
         })
     })
 
