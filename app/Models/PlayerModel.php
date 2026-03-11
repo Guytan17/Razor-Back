@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\Select2Searchable;
 use CodeIgniter\Model;
 
 class PlayerModel extends Model
 {
+    use Select2Searchable;
+
     protected $table            = 'player';
     protected $primaryKey       = 'id_member';
     protected $useAutoIncrement = true;
@@ -42,5 +45,31 @@ class PlayerModel extends Model
         $this->where('player.id_member',$id);
         $this->join('team', 'player.id_team = team.id');
         return $this->findAll();
+    }
+
+    protected $select2SearchFields = ['first_name','last_name'];
+    protected $select2DisplayField = 'first_name,last_name';
+
+    //On surcharge le model avec la fonction permettant de rajouter le nom de la saison dans le select
+    public function searchWithTeamId($search='',$page=1,$limit=20,$teamId){
+        $builder = $this->builder();
+
+        //jointure pour appliquer la condition d'équipe
+        $builder->select('member.id as id_member,member.first_name,member.last_name');
+        $builder->join('member', 'player.id_member = member.id');
+        $builder->where('player.id_team',$teamId);
+
+        // log de la requête SQL générée
+        log_message('debug', 'SQL: ' . $builder->getCompiledSelect(false));
+
+        return $this->searchForSelect2(
+            search:$search,
+            page:$page,
+            limit:$limit,
+            searchFields: $this->select2SearchFields,
+            displayField: $this->select2DisplayField,
+            orderBy: 'id_member',
+            builder: $builder
+        );
     }
 }

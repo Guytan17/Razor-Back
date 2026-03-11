@@ -25,6 +25,11 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->get('search', 'Team::searchTeam');
     });
 
+    //Routes pour les joueurs
+    $routes->group('player',['filter' => 'group:admin'], function($routes) {
+        $routes->get('search', 'Player::searchPlayer');
+    });
+
     //Routes pour les matchs
     $routes->group('game',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Game::index');

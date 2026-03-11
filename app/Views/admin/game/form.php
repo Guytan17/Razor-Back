@@ -179,6 +179,33 @@
                         </div>
                         <!-- END : ÉQUIPE À L'EXTÉRIEUR -->
                     </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <!--START : MVP -->
+                            <!--END : MVP -->
+                            <!--START : FAUTES TECHNIQUES -->
+                            <!--END : FAUTES TECHNIQUES -->
+                        </div>
+                        <!--START: SERVICES -->
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <div class="row">
+                                        <div class="col text-center">
+                                            <span class="card-title fw-bold h5">Services</span>
+                                        </div>
+                                        <div class="col-auto ms-auto">
+                                            <span class="btn btn-sm btn-primary ms-auto" id="btn-add-service"><i class="fas fa-plus"></i> Ajouter un service</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body" id="zone-services">
+
+                                </div>
+                            </div>
+                        </div>
+                        <!--END: SERVICES -->
+                    </div>
                 </div>
                 <div class="card-footer text-end">
                     <button type="submit" class="btn btn-primary mx-2"><i class="fas fa-save"></i> Valider</button>
@@ -190,6 +217,7 @@
 </div>
 <script>
     $(document).ready(function () {
+        let TasdonTeam ;
 
         //Initialisation Select Gym
         initAjaxSelect2('#select-gym', {url:'/admin/gym/search',searchFields:'name',additionalFields:['fbi_code','club_name'],placeholder:'Rechercher un gymnase'});
@@ -229,7 +257,10 @@
        //Une fois l'équipe choisie, apparition de l'input pour le score
         $(document).on('change','#select-home-team', function(){
             let selectedClub = $('#select-home-club').select2('data');
-
+            if (selectedClub[0]['id'] == 1){
+                let selectedTeam = $(this).select2('data');
+                TasdonTeam = selectedTeam[0]['id'];
+            }
             //création et apparition d'un input pour le score
             let row = `
                 <div class="row mb-3 d-flex align-items-center">
@@ -254,7 +285,6 @@
             let selectedClub = $(this).select2('data');
             let selectedClubId = selectedClub[0].id;
 
-
             //création et apparition d'un select pour choisir l'équipe du club sélectionné
             let row = `
                 <div class="row mb-3">
@@ -273,6 +303,10 @@
         //Une fois l'équipe choisie, apparition de l'input pour le score
         $(document).on('change','#select-away-team', function(){
             let selectedClub = $('#select-away-club').select2('data');
+            if (selectedClub[0]['id'] == 1){
+                let selectedTeam = $(this).select2('data');
+                TasdonTeam = selectedTeam[0]['id'];
+            }
 
             //création et apparition d'un input pour le score
             let row = `
@@ -288,7 +322,46 @@
             $('#zone-away-team-score').empty().append(row);
         })
 
+        //Gestion de l'ajout de services
+        let nbServices = $('#zone-services .row').length;
+        let services = <?= json_encode($services) ?>;
+        console.log(services);
+
+        //Apparition de la row d'ajout de service au clic sur le bouton d'ajout
+        $('#btn-add-service').on('click', function(){
+        console.log(TasdonTeam);
+            nbServices++;
+            let row=`
+                <div class="row mb-3">
+                    <div class="col-5">
+                        <select class="form-select" name="service_type_id" id="service_type_${nbServices}">
+
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <select class="form-select" name="service_member_id" id="service_member_${nbServices}">
+
+                        </select>
+                    </div>
+                    <div class="col-1">
+                    </div>
+                </div>
+
+            `;
+
+            $('#zone-services').append(row);
+
+            //Gestion du select de type de service
+            let selectServiceType = $('#service_type_'+nbServices);
+            selectServiceType.html(services.map(service=>{return `<option class="form-control" value="${service.id}">${service.label}</option>`}).join(""));
+
+            //Initialisation du select2 du membre qui rend ce service
+            initAjaxSelect2(`#service_member_${nbServices}`, {url:'/admin/player/search', searchFields: 'first_name, last_name', placeholder:'Rechercher un membre',
+                extraParams:{id_team:TasdonTeam}});
+
+        })
     })
+
 </script>
 <style>
     .score-input {

@@ -210,7 +210,6 @@ class Team extends AdminController
         $conditions = [];
         $idClub = $request->getGet('id_club');
 
-        log_message('debug', 'id club ='.print_r($idClub,true));
         if ($idClub !== null) {
             $conditions['id_club'] = (int) $idClub;
         }

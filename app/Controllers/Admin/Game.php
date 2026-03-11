@@ -7,6 +7,7 @@ use App\Models\ClubModel;
 use App\Models\DivisionModel;
 use App\Models\GameModel;
 use App\Models\GymModel;
+use App\Models\ServiceModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Game extends AdminController
@@ -16,11 +17,14 @@ class Game extends AdminController
     protected $divisionModel;
     protected $gymModel;
 
+    protected $serviceModel;
+
     public function __construct(){
         $this->clubModel = new ClubModel();
         $this->gameModel = new GameModel();
         $this->divisionModel = new DivisionModel();
         $this->gymModel = new GymModel();
+        $this->serviceModel = new ServiceModel();
     }
 
     public function index()
@@ -35,6 +39,7 @@ class Game extends AdminController
 
     public function form($id = null) {
         $this->addBreadcrumb('Liste des matchs', '/admin/game');
+        $services = $this->serviceModel->findAll();
 
         if ($id != null) {
             $title = 'Modifier un match';
@@ -46,6 +51,7 @@ class Game extends AdminController
         $data = [
             'title' => $title,
             'game' => $game ?? null,
+            'services' => $services ?? null,
             ];
         return $this->render('admin/game/form', $data);
     }

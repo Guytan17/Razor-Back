@@ -90,7 +90,7 @@ class DivisionModel extends Model
     protected $select2DisplayField = 'name';
     protected $select2AdditionalFields = ['season_name'];
 
-    //On surcharge le model avec la fonction permettant de rajouter le nom du club dans le select
+    //On surcharge le model avec la fonction permettant de rajouter le nom de la saison dans le select
     public function searchWithSeasonName($search='',$page=1,$limit=20){
         //jointure pour avoir le nom du club
         $this->select('division.*,season.name as season_name');

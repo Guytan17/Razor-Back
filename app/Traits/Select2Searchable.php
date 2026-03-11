@@ -27,12 +27,13 @@ trait Select2Searchable
         array $additionalFields = [],
         array $conditions = [],
         string $orderBy = 'name',
-        string $orderDirection = 'ASC'
+        string $orderDirection = 'ASC',
+        $builder = null
     ): array {
         $offset = ($page - 1) * $limit;
 
         // Construction de la requête de base
-        $builder = $this->builder();
+        $builder = $builder ?? $this->builder();
 
         // Application des conditions supplémentaires
         foreach ($conditions as $field => $value) {
