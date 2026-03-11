@@ -182,7 +182,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <!--START : MVP -->
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col">
                                     <div class="card">
                                         <div class="card-header">
@@ -203,6 +203,25 @@
                             </div>
                             <!--END : MVP -->
                             <!--START : FAUTES TECHNIQUES -->
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <div class="row">
+                                                <div class="col text-center">
+                                                    <span class="card-title fw-bold h5">Fautes techniques</span>
+                                                </div>
+                                                <div class="col-auto ms-auto">
+                                                    <span class="btn btn-sm btn-primary ms-auto" id="btn-add-technical-foul"><i class="fas fa-plus"></i> Ajouter une faute technique </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body" id="zone-technical-foul">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <!--END : FAUTES TECHNIQUES -->
                         </div>
                         <!--START: SERVICES -->
