@@ -97,8 +97,8 @@
                                                     <div class="row mb-3">
                                                         <div class="col">
                                                             <label class="form-label" for="">Équipe de <?= $game->home_club_name ?></label>
-                                                            <select class="form-control" name="home_team" id="select-away-team" required>
-                                                                <option value="<?= $game->home_team ?>"><?= $game->home_team_name ?></option>
+                                                            <select class="form-control" name="home_team" id="select-home-team" required>
+
                                                             </select>
                                                         </div>
                                                     </div>
@@ -106,7 +106,7 @@
                                             </div>
                                             <div id="zone-home-team-score">
                                                 <?php if(isset($game->home_team)): ?>
-                                                    <div class="row mb-3 d-flex align-items-center">
+                                                    <div class="row d-flex align-items-center">
                                                         <div class="col-6 text-end">
                                                             <label class="form-label me-3" for="home-score-input">Score de <?= $game->home_club_name ?></label>
                                                         </div>
@@ -152,7 +152,7 @@
                                                         <div class="col">
                                                             <label class="form-label" for="">Équipe de <?= $game->away_club_name ?></label>
                                                             <select class="form-control" name="away_team" id="select-away-team" required>
-                                                                <option value="<?= $game->away_team ?>"><?= $game->away_team_name ?></option>
+
                                                             </select>
                                                         </div>
                                                     </div>
@@ -160,7 +160,7 @@
                                             </div>
                                             <div id="zone-away-team-score">
                                                 <?php if(isset($game->away_team)): ?>
-                                                    <div class="row mb-3 d-flex align-items-center">
+                                                    <div class="row d-flex align-items-center">
                                                         <div class="col-6 text-end">
                                                             <label class="form-label me-3" for="away-score-input">Score de <?= $game->away_club_name ?></label>
                                                         </div>
@@ -255,6 +255,15 @@
 </div>
 <script>
     $(document).ready(function () {
+        let homeClubId = <?= json_encode($game->home_club ?? '')?>;
+        let awayClubId = <?= json_encode($game->away_club ?? '')?>;
+        let homeTeamId = <?= json_encode($game->home_team ?? '')?>;
+        let homeTeamName = <?= json_encode($game->home_team_name ??'')?>;
+        let awayTeamId = <?= json_encode($game->away_team ??'')?>;
+        let awayTeamName = <?= json_encode($game->away_team_name ??'')?>;
+
+        console.log(homeClubId, awayClubId, homeTeamId,homeTeamName, awayTeamId,awayTeamName);
+
         let TasdonTeam ;
 
         //Initialisation Select Gym
@@ -271,10 +280,19 @@
         //Initialisation du select des clubs
         initAjaxSelect2('#select-home-club', {url:'/admin/club/search',searchFields:'name',additionalFields:['code'],placeholder:'Rechercher un club'});
 
+        //Initialisation du select2 de l'équipe à domicile si mode édition
+        initAjaxSelect2(`#select-home-team`, {url:'/admin/team/search', searchFields:'name',placeholder:'Rechercher un équipe',extraParams: {id_club:homeClubId}});
+        //chargement de l'option déjà existante
+        if(homeTeamId) {
+            let option = new Option(homeTeamName,homeTeamId,true,true);
+            $('#select-home-team').append(option);
+        }
+
         //On commence par la sélection du club
         $('#select-home-club').on('change', function(){
             let selectedClub = $(this).select2('data');
             let selectedClubId = selectedClub[0].id;
+            console.log(selectedClubId);
 
 
             //création et apparition d'un select pour choisir l'équipe du club sélectionné
@@ -301,7 +319,7 @@
             }
             //création et apparition d'un input pour le score
             let row = `
-                <div class="row mb-3 d-flex align-items-center">
+                <div class="row d-flex align-items-center">
                     <div class="col-6 text-end">
                         <label class="form-label me-3" for="home-score-input">Score de ${selectedClub[0]['text']}</label>
                     </div>
@@ -317,6 +335,14 @@
 
         //Initialisation du select des clubs
         initAjaxSelect2('#select-away-club', {url:'/admin/club/search',searchFields:'name',additionalFields:['code'],placeholder:'Rechercher un club'});
+
+        //Initialisation du select2 de l'équipe à l'extérieur
+        initAjaxSelect2(`#select-away-team`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher une équipe',extraParams: {id_club:awayClubId}})
+        //chargement de l'option déjà existante
+        if(awayTeamId) {
+            let option = new Option(awayTeamName,awayTeamId,true,true);
+            $('#select-away-team').append(option);
+        }
 
         //On commence par la sélection du club
         $('#select-away-club').on('change', function(){
@@ -348,7 +374,7 @@
 
             //création et apparition d'un input pour le score
             let row = `
-                <div class="row mb-3 d-flex align-items-center">
+                <div class="row d-flex align-items-center">
                     <div class="col-6 text-end">
                         <label class="form-label me-3" for="away-score-input">Score de ${selectedClub[0]['text']}</label>
                     </div>
@@ -380,7 +406,7 @@
 
         });
 
-        //GESTION DE L'AJOUT DE SERVICES
+        //GESTION DES SERVICES
         let nbServices = $('#zone-services .row').length;
         let services = <?= json_encode($services) ?>;
         console.log(services);
@@ -391,20 +417,29 @@
             nbServices++;
             let row=`
                 <div class="row mb-3">
-                    <div class="col-5">
-                        <select class="form-select" name="service_type_id" id="service_type_${nbServices}">
+                    <div class="col-11">
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                <select class="form-select" name="services[${nbServices}][id_service]" id="service_type_${nbServices}">
 
-                        </select>
-                    </div>
-                    <div class="col-6">
-                        <select class="form-select" name="service_member_id" id="service_member_${nbServices}">
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <select class="form-select" name="services[${nbServices}][id_member]" id="service_member_${nbServices}">
 
-                        </select>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <input class="form-control" type="text" name="details" id="details" placeholder="Précisions (facultatif)">
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-1">
+                    <div class="col-1 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-trash-alt text-danger btn-delete-service fs-2"></i>
                     </div>
                 </div>
-
             `;
 
             $('#zone-services').append(row);
@@ -416,13 +451,27 @@
             //Initialisation du select2 du membre qui rend ce service
             initAjaxSelect2(`#service_member_${nbServices}`, {url:'/admin/player/search', searchFields: 'first_name, last_name', placeholder:'Rechercher un joueur', extraParams:{id_team:TasdonTeam}});
         })
+
+        //Gestion de la suppression d'un service
+        $(document).on('click', '.btn-delete-service', function(){
+            nbServices--;
+            $(this).closest('.row').remove();
+            let deleteInput = `
+                <input type="hidden" name="deletedServices[]">
+            `;
+            $(this).append(deleteInput);
+        })
     })
 
 </script>
 <style>
     .score-input {
-
         height: 50px ;
+    }
+
+    .btn-delete-service:hover {
+        scale:1.20;
+        cursor: pointer;
     }
 </style>
 <?php $this->endSection(); ?>

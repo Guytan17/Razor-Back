@@ -74,6 +74,10 @@ class Game extends AdminController
                 'score_away' => $this->request->getPost('away_score') ? intval($this->request->getPost('away_score')): null,
             ];
 
+            //Récupération des services
+            $services = $this->request->getPost('services');
+            $deletedServices = $this->request->getPost('deletedServices');
+            dd($services);
             //Variable pour savoir si c'est un nouveau match
             $newGame=empty($dataGame['id']);
 
