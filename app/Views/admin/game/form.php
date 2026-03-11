@@ -261,9 +261,6 @@
         let homeTeamName = <?= json_encode($game->home_team_name ??'')?>;
         let awayTeamId = <?= json_encode($game->away_team ??'')?>;
         let awayTeamName = <?= json_encode($game->away_team_name ??'')?>;
-
-        console.log(homeClubId, awayClubId, homeTeamId,homeTeamName, awayTeamId,awayTeamName);
-
         let TasdonTeam ;
 
         //Initialisation Select Gym
@@ -292,7 +289,6 @@
         $('#select-home-club').on('change', function(){
             let selectedClub = $(this).select2('data');
             let selectedClubId = selectedClub[0].id;
-            console.log(selectedClubId);
 
 
             //création et apparition d'un select pour choisir l'équipe du club sélectionné
@@ -409,11 +405,14 @@
         //GESTION DES SERVICES
         let nbServices = $('#zone-services .row').length;
         let services = <?= json_encode($services) ?>;
-        console.log(services);
+        if(homeClubId == 1) {
+            TasdonTeam = homeTeamId;
+        } else if(awayClubId == 1) {
+            TasdonTeam = awayTeamId;
+        }
 
         //Apparition de la row d'ajout de service au clic sur le bouton d'ajout
         $('#btn-add-service').on('click', function(){
-        console.log(TasdonTeam);
             nbServices++;
             let row=`
                 <div class="row mb-3">

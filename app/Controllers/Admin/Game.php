@@ -77,7 +77,7 @@ class Game extends AdminController
             //Récupération des services
             $services = $this->request->getPost('services');
             $deletedServices = $this->request->getPost('deletedServices');
-            dd($services);
+
             //Variable pour savoir si c'est un nouveau match
             $newGame=empty($dataGame['id']);
 
