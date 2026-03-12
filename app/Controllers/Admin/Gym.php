@@ -89,10 +89,12 @@ class Gym extends AdminController
                 $dataGym['id'] = $this->gymModel->getInsertID();
             }
 
-            //Enregistrement du club
+            //GESTION DES CLUBS
             //Création des variables
+            //Clubs existants
             $existingClubs = $this->gymClubModel->where('id_gym', $dataGym['id'])->findAll();
             $existingClubsIndexed = array_column($existingClubs, null,'id_club');
+            //clubs
             $clubsIds = array_column($clubs,'id');
 
             //Création de la transaction
@@ -108,7 +110,6 @@ class Gym extends AdminController
                             'id_club'=>$existingClub['id_club']
                         ])
                     ->delete();
-
                 }
             }
 

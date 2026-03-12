@@ -259,7 +259,7 @@
                                                     <div class="row">
                                                         <div class="col">
                                                             <input class="form-control" type="text" name="services[<?= $nbServices ?>][details]" id="service_details_<?= $nbServices ?>"
-                                                                   placeholder="Précisions (facultatif)">
+                                                                   placeholder="Précisions (facultatif)" value="<?= esc($service['details'] ?? '') ?>">
                                                         </div>
                                                     </div>
                                                 </div>

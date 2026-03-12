@@ -94,20 +94,31 @@ class Game extends AdminController
                 $id=$this->gameModel->getInsertID();
             }
 
-            //Enregistrement des services
+            //GESTION DES SERVICES
+            //Récupération des services existants pour ce match
+            $existingServices = $this->serviceGameModel->where('id_game', $id)->findAll();
+            //On créé un équivalent de la clé composite (sans_id_game car déjà filtré)
+            $existingKeys = [];
+            foreach($existingServices as $existingService){
+                $existingKeys[] = $existingService['id_service'].'-'.$existingService['id_member'];
+            }
+
+
+            //Enregistrement des services en BDD
             if(!empty($services)){
                 foreach($services as $service){
-                    $dataService = [
-                        'id_service' => $service['id_service'],
-                        'id_game' => $id,
-                        'id_member' => $service['id_member'],
-                        'details' => $service['details']
-                    ];
-
-                    if(!$this->serviceGameModel->insert($dataService)){
-                        $this->error(implode('<br>',$this->serviceGameModel->errors()));
+                    $key=$service['id_service'].'-'.$service['id_member'];
+                    if(!in_array($key, $existingKeys)){
+                        $dataService = [
+                            'id_service' => $service['id_service'],
+                            'id_game' => $id,
+                            'id_member' => $service['id_member'],
+                            'details' => $service['details']
+                        ];
+                        if(!$this->serviceGameModel->insert($dataService)){
+                            $this->error(implode('<br>',$this->serviceGameModel->errors()));
+                        }
                     }
-
                 }
             }
 
