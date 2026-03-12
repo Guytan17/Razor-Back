@@ -25,6 +25,21 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->get('search', 'Team::searchTeam');
     });
 
+    //Routes pour les joueurs
+    $routes->group('player',['filter' => 'group:admin'], function($routes) {
+        $routes->get('search', 'Player::searchPlayer');
+    });
+
+    //Routes pour les matchs
+    $routes->group('game',['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'Game::index');
+        $routes->get('form', 'Game::form');//formulaire de création
+        $routes->get('form/(:num)', 'Game::form/$1'); //formulaire d'édition
+        $routes->post('save', 'Game::saveGame'); //sauvegarde création
+        $routes->post('save/(:num)', 'Game::saveGame/$1'); //sauvegarde édition
+        $routes->post('switch-active/(:num)', 'Game::switchActiveGame/$1'); //activation/désactivation
+    });
+
     //Routes pour la gestion des clubs
     $routes->group('club',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Club::index');
@@ -32,7 +47,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->get('form/(:num)', 'Club::form/$1'); // accès au formulaire d'édition
         $routes->post('save', 'Club::saveClub'); // sauvegarde création
         $routes->post('save/(:num)', 'Club::saveClub/$1'); //sauvegarde édition
-        $routes->post('switch-active/(:num)', 'Club::switchActiveClub/$1');
+        $routes->post('switch-active/(:num)', 'Club::switchActiveClub/$1'); //activation/désactivation
         $routes->get('search', 'Club::searchClub');
     });
 
@@ -44,6 +59,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('save', 'Gym::saveGym'); // sauvegarde création
         $routes->post('save/(:num)', 'Gym::saveGym/$1'); //sauvegarde édition
         $routes->post('delete/(:num)', 'Gym::deleteGym/$1'); //Suppression d'un gymnase
+        $routes->get('search', 'Gym::searchGym');
     });
 
     //Routes pour les villes
@@ -81,6 +97,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('insert', 'Category::insertCategory'); //Sauvegarde création
         $routes->post('update/(:num)', 'Category::updateCategory/$1'); //Sauvegarde édition
         $routes->post('delete/(:num)', 'Category::deleteCategory/$1'); //suppression d'une catégorie
+        $routes->get('search', 'Category::searchCategory');
     });
 
     //Routes pour la gestion des saisons
@@ -97,6 +114,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('insert', 'Division::insertDivision'); //Sauvegarde création
         $routes->post('update/(:num)', 'Division::updateLeague/$1'); //Sauvegarde édition
         $routes->post('switch-active/(:num)', 'Division::switchActiveDivision/$1');//Activation/désactivation d'un championnat
+        $routes->get('search', 'Division::searchDivision');
     });
 
     //Routes pour la gestion des services

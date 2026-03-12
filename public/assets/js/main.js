@@ -82,7 +82,8 @@ function initAjaxSelect2(selector, options) {
         searchFields: '',            // Champs à rechercher (optionnel, pour info)
         additionalFields: '',        // Champs supplémentaires à afficher
         cache: true,                 // Met en cache les résultats pour éviter les requêtes répétées
-        showDescription: false       // Affiche ou non la description dans les résultats
+        showDescription: false,      // Affiche ou non la description dans les résultats
+        extraParams: {}
     };
 
     // Fusion de la configuration par défaut avec les options personnalisées
@@ -115,10 +116,14 @@ function initAjaxSelect2(selector, options) {
              * @returns {object} - Données à envoyer en GET
              */
             data: function (params) {
-                return {
+                var queryParams = {
                     search: params.term || '',  // Terme tapé par l'utilisateur (ou vide)
                     page: params.page || 1      // Numéro de page pour la pagination
                 };
+                if (config.extraParams && Object.keys(config.extraParams).length > 0) {
+                    $.extend(queryParams, config.extraParams);
+                }
+                return queryParams;
             },
 
             /**

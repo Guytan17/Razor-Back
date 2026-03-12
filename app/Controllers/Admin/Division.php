@@ -84,27 +84,27 @@ class Division extends AdminController
         }
     }
 
-    public function switchActiveLeague($idLeague){
+    public function switchActiveDivision($idDivision){
 
-        $league = $this->lm->withDeleted()->find($idLeague);
+        $division = $this->dm->withDeleted()->find($idDivision);
         //Test pour savoir si le championnat existe
 
-        if(!$league) {
+        if(!$division) {
             return $this->response->setJSON([
                 'success' => false,
                 'message' => 'Championnat introuvable'
             ]);
         }
         // Si le championnat est actif, on le désactive
-        if(empty($league['deleted_at'])) {
-            $this->lm->delete($idLeague);
+        if(empty($division['deleted_at'])) {
+            $this->dm->delete($idDivision);
             return $this->response->setJSON([
                 'success' => true,
                 'message' => 'Championnat désactivé',
             ]);
         } else {
             //S'il est inactif, on le réactive
-            if($this->lm->reactiveLeague($idLeague)){
+            if($this->dm->reactiveDivision($idDivision)){
                 return $this->response->setJSON([
                     'success' => true,
                     'message' => 'Championnat activé',
@@ -116,5 +116,24 @@ class Division extends AdminController
                 ]);
             }
         }
+    }
+    public function searchDivision(){
+        $request = $this->request;
+
+        //Vérification Ajax
+        if(!$request->isAJAX()) {
+            return $this->response->setJSON(['error'=> 'Requête non autorisée']);
+        }
+
+        //Paramètres de recherche
+        $search = $request->getget('search') ?? '';
+        $page = (int) $request->getget('page') ?? 1;
+        $limit = 25;
+
+        //Utilisation de la méthode du Model (via le trait)
+        $result = $this->dm->searchWithSeasonName($search, $page, $limit);
+
+        //Réponse JSON
+        return $this->response->setJSON($result);
     }
 }

@@ -31,6 +31,16 @@
     "url" : "/admin/team",
     "icon" : "fas fa-users-rectangle"
   },
+  "games" : {
+    "title" : "Matchs",
+    "url" : "/admin/game",
+    "icon" : "fas fa-basketball"
+  },
+  "divisions" : {
+    "title" : "Championnats",
+    "url" : "/admin/division",
+    "icon" : "fas fa-trophy"
+  },
   "clubs" : {
     "title" : "Clubs",
     "url" : "/admin/club",
@@ -71,11 +81,6 @@
         "title": "Saisons",
         "url": "/admin/season",
         "icon": "fas fa-hourglass-half"
-      },
-      "divisions" : {
-        "title" : "Championnats",
-        "url" : "/admin/division",
-        "icon" : "fas fa-trophy"
       },
       "services" : {
         "title" : "Services",

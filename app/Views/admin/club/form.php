@@ -65,7 +65,7 @@
                     <!-- END : INFO GENERALES DU CLUB -->
                     <div class="row mb-3">
                         <!-- START : EQUIPES -->
-                        <div class="col-md-6">
+                        <div class="col-md-6 mb-3">
                             <div class="card">
                                 <div class="card-header text-center">
                                     <span class="card-title fw-bold h5">Équipes du club</span>
@@ -93,7 +93,7 @@
 
                 </div>
                 <div class="card-footer text-end">
-                    <button type="submit" class="btn btn-sm btn-primary mx-2"><i class="fas fa-save"></i> Valider</button>
+                    <button type="submit" class="btn btn-primary mx-2"><i class="fas fa-save"></i> Valider</button>
                 </div>
             </div>
         </div>

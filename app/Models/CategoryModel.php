@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\DataTableTrait;
+use App\Traits\Select2Searchable;
 use App\Traits\SlugTrait;
 use CodeIgniter\Model;
 
@@ -10,6 +11,7 @@ class CategoryModel extends Model
 {
     use DataTableTrait;
     use SlugTrait;
+    use Select2Searchable;
 
     protected $table            = 'category';
     protected $primaryKey       = 'id';
