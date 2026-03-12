@@ -6,19 +6,27 @@ use CodeIgniter\Model;
 
 class ClassificationModel extends Model
 {
-    protected $table            = 'classification';
-    protected $primaryKey       = 'id';
+    protected $table = 'classification';
+    protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
-    protected $protectFields    = true;
-    protected $allowedFields    = ['code','classification'];
+    protected $returnType = 'array';
+    protected $useSoftDeletes = false;
+    protected $protectFields = true;
+    protected $allowedFields = ['code', 'explanation'];
 
     // Validation
-    protected $validationRules      = [
-        'code' => 'required|max_length[20]',
+    protected $validationRules = [
+        'code' => 'required|max_length[2]',
+        'explanation' => 'required|max_length[255]',
     ];
-    protected $validationMessages   = [];
-    protected $skipValidation       = false;
-    protected $cleanValidationRules = true;
+    protected $validationMessages = [
+        'code' => [
+            'required' => 'Le code est obligatoire',
+            'max_length' => 'Le code doit faire 2 caractères',
+        ],
+        'explanation' => [
+            'required' => 'L\'explication est obligatoire',
+            'max_length' => 'L\'explication ne peut pas excéder 255 caractères'
+        ]
+    ];
 }

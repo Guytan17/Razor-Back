@@ -38,7 +38,7 @@ class LicenseCode extends AdminController
             }
             return $this->redirect('admin/license-code');
         } catch (\Exception $e) {
-            $this->error = $e->getMessage();
+            $this->error($e->getMessage());
             return redirect()->back()->withInput();
         }
     }

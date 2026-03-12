@@ -18,7 +18,7 @@
                     <div class="row mt-2">
                         <div class="col">
                             <label class="form-label" for="explanation-type">Explication du code <span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" name="explanation-type" id="explanation-type" value="<?=old('explanation-type')?>" required>
+                            <input class="form-control" type="text" name="explanation_type" id="explanation-type" value="<?=old('explanation-type')?>" required>
                         </div>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
                     <div class="row mt-2">
                         <div class="col">
                             <label class="form-label" for="explanation-classification">Explication du code <span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" name="explanation-classification" id="explanation-classification" value="<?=old('explanation-classification')?>" required>
+                            <input class="form-control" type="text" name="explanation_classification" id="explanation-classification" value="<?=old('explanation-classification')?>" required>
                         </div>
                     </div>
                 </div>
