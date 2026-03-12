@@ -40,6 +40,15 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('switch-active/(:num)', 'Game::switchActiveGame/$1'); //activation/désactivation
     });
 
+    //Routes pour la gestion des championnats
+    $routes->group('division',['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'Division::index');
+        $routes->post('insert', 'Division::insertDivision'); //Sauvegarde création
+        $routes->post('update/(:num)', 'Division::updateLeague/$1'); //Sauvegarde édition
+        $routes->post('switch-active/(:num)', 'Division::switchActiveDivision/$1');//Activation/désactivation d'un championnat
+        $routes->get('search', 'Division::searchDivision');
+    });
+
     //Routes pour la gestion des clubs
     $routes->group('club',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Club::index');
@@ -83,6 +92,17 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('delete/(:num)', 'LicenseCode::deleteLicenseCode/$1');//Suppression d'un rôle
     });
 
+    //Routes pour la gestion des paramètres des fautes techniques
+    $routes->group('technical-foul-params', ['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'TechnicalFoulParams::index');
+        $routes->post('insert-type', 'TechnicalFoulParams::insertType'); //Sauvegarde création des Types
+        $routes->post('update-type/(:num)', 'TechnicalFoulParams::updateType/$1');//Sauvegarde édition des Types
+        $routes->post('delete-type/(:num)', 'TechnicalFoulParams::deleteType/$1'); // Suppression des Types
+        $routes->post('insert-classification', 'TechnicalFoulParams::insertClassification'); //Sauvegarde création des Classifications
+        $routes->post('update-classification/(:num)', 'TechnicalFoulParams::updateClassification/$1');//Sauvegarde édition des Classifications
+        $routes->post('delete-classification/(:num)', 'TechnicalFoulParams::deleteClassification/$1'); // Suppression des Classifications
+    });
+
     //Routes pour la gestion des roles
     $routes->group('role',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Role::index');
@@ -106,15 +126,6 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('insert', 'Season::insertSeason'); //Sauvegarde création
         $routes->post('update/(:num)', 'Season::updateSeason/$1');//Sauvegarde édition
         $routes->post('delete/(:num)', 'Season::deleteSeason/$1'); //Suppression d'une saison
-    });
-
-    //Routes pour la gestion des championnats
-    $routes->group('division',['filter' => 'group:admin'], function($routes) {
-        $routes->get('/', 'Division::index');
-        $routes->post('insert', 'Division::insertDivision'); //Sauvegarde création
-        $routes->post('update/(:num)', 'Division::updateLeague/$1'); //Sauvegarde édition
-        $routes->post('switch-active/(:num)', 'Division::switchActiveDivision/$1');//Activation/désactivation d'un championnat
-        $routes->get('search', 'Division::searchDivision');
     });
 
     //Routes pour la gestion des services
