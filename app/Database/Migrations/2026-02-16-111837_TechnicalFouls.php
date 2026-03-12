@@ -24,6 +24,11 @@ class TechnicalFouls extends Migration
                 'constraint' => 11,
                 'null' => false,
             ],
+            'id_type' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'null' => false,
+            ],
             'amount' => [
                 'type' => 'INT',
                 'constraint' => 11,
@@ -33,6 +38,7 @@ class TechnicalFouls extends Migration
         $this->forge->addForeignKey('id_game', 'game', 'id', 'RESTRICT', 'CASCADE');
         $this->forge->addForeignKey('id_member', 'member', 'id', 'RESTRICT', 'RESTRICT');
         $this->forge->addForeignKey('id_classification', 'classification', 'id', 'CASCADE', 'RESTRICT');
+        $this->forge->addForeignKey('id_type', 'type', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->createTable('technical_fouls');
     }
 
