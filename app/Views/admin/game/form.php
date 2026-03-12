@@ -238,7 +238,37 @@
                                     </div>
                                 </div>
                                 <div class="card-body" id="zone-services">
+                                    <?php if (isset($game) && !empty($game->services)):
+                                        $nbServices = 0;
+                                        foreach ($game->services as $service):
+                                            $nbServices++;?>
+                                            <div class="row mb-3 row-service">
+                                                <div class="col-11">
+                                                    <div class="row mb-2">
+                                                        <div class="col-6">
+                                                            <select class="form-select" name="services[<?= $nbServices ?>][id_service]" id="service_type_<?= $nbServices ?>">
+                                                                <option value="<?= $service['id_service'] ?>"><?= $service['service_label'] ?> </option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <select class="form-select" name="services[<?= $nbServices ?>][id_member]" id="service_member_<?= $nbServices ?>">
 
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <input class="form-control" type="text" name="services[<?= $nbServices ?>][details]" id="service_details_<?= $nbServices ?>"
+                                                                   placeholder="Précisions (facultatif)">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-1 d-flex align-items-center justify-content-center">
+                                                    <i class="fas fa-trash-alt text-danger btn-delete-service fs-2"></i>
+                                                </div>
+                                            </div>
+                                    <?php endforeach;
+                                    endif;?>
                                 </div>
                             </div>
                         </div>
@@ -403,19 +433,31 @@
         });
 
         //GESTION DES SERVICES
-        let nbServices = $('#zone-services .row').length;
+        let nbServices = $('#zone-services .row-service').length;
         let services = <?= json_encode($services) ?>;
+        let gameServices = <?= json_encode($game->services) ?>;
+
         if(homeClubId == 1) {
             TasdonTeam = homeTeamId;
         } else if(awayClubId == 1) {
             TasdonTeam = awayTeamId;
         }
 
+        //Boucle pour initialiser les select2 sur les services déjà existants
+        for (i=1 ; i<=nbServices; i++) {
+            //Initialisation du select2 du membre qui rend ce service (en mode édition)
+            initAjaxSelect2(`#service_member_${i}`, {url:'/admin/player/search', searchFields: 'first_name, last_name', placeholder:'Rechercher un joueur', extraParams:{id_team:TasdonTeam}});
+
+            let option = new Option((gameServices[i-1]['member_first_name']+' '+gameServices[i-1]['member_last_name']),gameServices[i-1]['id_member'],true,true);
+            $(`#service_member_${i}`).append(option);
+        }
+
+
         //Apparition de la row d'ajout de service au clic sur le bouton d'ajout
         $('#btn-add-service').on('click', function(){
             nbServices++;
             let row=`
-                <div class="row mb-3">
+                <div class="row mb-3 row-service">
                     <div class="col-11">
                         <div class="row mb-2">
                             <div class="col-6">
@@ -431,7 +473,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <input class="form-control" type="text" name="details" id="details" placeholder="Précisions (facultatif)">
+                                <input class="form-control" type="text" name="services[${nbServices}][details]" id="service_details_${nbServices}" placeholder="Précisions (facultatif)">
                             </div>
                         </div>
                     </div>

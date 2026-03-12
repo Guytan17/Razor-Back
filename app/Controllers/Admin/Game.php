@@ -8,6 +8,7 @@ use App\Models\DivisionModel;
 use App\Models\GameModel;
 use App\Models\GymModel;
 use App\Models\ServiceModel;
+use App\Models\ServiceGameModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Game extends AdminController
@@ -18,6 +19,7 @@ class Game extends AdminController
     protected $gymModel;
 
     protected $serviceModel;
+    protected $serviceGameModel;
 
     public function __construct(){
         $this->clubModel = new ClubModel();
@@ -25,6 +27,7 @@ class Game extends AdminController
         $this->divisionModel = new DivisionModel();
         $this->gymModel = new GymModel();
         $this->serviceModel = new ServiceModel();
+        $this->serviceGameModel = new ServiceGameModel();
     }
 
     public function index()
@@ -44,6 +47,7 @@ class Game extends AdminController
         if ($id != null) {
             $title = 'Modifier un match';
             $game = $this->gameModel->getFullGame($id);
+            $game->services = $this->serviceGameModel->getServicesByGame($id);
         } else {
             $title = 'Ajouter un match';
         }
@@ -90,6 +94,22 @@ class Game extends AdminController
                 $id=$this->gameModel->getInsertID();
             }
 
+            //Enregistrement des services
+            if(!empty($services)){
+                foreach($services as $service){
+                    $dataService = [
+                        'id_service' => $service['id_service'],
+                        'id_game' => $id,
+                        'id_member' => $service['id_member'],
+                        'details' => $service['details']
+                    ];
+
+                    if(!$this->serviceGameModel->insert($dataService)){
+                        $this->error(implode('<br>',$this->serviceGameModel->errors()));
+                    }
+
+                }
+            }
 
 
             //Messages de validation et récupération nouvel ID
