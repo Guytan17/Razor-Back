@@ -97,12 +97,34 @@ class Game extends AdminController
             //GESTION DES SERVICES
             //Récupération des services existants pour ce match
             $existingServices = $this->serviceGameModel->where('id_game', $id)->findAll();
-            //On créé un équivalent de la clé composite (sans_id_game car déjà filtré)
+
+            //On crée un équivalent de la clé composite (sans_id_game car déjà filtré)
             $existingKeys = [];
-            foreach($existingServices as $existingService){
-                $existingKeys[] = $existingService['id_service'].'-'.$existingService['id_member'];
+            if($existingServices){
+                foreach($existingServices as $existingService){
+                    $existingKeys[] = $existingService['id_service'].'-'.$existingService['id_member'];
+                }
             }
 
+
+            //suppression des services supprimés
+            $deletedKeys = [];
+            if($deletedServices){
+                foreach($deletedServices as $deletedService){
+                    $deletedKeys[] = $deletedService['id_service'].'-'.$deletedService['id_member'];
+                }
+            }
+
+            if(!empty($deletedServices)){
+                foreach($deletedServices as $deletedService){
+                    $key = $deletedService['id_service'].'-'.$deletedService['id_member'];
+                    if(in_array($key, $existingKeys)){
+                        if(!$this->serviceGameModel->where('id_service', $deletedService['id_service'])->where('id_game',$id)->where('id_member',$deletedService['id_member'])->delete()){
+                            $this->error(implode('<br>',$this->serviceGameModel->errors()));
+                        }
+                    }
+                }
+            }
 
             //Enregistrement des services en BDD
             if(!empty($services)){

@@ -264,7 +264,10 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-1 d-flex align-items-center justify-content-center">
-                                                    <i class="fas fa-trash-alt text-danger btn-delete-service fs-2"></i>
+                                                    <i class="fas fa-trash-alt text-danger btn-delete-service fs-2"
+                                                        data-id-service="<?= esc($service['id_service']) ?>"
+                                                        data-id-member="<?= esc($service['id_member']) ?>"
+                                                        data-details="<?= esc($service['details'] ?? '') ?>"></i>
                                                 </div>
                                             </div>
                                     <?php endforeach;
@@ -292,6 +295,7 @@
         let awayTeamId = <?= json_encode($game->away_team ??'')?>;
         let awayTeamName = <?= json_encode($game->away_team_name ??'')?>;
         let TasdonTeam ;
+        let deletedServices  = 0;
 
         //Initialisation Select Gym
         initAjaxSelect2('#select-gym', {url:'/admin/gym/search',searchFields:'name',additionalFields:['fbi_code','club_name'],placeholder:'Rechercher un gymnase'});
@@ -496,11 +500,15 @@
         //Gestion de la suppression d'un service
         $(document).on('click', '.btn-delete-service', function(){
             nbServices--;
-            $(this).closest('.row').remove();
-            let deleteInput = `
-                <input type="hidden" name="deletedServices[]">
+            let idService = $(this).data('id-service');
+            let idMember = $(this).data('id-member');
+            $(this).closest('.row-service').remove();
+            let deleteInputs = `
+                <input type="hidden" name="deletedServices[${deletedServices}][id_service]" value="${idService}">
+                <input type="hidden" name="deletedServices[${deletedServices}][id_member]" value="${idMember}">
             `;
-            $(this).append(deleteInput);
+            $('#zone-services').append(deleteInputs);
+            deletedServices++;
         })
     })
 
