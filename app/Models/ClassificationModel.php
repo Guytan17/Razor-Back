@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\DataTableTrait;
 use CodeIgniter\Model;
 
 class ClassificationModel extends Model
 {
+
+    use DataTableTrait;
+
     protected $table = 'classification';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
@@ -29,4 +33,16 @@ class ClassificationModel extends Model
             'max_length' => 'L\'explication ne peut pas excéder 255 caractères'
         ]
     ];
+
+    public function getDataTableConfig() {
+        return [
+            'searchable_fields' => [
+                'id',
+                'code',
+                'explanation'
+            ],
+            'joins' => [],
+            'select' => 'id,code, explanation',
+        ];
+    }
 }

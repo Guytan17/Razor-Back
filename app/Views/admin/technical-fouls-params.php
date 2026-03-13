@@ -105,8 +105,113 @@
 <script>
     var baseUrl = "<?=base_url();?>";
 
+    //GESTION INDEX DES TYPES
     $(document).ready(function() {
+        table = $('#typesTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: baseUrl + 'datatable/searchdatatable',
+                type: 'POST',
+                data: {
+                    model: 'TypeModel'
+                }
+            },
+            columns: [
+                {
+                    data: null,
+                    defaultContent: '',
+                    orderable: false,
+                    width: '100px',
+                    render: function (data, type, row) {
+                        return `
+                            <div class="btn-group" role="group">
+                                <button
+                                    class="btn btn-sm btn-warning btn-edit-type"
+                                    title="Modifier"
+                                    data-id='${row.id}'
+                                    data-code='${escapeHtml(row.code)}'
+                                    data-explanation='${escapeHtml(row.explanation)}'>
+                                        <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger btn-delete-type"
+                                    title="Supprimer"
+                                    data-id="${row.id}">
+                                        <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        `
+                            ;
+                    }
+                },
+                {data: 'id'},
+                {data: 'code'},
+                {data: 'explanation'},
+            ],
+            language: {
+                url: baseUrl + 'assets/js/datatable/datatable-2.3.5-fr-FR.json',
+            },
+            order: [[1, 'desc']], // Tri par ID décroissant par défaut
+            pageLength: 25,
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Tous"]]
+        });
 
-    }
+        //GESTION INDEX DES CLASSIFICATIONS
+        table = $('#classificationsTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: baseUrl + 'datatable/searchdatatable',
+                type: 'POST',
+                data: {
+                    model: 'ClassificationModel'
+                }
+            },
+            columns: [
+                {
+                    data: null,
+                    defaultContent: '',
+                    orderable: false,
+                    width: '100px',
+                    render: function (data, type, row) {
+                        return `
+                        <div class="btn-group" role="group">
+                            <button
+                                class="btn btn-sm btn-warning btn-edit-classification"
+                                title="Modifier"
+                                data-id='${row.id}'
+                                data-code='${escapeHtml(row.code)}'
+                                data-explanation='${escapeHtml(row.explanation)}'>
+                                    <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger btn-delete-classification"
+                                title="Supprimer"
+                                data-id="${row.id}">
+                                    <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    `
+                            ;
+                    }
+                },
+                {data: 'id'},
+                {data: 'code'},
+                {data: 'explanation'},
+            ],
+            language: {
+                url: baseUrl + 'assets/js/datatable/datatable-2.3.5-fr-FR.json',
+            },
+            order: [[1, 'desc']], // Tri par ID décroissant par défaut
+            pageLength: 25,
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Tous"]]
+        });
+
+        // Fonction pour actualiser la table
+        window.refreshTable = function () {
+            table.ajax.reload(null, false); // false pour garder la pagination
+        };
+    });
+
+
 </script>
 <?php $this->endSection() ;?>
