@@ -50,6 +50,32 @@
                 </div>
             </div>
             <!-- END : ZONE INDEX TYPE -->
+            <!-- START : MODAL POUR LES MODIFICATIONS -->
+            <div class="modal" id="modalType" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Modifier le type de faute technique</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <label class="form-label" for="modalTypeCodeInput">Code</label>
+                            <input class="form-control" id="modalTypeCodeInput" type="text">
+                            <div class="row mt-2">
+                                <div class="col">
+                                    <label class="form-label" for="modalTypeExplanationInput">Explication du code <span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" name="modalTypeExplanationInput" id="modalTypeExplanationInput" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            <button onclick="saveType()" type="button" class="btn btn-primary">Sauvegarder</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END : MODAL POUR LES MODIFICATIONS -->
         </div>
         <!-- END : ZONE TYPE -->
         <!-- START : ZONE CLASSIFICATION -->
@@ -98,16 +124,44 @@
                 </div>
             </div>
             <!-- END : ZONE INDEX CLASSIFICATION -->
+            <!-- START : MODAL POUR LES MODIFICATIONS -->
+            <div class="modal" id="modalClassification" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Modifier la classification de faute technique</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <label class="form-label" for="modalClassificationCodeInput">Code</label>
+                            <input class="form-control" id="modalClassificationCodeInput" type="text">
+                            <div class="row mt-2">
+                                <div class="col">
+                                    <label class="form-label" for="modalClassificationExplanationInput">Explication du code <span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" name="modalClassificationExplanationInput" id="modalClassificationExplanationInput" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            <button onclick="saveClassification()" type="button" class="btn btn-primary">Sauvegarder</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END : MODAL POUR LES MODIFICATIONS -->
         </div>
         <!-- END : ZONE CLASSIFICATION-->
     </div>
 </div>
 <script>
     var baseUrl = "<?=base_url();?>";
+    let tableType;
+    let tableClassification;
 
     //GESTION INDEX DES TYPES
     $(document).ready(function() {
-        table = $('#typesTable').DataTable({
+        tableType = $('#typesTable').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
@@ -154,10 +208,15 @@
             order: [[1, 'desc']], // Tri par ID décroissant par défaut
             pageLength: 25,
             lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Tous"]]
-        });
+        })
+
+        // Fonction pour actualiser la table
+        window.refreshTableType = function () {
+            tableType.ajax.reload(null, false); // false pour garder la pagination
+        }
 
         //GESTION INDEX DES CLASSIFICATIONS
-        table = $('#classificationsTable').DataTable({
+        tableClassification = $('#classificationsTable').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
@@ -204,14 +263,224 @@
             order: [[1, 'desc']], // Tri par ID décroissant par défaut
             pageLength: 25,
             lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Tous"]]
-        });
+        })
 
         // Fonction pour actualiser la table
-        window.refreshTable = function () {
-            table.ajax.reload(null, false); // false pour garder la pagination
-        };
+        window.refreshTableClassification = function () {
+            tableClassification.ajax.reload(null, false); // false pour garder la pagination
+        }
     });
 
+    //MODAL TYPE
+    //Définition de la modal Type
+    const myModalType = new bootstrap.Modal('#modalType');
 
+    //Fonction pour ouvrir la modal avec les données préremplies
+    $(document).on('click','.btn-edit-type', function() {
+        const btn = $(this);
+
+        $('#modalTypeCodeInput').val(btn.data('code'));
+        $('#modalTypeCodeInput').data('id',btn.data('id'));
+        $('#modalTypeExplanationInput').val(btn.data('explanation'));
+
+        myModalType.show();
+    });
+
+    //MODAL CLASSIFICATION
+    //Définition de la modal Type
+    const myModalClassification = new bootstrap.Modal('#modalClassification');
+
+    //Fonction pour ouvrir la modal avec les données préremplies
+    $(document).on('click','.btn-edit-classification', function() {
+        const btn = $(this);
+
+        $('#modalClassificationCodeInput').val(btn.data('code'));
+        $('#modalClassificationCodeInput').data('id',btn.data('id'));
+        $('#modalClassificationExplanationInput').val(btn.data('explanation'));
+
+        myModalClassification.show();
+    });
+
+    //FONCTIONS POUR APPELER LES FONCTIONS DE SUPPRESSION
+    //Pour TYPE
+    $(document).on('click','.btn-delete-type', function(){
+        deleteType($(this).data('id'));
+    })
+    //Pour CLASSIFICATION
+    $(document).on('click','.btn-delete-classification', function(){
+        deleteClassification($(this).data('id'));
+    })
+
+    // FONCTIONS SAVE POUR TYPE ET CLASSIFICATION
+    function saveType () {
+        let code = $('#modalTypeCodeInput').val();
+        let id = $('#modalTypeCodeInput').data('id');
+        let explanation = $('#modalTypeExplanationInput').val();
+        $.ajax({
+            url: baseUrl + 'admin/technical-foul-params/update-type/'+id,
+            type:'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            data: {
+                codeType: code,
+                explanationType: explanation,
+                [csrfName]: csrfHash
+            },
+            dataType: 'json',
+            success: function(response) {
+                if(response.success){
+                    myModalType.hide();
+                    Swal.fire({
+                        title : 'Succès !',
+                        text: response.message,
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    //Actualiser la table
+                    refreshTableType();
+                } else {
+                    Swal.fire({
+                        title: 'Erreur !',
+                        html: getAjaxErrorMessage(response),
+                        icon: 'error'
+                    });
+                }
+            }
+        })
+    }
+
+    function saveClassification () {
+        let code = $('#modalClassificationCodeInput').val();
+        let id = $('#modalClassificationCodeInput').data('id');
+        let explanation = $('#modalClassificationExplanationInput').val();
+        $.ajax({
+            url: baseUrl + 'admin/technical-foul-params/update-classification/'+id,
+            type:'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            data: {
+                codeClassification: code,
+                explanationClassification: explanation,
+                [csrfName]: csrfHash
+            },
+            dataType: 'json',
+            success: function(response) {
+                if(response.success){
+                    myModalClassification.hide();
+                    Swal.fire({
+                        title : 'Succès !',
+                        text: response.message,
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    //Actualiser la table
+                    refreshTableClassification();
+                } else {
+                    Swal.fire({
+                        title: 'Erreur !',
+                        html: getAjaxErrorMessage(response),
+                        icon: 'error'
+                    });
+                }
+            }
+        })
+    }
+
+    //FONCTIONS DE SUPPRESSION
+    //Type
+    function deleteType(id) {
+        Swal.fire({
+            title: `Êtes-vous sûr ?`,
+            text: `Voulez-vous vraiment supprimer ce type ?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#28a745",
+            cancelButtonColor: "#6c757d",
+            confirmButtonText: `Oui !`,
+            cancelButtonText: "Annuler",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '<?= base_url('/admin/technical-foul-params/delete-type/') ?>'+id,
+                    type: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    data: {
+                        [csrfName]: csrfHash
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Succès !',
+                                text: response.message,
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                            refreshTableType();
+                        } else {
+                            Swal.fire({
+                                title: 'Erreur !',
+                                text: 'Une erreur est survenue',
+                                icon: 'error'
+                            });
+                        }
+                    }
+                })
+            }
+        });
+    }
+
+    //Classification
+    function deleteClassification(id) {
+        Swal.fire({
+            title: `Êtes-vous sûr ?`,
+            text: `Voulez-vous vraiment supprimer cette classification ?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#28a745",
+            cancelButtonColor: "#6c757d",
+            confirmButtonText: `Oui !`,
+            cancelButtonText: "Annuler",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '<?= base_url('/admin/technical-foul-params/delete-classification/') ?>'+id,
+                    type: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    data: {
+                        [csrfName]: csrfHash
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Succès !',
+                                text: response.message,
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                            refreshTableClassification();
+                        } else {
+                            Swal.fire({
+                                title: 'Erreur !',
+                                text: 'Une erreur est survenue',
+                                icon: 'error'
+                            });
+                        }
+                    }
+                })
+            }
+        });
+    }
 </script>
 <?php $this->endSection() ;?>

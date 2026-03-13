@@ -73,4 +73,100 @@ class TechnicalFoulParams extends AdminController
             return redirect()->back()->withInput();
         }
     }
+
+    public function updateType($id) {
+        try{
+            // Récupération des données
+            $dataType = [
+                'code' => $this->request->getPost('codeType'),
+                'explanation' => $this->request->getPost('explanationType'),
+            ];
+
+            if($this->typeModel->update($id,$dataType)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Type de faute technique modifié avec succès',
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $this->typeModel->errors(),
+                ]);
+            }
+        } catch(\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function updateClassification($id) {
+        try{
+            // Récupération des données
+            $dataClassification = [
+                'code' => $this->request->getPost('codeClassification'),
+                'explanation' => $this->request->getPost('explanationClassification'),
+            ];
+
+            if($this->classificationModel->update($id,$dataClassification)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Classification de faute technique modifié avec succès',
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $this->classificationModel->errors(),
+                ]);
+            }
+        } catch(\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function deleteType($id) {
+        try {
+            if($this->typeModel->delete($id)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Le type a bien été supprimé'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $this->typeModel->errors(),
+                ]);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function deleteClassification($id) {
+        try {
+            if($this->classificationModel->delete($id)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'La classification a bien été supprimée'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $this->classificationModel->errors(),
+                ]);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
 }
