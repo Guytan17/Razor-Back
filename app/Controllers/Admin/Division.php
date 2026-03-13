@@ -2,11 +2,9 @@
 
 namespace App\Controllers\Admin;
 
-use App\Controllers\BaseController;
 use App\Models\CategoryModel;
 use App\Models\DivisionModel;
 use App\Models\SeasonModel;
-use CodeIgniter\HTTP\ResponseInterface;
 
 class Division extends AdminController
 {

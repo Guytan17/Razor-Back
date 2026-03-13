@@ -72,6 +72,11 @@
         "url" : "/admin/license-code",
         "icon" : "fas fa-square-binary"
       },
+      "classification": {
+        "title" : "Paramètres fautes techniques",
+        "url" : "/admin/technical-foul-params",
+        "icon" : "fas fa-scale-balanced"
+      },
       "categories" : {
         "title" : "Catégories",
         "url" : "/admin/category",

@@ -27,8 +27,7 @@
 })();
 
 // définition variables
-var baseUrl = "<?= base_url(); ?>";
-var table;
+let table;
 
 // Fonction pour messages d'erreurs ajax avec SweetAlert
 function getAjaxErrorMessage(response) {
