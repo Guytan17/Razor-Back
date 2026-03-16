@@ -6,25 +6,8 @@
   },
   "members" : {
     "title" : "Membres du club",
-    "url" : "/",
-    "icon" : "fas fa-user",
-    "subs" : {
-      "all-members" : {
-        "title" : "Tous les membres",
-        "url" : "/admin/member",
-        "icon" :  "fas fa-people-group"
-      },
-      "players" : {
-        "title" : "Joueurs",
-        "url" : "/admin/member/player",
-        "icon" : "fas fa-person"
-      },
-      "coachs" : {
-        "title" : "Coachs",
-        "url" : "/admin/member/coach",
-        "icon" : "fas fa-person-chalkboard"
-      }
-    }
+    "url" : "/admin/member",
+    "icon" : "fas fa-user"
   },
   "teams" : {
     "title" : "Équipes",
