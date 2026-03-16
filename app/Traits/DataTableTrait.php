@@ -136,7 +136,9 @@ trait DataTableTrait
             $builder->orderBy($orderColumnName, $orderDirection);
         }
 
-        $builder->limit($length, $start);
+        if($length != -1) {
+            $builder->limit($length, $start);
+        }
 
         return $builder->get()->getResultArray();
     }

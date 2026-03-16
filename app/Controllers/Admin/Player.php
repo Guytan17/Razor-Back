@@ -6,7 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\PlayerModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
-class Player extends BaseController
+class Player extends AdminController
 {
     protected PlayerModel $playerModel;
 
@@ -23,13 +23,13 @@ class Player extends BaseController
             return $this->response->setJSON(['error'=> 'Requête non autorisée']);
         }
 
+        // Récupération des conditions dynamiques
+        $idTeam = $request->getGet('id_team');
+
         //Paramètres de recherche
         $search = $request->getget('search') ?? '';
         $page = (int) $request->getget('page') ?? 1;
         $limit = 25;
-
-        // Récupération des conditions dynamiques
-        $idTeam = $request->getGet('id_team');
 
         //Utilisation de la méthode du Model (via le trait)
         $result = $this->playerModel->searchWithTeamId($search,$page,$limit,$idTeam
