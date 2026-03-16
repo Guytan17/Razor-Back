@@ -119,6 +119,18 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <?php if(isset($game) && $game->home_club == 1 ) : ?>
+                                        <div class="card-body" id="zone-mvp">
+                                            <div class="row mb-3">
+                                                <div class="col">
+                                                    <label for="select-mvp">MVP</label>
+                                                    <select class="form-select" name="mvp" id="select-mvp">
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -174,6 +186,18 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <?php if(isset($game) && $game->away_club == 1 ) : ?>
+                                        <div class="card-body" id="zone-mvp">
+                                            <div class="row mb-3">
+                                                <div class="col">
+                                                    <label for="select-mvp">MVP</label>
+                                                    <select class="form-select" name="mvp" id="select-mvp">
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -181,27 +205,6 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <!--START : MVP -->
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <div class="row">
-                                                <div class="col text-center">
-                                                    <span class="card-title fw-bold h5">MVP</span>
-                                                </div>
-                                                <div class="col-auto ms-auto">
-                                                    <span class="btn btn-sm btn-primary ms-auto" id="btn-add-mvp"><i class="fas fa-star"></i> Choisir le MVP </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card-body" id="zone-mvp">
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--END : MVP -->
                             <!--START : FAUTES TECHNIQUES -->
                             <div class="row mb-3">
                                 <div class="col">
@@ -295,6 +298,13 @@
         let awayTeamId = <?= json_encode($game->away_team ??'')?>;
         let awayTeamName = <?= json_encode($game->away_team_name ??'')?>;
         let TasdonTeam ;
+        //Définition de l'ID de l'équipe de Tasdon
+        if(homeClubId == 1) {
+            TasdonTeam = homeTeamId;
+        } else if(awayClubId == 1) {
+            TasdonTeam = awayTeamId;
+        }
+
         let deletedServices  = 0;
 
         //Initialisation Select Gym
@@ -417,35 +427,19 @@
         })
 
         //GESTION DU CHOIX DU MVP
-        $('#btn-add-mvp').on('click', function(){
-            let row=`
-                <div class="row mb-3">
-                    <div class="col">
-                        <select class="form-select" name="mvp" id="select-mvp">
+        let mvpId = <?= json_encode($game->mvp ?? '') ?>;
+        let mvpName = <?= json_encode($game->mvp_name ?? '') ?>;
 
-                        </select>
-                    </div>
-                </div>
+        let optionMvp = new Option(mvpName,mvpId,true,true);
+        $('#select-mvp').append(optionMvp);
+        initAjaxSelect2(`#select-mvp`, {url:'/admin/player/search', searchFields: 'first_name, last_name', placeholder:'Choisir le joueur', extraParams:{id_team:TasdonTeam}});
 
-            `;
-
-            $('#zone-mvp').append(row);
-
-            //Initialisation du select2 du mvp
-            initAjaxSelect2(`#select-mvp`, {url:'/admin/player/search', searchFields: 'first_name, last_name', placeholder:'Choisir le joueur', extraParams:{id_team:TasdonTeam}});
-
-        });
 
         //GESTION DES SERVICES
         let nbServices = $('#zone-services .row-service').length;
         let services = <?= json_encode($services) ?>;
-        let gameServices = <?= json_encode($game->services) ?>;
+        let gameServices = <?= json_encode($game->services ?? '') ?>;
 
-        if(homeClubId == 1) {
-            TasdonTeam = homeTeamId;
-        } else if(awayClubId == 1) {
-            TasdonTeam = awayTeamId;
-        }
 
         //Boucle pour initialiser les select2 sur les services déjà existants
         for (i=1 ; i<=nbServices; i++) {

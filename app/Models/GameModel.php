@@ -174,7 +174,8 @@ class GameModel extends Model
             club_home.id as home_club,
             club_away.id as away_club,
             club_home.name as home_club_name,
-            club_away.name as away_club_name');
+            club_away.name as away_club_name,
+            CONCAT(member.first_name," ",member.last_name) as mvp_name,');
         $this->join('category', 'game.id_category = category.id');
         $this->join('division', 'game.id_division = division.id');
         $this->join('gym', 'game.id_gym = gym.id');
@@ -182,6 +183,7 @@ class GameModel extends Model
         $this->join('team as team_away', 'game.away_team = team_away.id');
         $this->join('club as club_home', 'team_home.id_club = club_home.id');
         $this->join('club as club_away', 'team_away.id_club = club_away.id');
+        $this->join('member', 'game.mvp = member.id','left');
         $this->where('game.id', $id);
         return $this->first();
     }
