@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Traits\DataTableTrait;
+use App\Traits\Select2Searchable;
 use CodeIgniter\Model;
 
 class ClassificationModel extends Model
 {
 
     use DataTableTrait;
+    use Select2Searchable;
 
     protected $table = 'classification';
     protected $primaryKey = 'id';
@@ -45,4 +47,8 @@ class ClassificationModel extends Model
             'select' => 'id,code, explanation',
         ];
     }
+
+    protected $select2SearchFields = ['code'];
+    protected $select2DisplayField = 'code';
+    protected $select2AdditionalFields = ['explanation'];
 }

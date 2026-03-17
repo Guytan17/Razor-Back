@@ -43,4 +43,34 @@ class TechnicalFoulModel extends Model
             'integer' => 'Le montant doit être un entier',
         ]
     ];
+
+    public function getTechnicalFoulsWithInfos(){
+
+        $this->select('
+            technical_foul.*,
+            game.fbi_number as game_fbi_number,
+            type.code as type_code,
+            classification.code as classification_code,
+            CONCAT (member.first_name, " ", member.last_name) as member_name,
+            game.home_team as home_team_id,
+            home_team.name as home_team_name,
+            game.away_team as away_team_id,
+            away_team.name as away_team_name,
+            home_team.id_club as home_team_club,
+            home_club.name as home_club_name,
+            away_team.id_club as away_team_club,
+            away_club.name as away_club_name,
+            
+        ');
+        $this->join('game', 'game.id = technical_foul.id_game');
+        $this->join('type', 'type.id = technical_foul.id_type');
+        $this->join('classification', 'classification.id = technical_foul.id_classification');
+        $this->join('member', 'member.id = technical_foul.id_member');
+        $this->join('team as home_team', 'home_team.id = game.home_team');
+        $this->join('team as away_team', 'away_team.id = game.away_team');
+        $this->join('club as home_club', 'home_club.id = home_team.id_club');
+        $this->join('club as away_club', 'away_club.id = away_team.id_club');
+
+        return $this->findAll();
+    }
 }

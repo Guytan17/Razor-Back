@@ -220,7 +220,45 @@
                                             </div>
                                         </div>
                                         <div class="card-body" id="zone-technical-foul">
+                                            <?php if(isset($game)):
+                                                $nbTechnicalFouls = 0;
+                                            foreach ($game->technical_fouls as $technical_foul):
+                                                $nbTechnicalFouls++; ?>
+                                                <div class="row mb-3 row-technical-foul">
+                                                    <div class="col-11">
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                <label class="form-label" for="type_tf_<?= $nbTechnicalFouls ?>">Type</label>
+                                                                <select class="form-select" name="technical_fouls[<?= $nbTechnicalFouls ?>][type]" id="type_tf_<?= $nbTechnicalFouls ?>"></select>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <label class="form-label" for="classification_tf_<?= $nbTechnicalFouls ?>">Classification</label>
+                                                                <select class="form-select" name="technical_fouls[<?= $nbTechnicalFouls ?>][classification]" id="classification_tf_<?= $nbTechnicalFouls ?>"></select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-8">
+                                                                <label class="form-label" for="player_tf_<?= $nbTechnicalFouls ?>">Joueur</label>
+                                                                <select class="form-select" name="technical_fouls[<?= $nbTechnicalFouls ?>][player]" id="player_tf_<?= $nbTechnicalFouls ?>"></select>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <label class="form-label" for="amount_tf_<?= $nbTechnicalFouls ?>">Montant</label>
+                                                                <div class="input-group">
+                                                                    <input class="form-control" type="number" name="technical_fouls[<?= $nbTechnicalFouls ?>][amount]" id="amount_tf_<?=
+                                                                    $nbTechnicalFouls ?>" value="<?= esc($technical_foul['amount'] ?? '') ?>">
+                                                                    <span class="input-group-text text-decoration">€</span>
+                                                                </div>
 
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-1 d-flex align-items-center justify-content-center">
+                                                        <i class="fas fa-trash-alt text-danger btn-delete-technical-foul fs-2"></i>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach;
+                                            endif; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -306,6 +344,7 @@
         }
 
         let nbTechnicalFouls = $('#zone-technical-foul .row-technical-foul').length;
+        let technicalFouls = <?= json_encode($game->technical_fouls ?? '')?>;
 
         let deletedServices  = 0;
 
@@ -437,8 +476,31 @@
         initAjaxSelect2(`#select-mvp`, {url:'/admin/player/search', searchFields: 'first_name, last_name', placeholder:'Choisir le joueur', extraParams:{id_team:TasdonTeam}});
 
         //GESTION DES FAUTES TECHNIQUES
+        //Reprise des fautes techniques déjà existantes
         let typesTF = <?= json_encode($typesTF ?? '') ?>;
         let classificationsTF = <?= json_encode($classificationsTF ?? '') ?>;
+
+        //Boucles pour initialiser les select2 sur les fautes techniques déjà existantes
+        for (i=1 ; i<=nbTechnicalFouls; i++) {
+            //Initialisation du select2 du type de faute technique (en mode édition)
+            initAjaxSelect2(`#type_tf_${i}`, {url:'/admin/technical-foul-params/search-type', searchFields: 'code',additionalFields:'explanation', placeholder:'Rechercher un type de faute'});
+
+            let optionType = new Option((technicalFouls[i-1]['type_code']),technicalFouls[i-1]['id_type'],true,true);
+            $(`#type_tf_${i}`).append(optionType);
+
+            //Initialisation du select2 de la classification de faute technique (en mode édition)
+            initAjaxSelect2(`#classification_tf_${i}`, {url:'/admin/technical-foul-params/search-classification', searchFields: 'code',additionalFields:'explanation', placeholder:'Rechercher une ' +
+                    'classification de faute'});
+
+            let optionClassification = new Option((technicalFouls[i-1]['classification_code']),technicalFouls[i-1]['id_classification'],true,true);
+            $(`#classification_tf_${i}`).append(optionClassification);
+
+            //Initialisation du select2 du joueur qui a fait la faute technique (en mode édition)
+            initAjaxSelect2(`#player_tf_${i}`, {url:'/admin/player/search', searchFields: 'first_name, last_name', placeholder:'Rechercher un joueur', extraParams:{id_team:TasdonTeam}});
+
+            let optionPlayer = new Option((technicalFouls[i-1]['member_name']),technicalFouls[i-1]['id_member'],true,true);
+            $(`#player_tf_${i}`).append(optionPlayer);
+        }
 
         $('#btn-add-technical-foul').on('click', function(){
             nbTechnicalFouls++;

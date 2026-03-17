@@ -60,6 +60,7 @@ class Game extends AdminController
             $title = 'Modifier un match';
             $game = $this->gameModel->getFullGame($id);
             $game->services = $this->serviceGameModel->getServicesByGame($id);
+            $game->technical_fouls = $this->technicalFoulModel->where('id_game',$id)->getTechnicalFoulsWithInfos();
         } else {
             $title = 'Ajouter un match';
         }
