@@ -73,7 +73,7 @@
       "services" : {
         "title" : "Services",
         "url" : "/admin/service",
-        "icon" : "fas fa-cookie-bite"
+        "icon" : "fas fa-car-side"
       },
       "users" : {
         "title" : "Utilisateurs",

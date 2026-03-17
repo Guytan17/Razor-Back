@@ -305,6 +305,8 @@
             TasdonTeam = awayTeamId;
         }
 
+        let nbTechnicalFouls = $('#zone-technical-foul .row-technical-foul').length;
+
         let deletedServices  = 0;
 
         //Initialisation Select Gym
@@ -434,6 +436,60 @@
         $('#select-mvp').append(optionMvp);
         initAjaxSelect2(`#select-mvp`, {url:'/admin/player/search', searchFields: 'first_name, last_name', placeholder:'Choisir le joueur', extraParams:{id_team:TasdonTeam}});
 
+        //GESTION DES FAUTES TECHNIQUES
+        let typesTF = <?= json_encode($typesTF ?? '') ?>;
+        let classificationsTF = <?= json_encode($classificationsTF ?? '') ?>;
+
+        $('#btn-add-technical-foul').on('click', function(){
+            nbTechnicalFouls++;
+            let row=`
+                <div class="row mb-3 row-technical-foul">
+                    <div class="col-11">
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="form-label" for="type_tf_${nbTechnicalFouls}">Type</label>
+                                <select class="form-select" name="technical_fouls[${nbTechnicalFouls}][type]" id="type_tf_${nbTechnicalFouls}"></select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label" for="classification_tf_${nbTechnicalFouls}">Classification</label>
+                                <select class="form-select" name="technical_fouls[${nbTechnicalFouls}][classification]" id="classification_tf_${nbTechnicalFouls}"></select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
+                                <label class="form-label" for="player_tf_${nbTechnicalFouls}">Joueur</label>
+                                <select class="form-select" name="technical_fouls[${nbTechnicalFouls}][player]" id="player_tf_${nbTechnicalFouls}"></select>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" for="amount_tf_${nbTechnicalFouls}">Montant</label>
+                                <div class="input-group">
+                                    <input class="form-control" type="number" name="technical_fouls[${nbTechnicalFouls}][amount]" id="amount_tf_${nbTechnicalFouls}">
+                                    <span class="input-group-text text-decoration">€</span>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-trash-alt text-danger btn-delete-technical-foul fs-2"></i>
+                    </div>
+                </div>
+            `;
+
+            $('#zone-technical-foul').append(row);
+
+            //Gestion du select de type de faute technique
+            let selectTypeTF = $('#type_tf_'+nbTechnicalFouls);
+            selectTypeTF.html(typesTF.map(typeTF=>{return `<option class="form-control" value="${typeTF.id}">${typeTF.code}</option>`}).join(""));
+
+            //Gestion du select de classification de faute technique
+            let selectClassificationTF = $('#classification_tf_'+nbTechnicalFouls);
+            selectClassificationTF.html(classificationsTF.map(classificationTF=>{return `<option class="form-control" value="${classificationTF.id}">${classificationTF.code}</option>`}).join(""));
+
+            //Initialisation du select2 du joueur ayant fait la faute
+            initAjaxSelect2(`#player_tf_${nbTechnicalFouls}`, {url:'/admin/player/search', searchFields: 'first_name, last_name', placeholder:'Rechercher un joueur', extraParams:{id_team:TasdonTeam}});
+        })
 
         //GESTION DES SERVICES
         let nbServices = $('#zone-services .row-service').length;
@@ -512,7 +568,7 @@
         height: 50px ;
     }
 
-    .btn-delete-service:hover {
+    .btn-delete-service:hover, .btn-delete-technical-foul:hover {
         scale:1.20;
         cursor: pointer;
     }

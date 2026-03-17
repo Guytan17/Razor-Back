@@ -3,12 +3,15 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Models\ClassificationModel;
 use App\Models\ClubModel;
 use App\Models\DivisionModel;
 use App\Models\GameModel;
 use App\Models\GymModel;
 use App\Models\ServiceModel;
 use App\Models\ServiceGameModel;
+use App\Models\TechnicalFoulModel;
+use App\Models\TypeModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Game extends AdminController
@@ -20,6 +23,10 @@ class Game extends AdminController
 
     protected $serviceModel;
     protected $serviceGameModel;
+    protected $typeModel;
+    protected $classificationModel;
+
+    protected $technicalFoulModel;
 
     public function __construct(){
         $this->clubModel = new ClubModel();
@@ -28,6 +35,9 @@ class Game extends AdminController
         $this->gymModel = new GymModel();
         $this->serviceModel = new ServiceModel();
         $this->serviceGameModel = new ServiceGameModel();
+        $this->typeModel = new TypeModel();
+        $this->classificationModel = new ClassificationModel();
+        $this->technicalFoulModel = new TechnicalFoulModel();
     }
 
     public function index()
@@ -43,6 +53,8 @@ class Game extends AdminController
     public function form($id = null) {
         $this->addBreadcrumb('Liste des matchs', '/admin/game');
         $services = $this->serviceModel->findAll();
+        $typesTF = $this->typeModel->findAll();
+        $classificationsTF = $this->classificationModel->findAll();
 
         if ($id != null) {
             $title = 'Modifier un match';
@@ -56,6 +68,8 @@ class Game extends AdminController
             'title' => $title,
             'game' => $game ?? null,
             'services' => $services ?? null,
+            'typesTF' => $typesTF ?? null,
+            'classificationsTF' => $classificationsTF ?? null,
             ];
         return $this->render('admin/game/form', $data);
     }
@@ -82,6 +96,10 @@ class Game extends AdminController
             $services = $this->request->getPost('services');
             $deletedServices = $this->request->getPost('deletedServices');
 
+            //Récupération des fautes techniques
+            $technicalFouls = $this->request->getPost('technical_fouls');
+
+
             //Variable pour savoir si c'est un nouveau match
             $newGame=empty($dataGame['id']);
 
@@ -94,7 +112,23 @@ class Game extends AdminController
                 $id=$this->gameModel->getInsertID();
             }
 
-            //GESTION DES SERVICES
+            //START : GESTION DES FAUTES TECHNIQUES
+            //Enregistrement des fautes techniques en BDD
+            foreach ($technicalFouls as $technicalFoul) {
+                $dataTechnicalFoul = [
+                    'id_game' => $id,
+                    'id_member' => $technicalFoul ['player'],
+                    'id_type' => $technicalFoul ['type'],
+                    'id_classification' => $technicalFoul ['classification'],
+                    'amount' => $technicalFoul ['amount'],
+                ];
+                if(!$this->technicalFoulModel->insert($dataTechnicalFoul)){
+                    $this->error(implode('<br>',$this->technicalFoulModel->errors()));
+                }
+            }
+            //END : GESTION DES FAUTES TECHNIQUES
+
+            //START : GESTION DES SERVICES
             //Récupération des services existants pour ce match
             $existingServices = $this->serviceGameModel->where('id_game', $id)->findAll();
 
@@ -105,7 +139,6 @@ class Game extends AdminController
                     $existingKeys[] = $existingService['id_service'].'-'.$existingService['id_member'];
                 }
             }
-
 
             //suppression des services supprimés
             $deletedKeys = [];
@@ -143,7 +176,7 @@ class Game extends AdminController
                     }
                 }
             }
-
+            //END : GESTION DES SERVICES
 
             //Messages de validation et récupération nouvel ID
             if($newGame){

@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class TechnicalFouls extends Migration
+class TechnicalFoul extends Migration
 {
     public function up()
     {
@@ -39,11 +39,11 @@ class TechnicalFouls extends Migration
         $this->forge->addForeignKey('id_member', 'member', 'id', 'RESTRICT', 'RESTRICT');
         $this->forge->addForeignKey('id_classification', 'classification', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->addForeignKey('id_type', 'type', 'id', 'CASCADE', 'RESTRICT');
-        $this->forge->createTable('technical_fouls');
+        $this->forge->createTable('technical_foul');
     }
 
     public function down()
     {
-        $this->forge->dropTable('technical_fouls');
+        $this->forge->dropTable('technical_foul');
     }
 }
