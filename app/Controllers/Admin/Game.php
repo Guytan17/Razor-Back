@@ -99,6 +99,7 @@ class Game extends AdminController
 
             //Récupération des fautes techniques
             $technicalFouls = $this->request->getPost('technical_fouls');
+            $deletedTechnicalFouls = $this->request->getPost('deletedTechnicalFouls');
 
 
             //Variable pour savoir si c'est un nouveau match
@@ -114,17 +115,31 @@ class Game extends AdminController
             }
 
             //START : GESTION DES FAUTES TECHNIQUES
+            //Gestion des suppressions des fautes techniques
+            if(!empty($deletedTechnicalFouls)){
+                $existingTechnicalFoulsId = $this->technicalFoulModel->where('id_game',$id)->findcolumn('id');
+                foreach ($deletedTechnicalFouls as $deletedTF){
+                    $idTF = $deletedTF ['id'];
+                    if(in_array($idTF,$existingTechnicalFoulsId)){
+                        $this->technicalFoulModel->delete($idTF);
+                    }
+                }
+            }
+
             //Enregistrement des fautes techniques en BDD
-            foreach ($technicalFouls as $technicalFoul) {
-                $dataTechnicalFoul = [
-                    'id_game' => $id,
-                    'id_member' => $technicalFoul ['player'],
-                    'id_type' => $technicalFoul ['type'],
-                    'id_classification' => $technicalFoul ['classification'],
-                    'amount' => $technicalFoul ['amount'],
-                ];
-                if(!$this->technicalFoulModel->insert($dataTechnicalFoul)){
-                    $this->error(implode('<br>',$this->technicalFoulModel->errors()));
+            if(!empty($technicalFouls)){
+                foreach ($technicalFouls as $technicalFoul) {
+                    $dataTechnicalFoul = [
+                        'id' => $technicalFoul['id'] ?? null,
+                        'id_game' => $id,
+                        'id_member' => $technicalFoul ['player'],
+                        'id_type' => $technicalFoul ['type'],
+                        'id_classification' => $technicalFoul ['classification'],
+                        'amount' => $technicalFoul ['amount'],
+                    ];
+                    if(!$this->technicalFoulModel->save($dataTechnicalFoul)){
+                        $this->error(implode('<br>',$this->technicalFoulModel->errors()));
+                    }
                 }
             }
             //END : GESTION DES FAUTES TECHNIQUES

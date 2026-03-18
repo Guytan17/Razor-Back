@@ -252,9 +252,11 @@
                                                             </div>
 
                                                         </div>
+                                                        <input type="hidden" name="technical_fouls[<?= $nbTechnicalFouls ?>][id]" id="id_tf_<?=
+                                                        $nbTechnicalFouls ?>" value="<?=esc($technical_foul['id'] ?? '') ?>">
                                                     </div>
                                                     <div class="col-1 d-flex align-items-center justify-content-center">
-                                                        <i class="fas fa-trash-alt text-danger btn-delete-technical-foul fs-2"></i>
+                                                        <i class="fas fa-trash-alt text-danger btn-delete-technical-foul fs-2" data-id-technical-foul="<?= esc($technical_foul['id']) ?>"></i>
                                                     </div>
                                                 </div>
                                             <?php endforeach;
@@ -345,6 +347,8 @@
 
         let nbTechnicalFouls = $('#zone-technical-foul .row-technical-foul').length;
         let technicalFouls = <?= json_encode($game->technical_fouls ?? '')?>;
+
+        let deletedTechnicalFouls = 0;
 
         let deletedServices  = 0;
 
@@ -502,6 +506,7 @@
             $(`#player_tf_${i}`).append(optionPlayer);
         }
 
+        //Action au clic sur l'ajout d'une faute technique
         $('#btn-add-technical-foul').on('click', function(){
             nbTechnicalFouls++;
             let row=`
@@ -551,6 +556,19 @@
 
             //Initialisation du select2 du joueur ayant fait la faute
             initAjaxSelect2(`#player_tf_${nbTechnicalFouls}`, {url:'/admin/player/search', searchFields: 'first_name, last_name', placeholder:'Rechercher un joueur', extraParams:{id_team:TasdonTeam}});
+        })
+
+        //Gestion de la suppression d'une faute technique
+        $(document).on('click', '.btn-delete-technical-foul', function(){
+            nbTechnicalFouls--;
+            let idTechnicalFoul = $(this).data('id-technical-foul');
+            console.log(idTechnicalFoul);
+            $(this).closest('.row-technical-foul').remove();
+            let deleteInputs = `
+                <input type="hidden" name="deletedTechnicalFouls[${deletedTechnicalFouls}][id]" value="${idTechnicalFoul}">
+            `;
+            $('#zone-technical-foul').append(deleteInputs);
+            deletedTechnicalFouls++;
         })
 
         //GESTION DES SERVICES

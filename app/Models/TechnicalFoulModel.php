@@ -7,8 +7,8 @@ use CodeIgniter\Model;
 class TechnicalFoulModel extends Model
 {
     protected $table            = 'technical_foul';
-    protected $primaryKey       = 'id_game';
-    protected $useAutoIncrement = false;
+    protected $primaryKey       = 'id';
+    protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;

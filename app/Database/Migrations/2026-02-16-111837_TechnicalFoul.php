@@ -9,6 +9,11 @@ class TechnicalFoul extends Migration
     public function up()
     {
         $this->forge->addField([
+            'id' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'auto_increment' => true,
+            ],
             'id_game' => [
                 'type' => 'INT',
                 'constraint' => 11,
@@ -35,7 +40,8 @@ class TechnicalFoul extends Migration
                 'null' => true,
             ]
         ]);
-        $this->forge->addForeignKey('id_game', 'game', 'id', 'RESTRICT', 'CASCADE');
+        $this->forge->addKey('id', true);
+        $this->forge->addForeignKey('id_game', 'game', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->addForeignKey('id_member', 'member', 'id', 'RESTRICT', 'RESTRICT');
         $this->forge->addForeignKey('id_classification', 'classification', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->addForeignKey('id_type', 'type', 'id', 'CASCADE', 'RESTRICT');
