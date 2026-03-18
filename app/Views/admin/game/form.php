@@ -97,9 +97,11 @@
                                                     <div class="row mb-3">
                                                         <div class="col">
                                                             <label class="form-label" for="">Équipe de <?= $game->home_club_name ?></label>
-                                                            <select class="form-control" name="home_team" id="select-home-team" required>
+                                                            <div class="input-group mb-3">
+                                                                <select class="form-control" name="home_team" id="select-home-team" required>
 
-                                                            </select>
+                                                                </select>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 <?php endif; ?>
@@ -124,9 +126,11 @@
                                             <div class="row mb-3">
                                                 <div class="col">
                                                     <label for="select-mvp">MVP</label>
-                                                    <select class="form-select" name="mvp" id="select-mvp">
+                                                    <div class="input-group mb-3">
+                                                        <select class="form-select" name="mvp" id="select-mvp">
 
-                                                    </select>
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -163,9 +167,10 @@
                                                     <div class="row mb-3">
                                                         <div class="col">
                                                             <label class="form-label" for="">Équipe de <?= $game->away_club_name ?></label>
-                                                            <select class="form-control" name="away_team" id="select-away-team" required>
-
-                                                            </select>
+                                                            <div class="input-group mb-3">
+                                                                <select class="form-control" name="away_team" id="select-away-team" required>
+                                                                </select>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 <?php endif; ?>
@@ -174,11 +179,10 @@
                                                 <?php if(isset($game->away_team)): ?>
                                                     <div class="row d-flex align-items-center">
                                                         <div class="col-6 text-end">
-                                                            <label class="form-label me-3" for="away-score-input">Score de <?= $game->away_club_name ?></label>
+                                                            <label class="form-label me-3" for="away-score-input">Score de <?= $game->away_club_name?></label>
                                                         </div>
                                                         <div class="col-6">
-                                                            <input class="form-control fw-bold fs-4 score-input" type="number" name="away_score" id="away-score-input" value="<?= esc
-                                                            ($game->score_away) ?? ''
+                                                            <input class="form-control fw-bold fs-4 score-input" type="number" name="away_score" id="away-score-input" value="<?= esc($game->score_away) ?? ''
                                                             ?>">
                                                         </div>
                                                     </div>
@@ -191,9 +195,11 @@
                                             <div class="row mb-3">
                                                 <div class="col">
                                                     <label for="select-mvp">MVP</label>
-                                                    <select class="form-select" name="mvp" id="select-mvp">
+                                                    <div class="input-group mb-3">
+                                                        <select class="form-select" name="mvp" id="select-mvp">
 
-                                                    </select>
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -229,17 +235,23 @@
                                                         <div class="row">
                                                             <div class="col-6">
                                                                 <label class="form-label" for="type_tf_<?= $nbTechnicalFouls ?>">Type</label>
-                                                                <select class="form-select" name="technical_fouls[<?= $nbTechnicalFouls ?>][type]" id="type_tf_<?= $nbTechnicalFouls ?>"></select>
+                                                                <div class="input-group mb-3">
+                                                                    <select class="form-select" name="technical_fouls[<?= $nbTechnicalFouls ?>][type]" id="type_tf_<?= $nbTechnicalFouls ?>"></select>
+                                                                </div>
                                                             </div>
                                                             <div class="col-6">
                                                                 <label class="form-label" for="classification_tf_<?= $nbTechnicalFouls ?>">Classification</label>
-                                                                <select class="form-select" name="technical_fouls[<?= $nbTechnicalFouls ?>][classification]" id="classification_tf_<?= $nbTechnicalFouls ?>"></select>
+                                                                <div class="input-group mb-3">
+                                                                    <select class="form-select" name="technical_fouls[<?= $nbTechnicalFouls ?>][classification]" id="classification_tf_<?= $nbTechnicalFouls ?>"></select>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-8">
                                                                 <label class="form-label" for="player_tf_<?= $nbTechnicalFouls ?>">Joueur</label>
-                                                                <select class="form-select" name="technical_fouls[<?= $nbTechnicalFouls ?>][player]" id="player_tf_<?= $nbTechnicalFouls ?>"></select>
+                                                                <div class="input-group mb-3">
+                                                                    <select class="form-select" name="technical_fouls[<?= $nbTechnicalFouls ?>][player]" id="player_tf_<?= $nbTechnicalFouls ?>"></select>
+                                                                </div>
                                                             </div>
                                                             <div class="col-4">
                                                                 <label class="form-label" for="amount_tf_<?= $nbTechnicalFouls ?>">Montant</label>
@@ -248,9 +260,7 @@
                                                                     $nbTechnicalFouls ?>" value="<?= esc($technical_foul['amount'] ?? '') ?>">
                                                                     <span class="input-group-text text-decoration">€</span>
                                                                 </div>
-
                                                             </div>
-
                                                         </div>
                                                         <input type="hidden" name="technical_fouls[<?= $nbTechnicalFouls ?>][id]" id="id_tf_<?=
                                                         $nbTechnicalFouls ?>" value="<?=esc($technical_foul['id'] ?? '') ?>">
@@ -290,13 +300,14 @@
                                                     <div class="row mb-2">
                                                         <div class="col-6">
                                                             <select class="form-select" name="services[<?= $nbServices ?>][id_service]" id="service_type_<?= $nbServices ?>">
-                                                                <option value="<?= $service['id_service'] ?>"><?= $service['service_label'] ?> </option>
+                                                                <option value="<?= $service['id_service'] ?>"><?= $service['service_label'] ?></option>
                                                             </select>
                                                         </div>
                                                         <div class="col-6">
-                                                            <select class="form-select" name="services[<?= $nbServices ?>][id_member]" id="service_member_<?= $nbServices ?>">
-
-                                                            </select>
+                                                            <div class="input-group mb-3">
+                                                                <select class="form-select" name="services[<?= $nbServices ?>][id_member]" id="service_member_<?= $nbServices ?>">
+                                                                </select>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -515,17 +526,26 @@
                         <div class="row">
                             <div class="col-6">
                                 <label class="form-label" for="type_tf_${nbTechnicalFouls}">Type</label>
-                                <select class="form-select" name="technical_fouls[${nbTechnicalFouls}][type]" id="type_tf_${nbTechnicalFouls}"></select>
+                                <div class="input-group mb-3">
+                                    <select class="form-select" name="technical_fouls[${nbTechnicalFouls}][type]" id="type_tf_${nbTechnicalFouls}"></select>
+                                </div>
+
                             </div>
                             <div class="col-6">
                                 <label class="form-label" for="classification_tf_${nbTechnicalFouls}">Classification</label>
-                                <select class="form-select" name="technical_fouls[${nbTechnicalFouls}][classification]" id="classification_tf_${nbTechnicalFouls}"></select>
+                                <div class="input-group mb-3">
+                                     <select class="form-select" name="technical_fouls[${nbTechnicalFouls}][classification]" id="classification_tf_${nbTechnicalFouls}"></select>
+                                </div>
+
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-8">
                                 <label class="form-label" for="player_tf_${nbTechnicalFouls}">Joueur</label>
-                                <select class="form-select" name="technical_fouls[${nbTechnicalFouls}][player]" id="player_tf_${nbTechnicalFouls}"></select>
+                                <div class="input-group mb-3">
+                                    <select class="form-select" name="technical_fouls[${nbTechnicalFouls}][player]" id="player_tf_${nbTechnicalFouls}"></select>
+                                </div>
+
                             </div>
                             <div class="col-4">
                                 <label class="form-label" for="amount_tf_${nbTechnicalFouls}">Montant</label>
