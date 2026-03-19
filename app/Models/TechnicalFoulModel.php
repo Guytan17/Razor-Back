@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\DataTableTrait;
 use CodeIgniter\Model;
 
 class TechnicalFoulModel extends Model
 {
+    use DataTableTrait;
+
     protected $table            = 'technical_foul';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
@@ -43,6 +46,10 @@ class TechnicalFoulModel extends Model
             'integer' => 'Le montant doit être un entier',
         ]
     ];
+
+    public function getDataTableConfig(){
+
+    }
 
     public function getTechnicalFoulsWithInfos(){
 

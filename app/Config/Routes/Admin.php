@@ -84,6 +84,14 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('delete/(:num)', 'Sponsor::deleteSponsor/$1'); // suppression sponsor
     });
 
+    //Routes pour les fautes techniques
+    $routes->group('technical-foul',['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'TechnicalFoul::index');
+        $routes->post('insert', 'TechnicalFoul::insert');
+        $routes->post('update/(:num)', 'TechnicalFoul::update/$1');
+        $routes->post('delete/(:num)', 'TechnicalFoul::delete/$1');
+    });
+
     //Routes pour la gestion des codes licences
     $routes->group('license-code', ['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'LicenseCode::index');

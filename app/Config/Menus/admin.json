@@ -39,6 +39,11 @@
     "url" : "/admin/sponsor",
     "icon" : "fas fa-hand-holding-dollar"
   },
+  "Technical Fouls" : {
+    "title" : "Fautes techniques",
+    "url" : "/admin/technical-foul",
+    "icon" : "fas fa-circle-exclamation"
+  },
   "administration" : {
     "title" : "Administration",
     "url" : "/",
