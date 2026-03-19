@@ -101,6 +101,8 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('insert-classification', 'TechnicalFoulParams::insertClassification'); //Sauvegarde création des Classifications
         $routes->post('update-classification/(:num)', 'TechnicalFoulParams::updateClassification/$1');//Sauvegarde édition des Classifications
         $routes->post('delete-classification/(:num)', 'TechnicalFoulParams::deleteClassification/$1'); // Suppression des Classifications
+        $routes->get('search-type', 'TechnicalFoulParams::searchType');
+        $routes->get('search-classification', 'TechnicalFoulParams::searchClassification');
     });
 
     //Routes pour la gestion des roles

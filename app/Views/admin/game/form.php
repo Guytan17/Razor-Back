@@ -97,9 +97,11 @@
                                                     <div class="row mb-3">
                                                         <div class="col">
                                                             <label class="form-label" for="">Équipe de <?= $game->home_club_name ?></label>
-                                                            <select class="form-control" name="home_team" id="select-home-team" required>
+                                                            <div class="input-group mb-3">
+                                                                <select class="form-control" name="home_team" id="select-home-team" required>
 
-                                                            </select>
+                                                                </select>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 <?php endif; ?>
@@ -119,6 +121,20 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <?php if(isset($game) && $game->home_club == 1 ) : ?>
+                                        <div class="card-body" id="zone-mvp">
+                                            <div class="row mb-3">
+                                                <div class="col">
+                                                    <label for="select-mvp">MVP</label>
+                                                    <div class="input-group mb-3">
+                                                        <select class="form-select" name="mvp" id="select-mvp">
+
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -151,9 +167,10 @@
                                                     <div class="row mb-3">
                                                         <div class="col">
                                                             <label class="form-label" for="">Équipe de <?= $game->away_club_name ?></label>
-                                                            <select class="form-control" name="away_team" id="select-away-team" required>
-
-                                                            </select>
+                                                            <div class="input-group mb-3">
+                                                                <select class="form-control" name="away_team" id="select-away-team" required>
+                                                                </select>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 <?php endif; ?>
@@ -162,11 +179,10 @@
                                                 <?php if(isset($game->away_team)): ?>
                                                     <div class="row d-flex align-items-center">
                                                         <div class="col-6 text-end">
-                                                            <label class="form-label me-3" for="away-score-input">Score de <?= $game->away_club_name ?></label>
+                                                            <label class="form-label me-3" for="away-score-input">Score de <?= $game->away_club_name?></label>
                                                         </div>
                                                         <div class="col-6">
-                                                            <input class="form-control fw-bold fs-4 score-input" type="number" name="away_score" id="away-score-input" value="<?= esc
-                                                            ($game->score_away) ?? ''
+                                                            <input class="form-control fw-bold fs-4 score-input" type="number" name="away_score" id="away-score-input" value="<?= esc($game->score_away) ?? ''
                                                             ?>">
                                                         </div>
                                                     </div>
@@ -174,6 +190,20 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <?php if(isset($game) && $game->away_club == 1 ) : ?>
+                                        <div class="card-body" id="zone-mvp">
+                                            <div class="row mb-3">
+                                                <div class="col">
+                                                    <label for="select-mvp">MVP</label>
+                                                    <div class="input-group mb-3">
+                                                        <select class="form-select" name="mvp" id="select-mvp">
+
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -181,27 +211,6 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <!--START : MVP -->
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <div class="row">
-                                                <div class="col text-center">
-                                                    <span class="card-title fw-bold h5">MVP</span>
-                                                </div>
-                                                <div class="col-auto ms-auto">
-                                                    <span class="btn btn-sm btn-primary ms-auto" id="btn-add-mvp"><i class="fas fa-star"></i> Choisir le MVP </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card-body" id="zone-mvp">
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--END : MVP -->
                             <!--START : FAUTES TECHNIQUES -->
                             <div class="row mb-3">
                                 <div class="col">
@@ -217,7 +226,55 @@
                                             </div>
                                         </div>
                                         <div class="card-body" id="zone-technical-foul">
-
+                                            <?php if(isset($game)):
+                                                $nbTechnicalFouls = 0;
+                                            foreach ($game->technical_fouls as $technical_foul):
+                                                $nbTechnicalFouls++; ?>
+                                                <div class="card card-technical-foul mb-3">
+                                                    <div class="card-body">
+                                                        <div class="row mb-3">
+                                                            <div class="col-11">
+                                                                <div class="row">
+                                                                    <div class="col-6">
+                                                                        <label class="form-label" for="type_tf_<?= $nbTechnicalFouls ?>">Type</label>
+                                                                        <div class="input-group mb-3">
+                                                                            <select class="form-select" name="technical_fouls[<?= $nbTechnicalFouls ?>][type]" id="type_tf_<?= $nbTechnicalFouls ?>"></select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-6">
+                                                                        <label class="form-label" for="classification_tf_<?= $nbTechnicalFouls ?>">Classification</label>
+                                                                        <div class="input-group mb-3">
+                                                                            <select class="form-select" name="technical_fouls[<?= $nbTechnicalFouls ?>][classification]" id="classification_tf_<?= $nbTechnicalFouls ?>"></select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-8">
+                                                                        <label class="form-label" for="player_tf_<?= $nbTechnicalFouls ?>">Joueur</label>
+                                                                        <div class="input-group mb-3">
+                                                                            <select class="form-select" name="technical_fouls[<?= $nbTechnicalFouls ?>][player]" id="player_tf_<?= $nbTechnicalFouls ?>"></select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-4">
+                                                                        <label class="form-label" for="amount_tf_<?= $nbTechnicalFouls ?>">Montant</label>
+                                                                        <div class="input-group">
+                                                                            <input class="form-control" type="number" name="technical_fouls[<?= $nbTechnicalFouls ?>][amount]" id="amount_tf_<?=
+                                                                            $nbTechnicalFouls ?>" value="<?= esc($technical_foul['amount'] ?? '') ?>">
+                                                                            <span class="input-group-text text-decoration">€</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <input type="hidden" name="technical_fouls[<?= $nbTechnicalFouls ?>][id]" id="id_tf_<?=
+                                                                $nbTechnicalFouls ?>" value="<?=esc($technical_foul['id'] ?? '') ?>">
+                                                            </div>
+                                                            <div class="col-1 d-flex align-items-center justify-content-center">
+                                                                <i class="fas fa-trash-alt text-danger btn-delete-technical-foul fs-2" data-id-technical-foul="<?= esc($technical_foul['id']) ?>"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach;
+                                            endif; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -242,32 +299,37 @@
                                         $nbServices = 0;
                                         foreach ($game->services as $service):
                                             $nbServices++;?>
-                                            <div class="row mb-3 row-service">
-                                                <div class="col-11">
-                                                    <div class="row mb-2">
-                                                        <div class="col-6">
-                                                            <select class="form-select" name="services[<?= $nbServices ?>][id_service]" id="service_type_<?= $nbServices ?>">
-                                                                <option value="<?= $service['id_service'] ?>"><?= $service['service_label'] ?> </option>
-                                                            </select>
+                                            <div class="card card-service mb-3">
+                                                <div class="card-body">
+                                                    <div class="row mb-3 row-service">
+                                                        <div class="col-11">
+                                                            <div class="row mb-2">
+                                                                <div class="col-6">
+                                                                    <select class="form-select" name="services[<?= $nbServices ?>][id_service]" id="service_type_<?= $nbServices ?>">
+                                                                        <option value="<?= $service['id_service'] ?>"><?= $service['service_label'] ?></option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <div class="input-group mb-3">
+                                                                        <select class="form-select" name="services[<?= $nbServices ?>][id_member]" id="service_member_<?= $nbServices ?>">
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <input class="form-control" type="text" name="services[<?= $nbServices ?>][details]" id="service_details_<?= $nbServices ?>"
+                                                                           placeholder="Précisions (facultatif)" value="<?= esc($service['details'] ?? '') ?>">
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="col-6">
-                                                            <select class="form-select" name="services[<?= $nbServices ?>][id_member]" id="service_member_<?= $nbServices ?>">
-
-                                                            </select>
+                                                        <div class="col-1 d-flex align-items-center justify-content-center">
+                                                            <i class="fas fa-trash-alt text-danger btn-delete-service fs-2"
+                                                               data-id-service="<?= esc($service['id_service']) ?>"
+                                                               data-id-member="<?= esc($service['id_member']) ?>"
+                                                               data-details="<?= esc($service['details'] ?? '') ?>"></i>
                                                         </div>
                                                     </div>
-                                                    <div class="row">
-                                                        <div class="col">
-                                                            <input class="form-control" type="text" name="services[<?= $nbServices ?>][details]" id="service_details_<?= $nbServices ?>"
-                                                                   placeholder="Précisions (facultatif)" value="<?= esc($service['details'] ?? '') ?>">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-1 d-flex align-items-center justify-content-center">
-                                                    <i class="fas fa-trash-alt text-danger btn-delete-service fs-2"
-                                                        data-id-service="<?= esc($service['id_service']) ?>"
-                                                        data-id-member="<?= esc($service['id_member']) ?>"
-                                                        data-details="<?= esc($service['details'] ?? '') ?>"></i>
                                                 </div>
                                             </div>
                                     <?php endforeach;
@@ -295,6 +357,18 @@
         let awayTeamId = <?= json_encode($game->away_team ??'')?>;
         let awayTeamName = <?= json_encode($game->away_team_name ??'')?>;
         let TasdonTeam ;
+        //Définition de l'ID de l'équipe de Tasdon
+        if(homeClubId == 1) {
+            TasdonTeam = homeTeamId;
+        } else if(awayClubId == 1) {
+            TasdonTeam = awayTeamId;
+        }
+
+        let nbTechnicalFouls = $('#zone-technical-foul .card-technical-foul').length;
+        let technicalFouls = <?= json_encode($game->technical_fouls ?? '')?>;
+
+        let deletedTechnicalFouls = 0;
+
         let deletedServices  = 0;
 
         //Initialisation Select Gym
@@ -417,43 +491,139 @@
         })
 
         //GESTION DU CHOIX DU MVP
-        $('#btn-add-mvp').on('click', function(){
-            let row=`
-                <div class="row mb-3">
-                    <div class="col">
-                        <select class="form-select" name="mvp" id="select-mvp">
+        let mvpId = <?= json_encode($game->mvp ?? '') ?>;
+        let mvpName = <?= json_encode($game->mvp_name ?? '') ?>;
 
-                        </select>
+        let optionMvp = new Option(mvpName,mvpId,true,true);
+        $('#select-mvp').append(optionMvp);
+        initAjaxSelect2(`#select-mvp`, {url:'/admin/player/search', searchFields: 'first_name, last_name', placeholder:'Choisir le joueur', extraParams:{id_team:TasdonTeam}});
+
+        //GESTION DES FAUTES TECHNIQUES
+        //Reprise des fautes techniques déjà existantes
+        let typesTF = <?= json_encode($typesTF ?? '') ?>;
+        let classificationsTF = <?= json_encode($classificationsTF ?? '') ?>;
+
+        //Boucles pour initialiser les select2 sur les fautes techniques déjà existantes
+        for (i=1 ; i<=nbTechnicalFouls; i++) {
+            //Initialisation du select2 du type de faute technique (en mode édition)
+            initAjaxSelect2(`#type_tf_${i}`, {url:'/admin/technical-foul-params/search-type', searchFields: 'code',additionalFields:'explanation', placeholder:'Rechercher un type de faute'});
+
+            let optionType = new Option((technicalFouls[i-1]['type_code']),technicalFouls[i-1]['id_type'],true,true);
+            $(`#type_tf_${i}`).append(optionType);
+
+            //Initialisation du select2 de la classification de faute technique (en mode édition)
+            initAjaxSelect2(`#classification_tf_${i}`, {url:'/admin/technical-foul-params/search-classification', searchFields: 'code',additionalFields:'explanation', placeholder:'Rechercher une ' +
+                    'classification de faute'});
+
+            let optionClassification = new Option((technicalFouls[i-1]['classification_code']),technicalFouls[i-1]['id_classification'],true,true);
+            $(`#classification_tf_${i}`).append(optionClassification);
+
+            //Initialisation du select2 du joueur qui a fait la faute technique (en mode édition)
+            initAjaxSelect2(`#player_tf_${i}`, {url:'/admin/player/search', searchFields: 'first_name, last_name', placeholder:'Rechercher un joueur', extraParams:{id_team:TasdonTeam}});
+
+            let optionPlayer = new Option((technicalFouls[i-1]['member_name']),technicalFouls[i-1]['id_member'],true,true);
+            $(`#player_tf_${i}`).append(optionPlayer);
+        }
+
+        //Action au clic sur l'ajout d'une faute technique
+        $('#btn-add-technical-foul').on('click', function(){
+            nbTechnicalFouls++;
+            let row=`
+                <div class="card card-technical-foul mb-3">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-11">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label class="form-label" for="type_tf_${nbTechnicalFouls}">Type</label>
+                                        <div class="input-group mb-3">
+                                            <select class="form-select" name="technical_fouls[${nbTechnicalFouls}][type]" id="type_tf_${nbTechnicalFouls}"></select>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" for="classification_tf_${nbTechnicalFouls}">Classification</label>
+                                        <div class="input-group mb-3">
+                                             <select class="form-select" name="technical_fouls[${nbTechnicalFouls}][classification]" id="classification_tf_${nbTechnicalFouls}"></select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-8">
+                                        <label class="form-label" for="player_tf_${nbTechnicalFouls}">Joueur</label>
+                                        <div class="input-group mb-3">
+                                            <select class="form-select" name="technical_fouls[${nbTechnicalFouls}][player]" id="player_tf_${nbTechnicalFouls}"></select>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" for="amount_tf_${nbTechnicalFouls}">Montant</label>
+                                        <div class="input-group">
+                                            <input class="form-control" type="number" name="technical_fouls[${nbTechnicalFouls}][amount]" id="amount_tf_${nbTechnicalFouls}">
+                                            <span class="input-group-text text-decoration">€</span>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-1 d-flex align-items-center justify-content-center">
+                                <i class="fas fa-trash-alt text-danger btn-delete-technical-foul fs-2"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
             `;
 
-            $('#zone-mvp').append(row);
+            $('#zone-technical-foul').append(row);
 
-            //Initialisation du select2 du mvp
-            initAjaxSelect2(`#select-mvp`, {url:'/admin/player/search', searchFields: 'first_name, last_name', placeholder:'Choisir le joueur', extraParams:{id_team:TasdonTeam}});
+            //Gestion du select de type de faute technique
+            let selectTypeTF = $('#type_tf_'+nbTechnicalFouls);
+            selectTypeTF.html(typesTF.map(typeTF=>{return `<option class="form-control" value="${typeTF.id}">${typeTF.code}</option>`}).join(""));
 
-        });
+            //Gestion du select de classification de faute technique
+            let selectClassificationTF = $('#classification_tf_'+nbTechnicalFouls);
+            selectClassificationTF.html(classificationsTF.map(classificationTF=>{return `<option class="form-control" value="${classificationTF.id}">${classificationTF.code}</option>`}).join(""));
+
+            //Initialisation du select2 du joueur ayant fait la faute
+            initAjaxSelect2(`#player_tf_${nbTechnicalFouls}`, {url:'/admin/player/search', searchFields: 'first_name, last_name', placeholder:'Rechercher un joueur', extraParams:{id_team:TasdonTeam}});
+        })
+
+        //Gestion de la suppression d'une faute technique
+        $(document).on('click', '.btn-delete-technical-foul', function(){
+            nbTechnicalFouls--;
+            let idTechnicalFoul = $(this).data('id-technical-foul');
+            console.log(idTechnicalFoul);
+            $(this).closest('.card-technical-foul').remove();
+            let deleteInputs = `
+                <input type="hidden" name="deletedTechnicalFouls[${deletedTechnicalFouls}][id]" value="${idTechnicalFoul}">
+            `;
+            $('#zone-technical-foul').append(deleteInputs);
+            deletedTechnicalFouls++;
+        })
 
         //GESTION DES SERVICES
-        let nbServices = $('#zone-services .row-service').length;
+        let nbServices = $('#zone-services .card-service').length;
         let services = <?= json_encode($services) ?>;
-        let gameServices = <?= json_encode($game->services) ?>;
+        let gameServices = <?= json_encode($game->services ?? '') ?>;
+        console.log(gameServices);
 
-        if(homeClubId == 1) {
-            TasdonTeam = homeTeamId;
-        } else if(awayClubId == 1) {
-            TasdonTeam = awayTeamId;
-        }
 
         //Boucle pour initialiser les select2 sur les services déjà existants
         for (i=1 ; i<=nbServices; i++) {
             //Initialisation du select2 du membre qui rend ce service (en mode édition)
             initAjaxSelect2(`#service_member_${i}`, {url:'/admin/player/search', searchFields: 'first_name, last_name', placeholder:'Rechercher un joueur', extraParams:{id_team:TasdonTeam}});
 
-            let option = new Option((gameServices[i-1]['member_first_name']+' '+gameServices[i-1]['member_last_name']),gameServices[i-1]['id_member'],true,true);
-            $(`#service_member_${i}`).append(option);
+            let optionServiceMember = new Option((gameServices[i-1]['member_first_name']+' '+gameServices[i-1]['member_last_name']),gameServices[i-1]['id_member'],true,true);
+            $(`#service_member_${i}`).append(optionServiceMember);
+
+            //Gestion du select de type de service (mode édition)
+            let selectServiceType= $('#service_type_'+i);
+            selectServiceType.html(services.map(service=>{return `<option class="form-control" value="${service.id}" ${service.id===gameServices[i-1]['id_service'] ? 'selected' : ''}>${service
+                .label}</option>`}).join
+            (""));
         }
 
 
@@ -461,30 +631,34 @@
         $('#btn-add-service').on('click', function(){
             nbServices++;
             let row=`
-                <div class="row mb-3 row-service">
-                    <div class="col-11">
-                        <div class="row mb-2">
-                            <div class="col-6">
-                                <select class="form-select" name="services[${nbServices}][id_service]" id="service_type_${nbServices}">
+            <div class="card card-service mb-3">
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-11">
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <select class="form-select" name="services[${nbServices}][id_service]" id="service_type_${nbServices}">
 
-                                </select>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <select class="form-select" name="services[${nbServices}][id_member]" id="service_member_${nbServices}">
+
+                                    </select>
+                                </div>
                             </div>
-                            <div class="col-6">
-                                <select class="form-select" name="services[${nbServices}][id_member]" id="service_member_${nbServices}">
-
-                                </select>
+                            <div class="row">
+                                <div class="col">
+                                    <input class="form-control" type="text" name="services[${nbServices}][details]" id="service_details_${nbServices}" placeholder="Précisions (facultatif)">
+                                </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col">
-                                <input class="form-control" type="text" name="services[${nbServices}][details]" id="service_details_${nbServices}" placeholder="Précisions (facultatif)">
-                            </div>
+                        <div class="col-1 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-trash-alt text-danger btn-delete-service fs-2"></i>
                         </div>
-                    </div>
-                    <div class="col-1 d-flex align-items-center justify-content-center">
-                        <i class="fas fa-trash-alt text-danger btn-delete-service fs-2"></i>
                     </div>
                 </div>
+            </div>
             `;
 
             $('#zone-services').append(row);
@@ -502,7 +676,7 @@
             nbServices--;
             let idService = $(this).data('id-service');
             let idMember = $(this).data('id-member');
-            $(this).closest('.row-service').remove();
+            $(this).closest('.card-service').remove();
             let deleteInputs = `
                 <input type="hidden" name="deletedServices[${deletedServices}][id_service]" value="${idService}">
                 <input type="hidden" name="deletedServices[${deletedServices}][id_member]" value="${idMember}">
@@ -518,7 +692,7 @@
         height: 50px ;
     }
 
-    .btn-delete-service:hover {
+    .btn-delete-service:hover, .btn-delete-technical-foul:hover {
         scale:1.20;
         cursor: pointer;
     }
