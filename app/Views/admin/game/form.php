@@ -595,6 +595,7 @@
         let nbServices = $('#zone-services .row-service').length;
         let services = <?= json_encode($services) ?>;
         let gameServices = <?= json_encode($game->services ?? '') ?>;
+        console.log(gameServices);
 
 
         //Boucle pour initialiser les select2 sur les services déjà existants
@@ -602,8 +603,14 @@
             //Initialisation du select2 du membre qui rend ce service (en mode édition)
             initAjaxSelect2(`#service_member_${i}`, {url:'/admin/player/search', searchFields: 'first_name, last_name', placeholder:'Rechercher un joueur', extraParams:{id_team:TasdonTeam}});
 
-            let option = new Option((gameServices[i-1]['member_first_name']+' '+gameServices[i-1]['member_last_name']),gameServices[i-1]['id_member'],true,true);
-            $(`#service_member_${i}`).append(option);
+            let optionServiceMember = new Option((gameServices[i-1]['member_first_name']+' '+gameServices[i-1]['member_last_name']),gameServices[i-1]['id_member'],true,true);
+            $(`#service_member_${i}`).append(optionServiceMember);
+
+            //Gestion du select de type de service (mode édition)
+            let selectServiceType= $('#service_type_'+i);
+            selectServiceType.html(services.map(service=>{return `<option class="form-control" value="${service.id}" ${service.id===gameServices[i-1]['id_service'] ? 'selected' : ''}>${service
+                .label}</option>`}).join
+            (""));
         }
 
 
