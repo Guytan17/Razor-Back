@@ -38,6 +38,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('save', 'Game::saveGame'); //sauvegarde création
         $routes->post('save/(:num)', 'Game::saveGame/$1'); //sauvegarde édition
         $routes->post('switch-active/(:num)', 'Game::switchActiveGame/$1'); //activation/désactivation
+        $routes->get('search', 'Game::searchGame');
     });
 
     //Routes pour la gestion des championnats

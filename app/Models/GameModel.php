@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Traits\DataTableTrait;
+use App\Traits\Select2Searchable;
 use CodeIgniter\Model;
 use App\Entities\Game;
 
 class GameModel extends Model
 {
     use DataTableTrait;
+    use Select2Searchable;
 
     protected $table            = 'game';
     protected $primaryKey       = 'id';
@@ -156,6 +158,10 @@ class GameModel extends Model
             "
         ];
     }
+
+    protected $select2SearchFields = ['fbi_number'];
+    protected $select2DisplayField = 'fbi_number';
+    protected $select2AdditionalFields = ['schedule'];
 
     public function reactiveGame($id) : bool{
         return $this->builder()
