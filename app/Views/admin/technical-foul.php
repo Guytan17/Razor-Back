@@ -219,7 +219,16 @@
                                     data-type-code='${escapeHtml(row.type)}'
                                     data-classification-id='${escapeHtml(row.id_classification)}'
                                     data-classification-code='${escapeHtml(row.classification)}'
-                                    data-amount='${escapeHtml(row.amount)}'>
+                                    data-amount='${escapeHtml(row.amount)}'
+                                    data-home-team-id='${escapeHtml(row.home_team_id)}'
+                                    data-home-team-name='${escapeHtml(row.home_team_name)}'
+                                    data-away-team-id='${escapeHtml(row.away_team_id)}'
+                                    data-away-team-name='${escapeHtml(row.away_team_name)}'
+                                    data-home-club-id='${escapeHtml(row.home_club_id)}'
+                                    data-home-club-name='${escapeHtml(row.home_club_name)}'
+                                    data-away-club-id='${escapeHtml(row.away_club_id)}'
+                                    data-away-club-name='${escapeHtml(row.away_club_name)}'
+>
                                         <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="btn btn-sm btn-danger btn-delete-technical-foul"
@@ -269,7 +278,15 @@
                 typeCode: btn.data('typeCode'),
                 classificationId: btn.data('classification-id'),
                 classificationCode: btn.data('classification-code'),
-                amount: btn.data('amount')
+                amount: btn.data('amount'),
+                homeTeamId: btn.data('home-team-id'),
+                homeTeamName: btn.data('home-team-name'),
+                awayTeamId: btn.data('away-team-id'),
+                awayTeamName: btn.data('away-team-name'),
+                homeClubId: btn.data('home-club-id'),
+                homeClubName: btn.data('home-club-name'),
+                awayClubId: btn.data('away-club-id'),
+                awayClubName: btn.data('away-club-name'),
             })
 
             myModal.show();
@@ -278,8 +295,12 @@
         //Fonction pour remplir la modal avec les données d'édition
         $('#modalTechnicalFoul').on('shown.bs.modal', function() {
             const data = $(this).data('editData');
-
-
+            console.log(data);
+            if (data.homeClubId == 1){
+                team = data.homeTeamId
+            } else if (data.awayClubId == 1){
+                team = data.awayTeamId
+            }
 
             //INITIALISATION DES SELECT2 (MODIFICATION)
             //Select2 types
@@ -294,8 +315,9 @@
             //Select2 match
             initAjaxSelect2(`#modal_game_tf`, {dropdownParent:$(this),url:'/admin/game/search', searchFields:'fbi_number',additionalFields:'schedule,category', placeholder:'Choisir le match'});
 
+            console.log(team);
             //Select2 des joueurs
-            initAjaxSelect2(`#modal_member_tf`, {dropdownParent:$(this),url:'/admin/member/search', searchFields: 'first_name,last_name', placeholder:'Choisir le membre',extraParams:{teamId:team}});
+            initAjaxSelect2(`#modal_member_tf`, {dropdownParent:$(this),url:'/admin/player/search', searchFields: 'first_name,last_name', placeholder:'Choisir le membre',extraParams:{id_team:team}});
 
             //On préremplit les champs avec les valeurs existantes
             let optionType = new Option(data.typeCode, data.typeId,true,true);
