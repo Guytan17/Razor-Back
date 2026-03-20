@@ -65,7 +65,7 @@
                 <div class="card-header">
                     <span class="card-title h5">Liste des fautes techniques</span>
                 </div>
-                <div class="card-body">
+                <div class="card-body overflow-auto">
                     <table class="table table-striped" id="technicalFoulsTable">
                         <thead>
                         <tr>
@@ -75,6 +75,7 @@
                             <th>Type</th>
                             <th>Classification</th>
                             <th>Match</th>
+                            <th>Montant</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -110,7 +111,7 @@
     var baseUrl = "<?=base_url();?>";
 
     $(document).ready(function() {
-
+        //ZONE CRÉATION
         //INITIALISATION DES SELECT2 (CRÉATION)
         //Select2 types
         initAjaxSelect2(`#type_tf`, {url:'/admin/technical-foul-params/search-type', searchFields: 'code',additionalFields:'explanation', placeholder:'Choisir le type de faute technique'});
@@ -133,7 +134,7 @@
            } else if (selectedGame[0].away_club == 1){
                team = selectedGame[0].away_team;
            }
-            console.log(selectedGame,team);
+
             //Select2 des joueurs avec filtre de l'équipe
             initAjaxSelect2(`#member_tf`, {url:'/admin/player/search', searchFields: 'first_name,last_name', placeholder:'Choisir le membre',extraParams:{id_team:team}});
 
@@ -144,6 +145,67 @@
             //Select2 des joueurs
             initAjaxSelect2(`#member_tf`, {url:'/admin/member/search', searchFields: 'first_name,last_name', placeholder:'Choisir le membre'});
         })
+
+        //ZONE INDEX
+        table = $('#technicalFoulsTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: baseUrl + 'datatable/searchdatatable',
+                type: 'POST',
+                data: {
+                    model: 'TechnicalFoulModel'
+                }
+            },
+            columns: [
+                {
+                    data: null,
+                    defaultContent: '',
+                    orderable: false,
+                    width: '100px',
+                    render: function (data, type, row) {
+                        return `
+                            <div class="btn-group" role="group">
+                                <button
+                                    class="btn btn-sm btn-warning btn-edit-technical-foul"
+                                    title="Modifier"
+                                    data-id='${row.id}'
+                                    data-game='${escapeHtml(row.id_game)}'
+                                    data-member='${escapeHtml(row.id_member)}'
+                                    data-type='${escapeHtml(row.id_type)}'
+                                    data-classification='${escapeHtml(row.id_classification)}'
+                                    data-amount='${escapeHtml(row.amount)}'>
+                                        <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger btn-delete-technical-foul"
+                                    title="Supprimer"
+                                    data-id="${row.id}">
+                                        <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        `
+                            ;
+                    }
+                },
+                {data: 'id'},
+                {data: 'member_name'},
+                {data: 'type'},
+                {data: 'classification'},
+                {data: 'game_fbi_number'},
+                {data: 'amount'},
+            ],
+            language: {
+                url: baseUrl + 'assets/js/datatable/datatable-2.3.5-fr-FR.json',
+            },
+            order: [[1, 'desc']], // Tri par ID décroissant par défaut
+            pageLength: 25,
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Tous"]]
+        });
+
+        // Fonction pour actualiser la table
+        window.refreshTable = function () {
+            table.ajax.reload(null, false); // false pour garder la pagination
+        };
     });
 </script>
 <?php $this->endSection();

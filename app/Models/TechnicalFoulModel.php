@@ -48,7 +48,46 @@ class TechnicalFoulModel extends Model
     ];
 
     public function getDataTableConfig(){
-
+        return [
+            'searchable_fields' => [
+                'technical_foul.*',
+                'member.first_name',
+                'member.last_name',
+                'type.code as type',
+                'classification.code as classification',
+                'game.fbi_number'
+            ],
+            'joins' => [
+                [
+                    'table' => 'member',
+                    'condition' => 'member.id = technical_foul.id_member',
+                    'type' => 'inner'
+                ],
+                [
+                    'table' => 'type',
+                    'condition' => 'type.id = technical_foul.id_type',
+                    'type' => 'inner'
+                ],
+                [
+                    'table' => 'classification',
+                    'condition' => 'classification.id = technical_foul.id_classification',
+                    'type' => 'inner'
+                ],
+                [
+                    'table' => 'game',
+                    'condition' => 'game.id = technical_foul.id_game',
+                    'type' => 'inner'
+                ],
+            ],
+            'select' => '
+                technical_foul.id,
+                technical_foul.amount,
+                CONCAT(member.first_name, " ", member.last_name) as member_name,
+                type.code as type,
+                classification.code as classification,
+                game.fbi_number as game_fbi_number
+            '
+        ];
     }
 
     public function getTechnicalFoulsWithInfos(){
