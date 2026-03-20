@@ -80,8 +80,7 @@ class TechnicalFoulModel extends Model
                 ],
             ],
             'select' => '
-                technical_foul.id,
-                technical_foul.amount,
+                technical_foul.*,
                 CONCAT(member.first_name, " ", member.last_name) as member_name,
                 type.code as type,
                 classification.code as classification,

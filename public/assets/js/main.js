@@ -83,7 +83,8 @@ function initAjaxSelect2(selector, options) {
         additionalFields: '',        // Champs supplémentaires à afficher
         cache: true,                 // Met en cache les résultats pour éviter les requêtes répétées
         showDescription: false,      // Affiche ou non la description dans les résultats
-        extraParams: {}
+        extraParams: {},
+        dropdownParent: null,
     };
 
     // Fusion de la configuration par défaut avec les options personnalisées
@@ -103,6 +104,7 @@ function initAjaxSelect2(selector, options) {
         allowClear: config.allowClear,
         theme: config.theme,
         minimumInputLength: config.minimumInputLength,
+        dropdownParent: config.dropdownParent || undefined,
 
         // CONFIGURATION AJAX
         ajax: {

@@ -96,7 +96,45 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label class="form-label" for="modal_type_tf">Type</label>
+                            <div class="input-group">
+                                <select class="form-select" name="id_type_modal" id="modal_type_tf"></select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label" for="modal_classification_tf">Classification</label>
+                            <div class="input-group">
+                                <select class="form-select" name="id_classification_modal" id="modal_classification_tf"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label class="form-label" for="modal_game_tf">Match</label>
+                            <div class="input-group">
+                                <select class="form-select" name="id_game_modal" id="modal_game_tf"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label class="form-label" for="modal_member_tf">Joueur</label>
+                            <div class="input-group">
+                                <select class="form-select" name="id_member_modal" id="modal_member_tf"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label class="form-label" for="modal_amount">Montant</label>
+                            <div class="input-group">
+                                <input class="form-control" type="number" name="amount_modal" id="modal_amount">
+                                <span class="input-group-text text-decoration">€</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
@@ -111,6 +149,8 @@
     var baseUrl = "<?=base_url();?>";
 
     $(document).ready(function() {
+        let team;
+
         //ZONE CRÉATION
         //INITIALISATION DES SELECT2 (CRÉATION)
         //Select2 types
@@ -119,7 +159,7 @@
         //Select2 classifications
         initAjaxSelect2(`#classification_tf`, {url:'/admin/technical-foul-params/search-classification', searchFields: 'code',additionalFields:'explanation', placeholder:'Choisir la classification de faute technique'});
 
-        //Select2 classifications
+        //Select2 match
         initAjaxSelect2(`#game_tf`, {url:'/admin/game/search', searchFields:'fbi_number',additionalFields:'schedule,category', placeholder:'Choisir le match'});
 
         //Select2 des joueurs
@@ -128,13 +168,14 @@
         //Restriction du choix des joueurs à l'équipe ayant disputé le match si un match est sélectionné
         $('#game_tf').on('select2:select', function(){
            let selectedGame = $(this).select2('data');
-           let team;
+
            if(selectedGame[0].home_club == 1){
                team = selectedGame[0].home_team;
            } else if (selectedGame[0].away_club == 1){
                team = selectedGame[0].away_team;
            }
 
+           console.log(team);
             //Select2 des joueurs avec filtre de l'équipe
             initAjaxSelect2(`#member_tf`, {url:'/admin/player/search', searchFields: 'first_name,last_name', placeholder:'Choisir le membre',extraParams:{id_team:team}});
 
@@ -170,10 +211,14 @@
                                     class="btn btn-sm btn-warning btn-edit-technical-foul"
                                     title="Modifier"
                                     data-id='${row.id}'
-                                    data-game='${escapeHtml(row.id_game)}'
-                                    data-member='${escapeHtml(row.id_member)}'
-                                    data-type='${escapeHtml(row.id_type)}'
-                                    data-classification='${escapeHtml(row.id_classification)}'
+                                    data-game-id='${escapeHtml(row.id_game)}'
+                                    data-game-fbi-number='${escapeHtml(row.game_fbi_number)}'
+                                    data-member-id='${escapeHtml(row.id_member)}'
+                                    data-member-name='${escapeHtml(row.member_name)}'
+                                    data-type-id='${escapeHtml(row.id_type)}'
+                                    data-type-code='${escapeHtml(row.type)}'
+                                    data-classification-id='${escapeHtml(row.id_classification)}'
+                                    data-classification-code='${escapeHtml(row.classification)}'
                                     data-amount='${escapeHtml(row.amount)}'>
                                         <i class="fas fa-edit"></i>
                                 </button>
@@ -206,6 +251,73 @@
         window.refreshTable = function () {
             table.ajax.reload(null, false); // false pour garder la pagination
         };
+
+        //Définition de la modal
+        const myModal = new bootstrap.Modal('#modalTechnicalFoul');
+
+        //Fonction pour ouvrir la modal avec les données préremplies
+        $(document).on('click','.btn-edit-technical-foul', function() {
+
+            const btn = $(this);
+
+            $('#modalTechnicalFoul').data('editData',{
+                gameId: btn.data('game-id'),
+                gameFbiNumber: btn.data('game-fbi-number'),
+                memberId: btn.data('member-id'),
+                memberName: btn.data('member-name'),
+                typeId: btn.data('type-id'),
+                typeCode: btn.data('typeCode'),
+                classificationId: btn.data('classification-id'),
+                classificationCode: btn.data('classification-code'),
+                amount: btn.data('amount')
+            })
+
+            myModal.show();
+        });
+
+        //Fonction pour remplir la modal avec les données d'édition
+        $('#modalTechnicalFoul').on('shown.bs.modal', function() {
+            const data = $(this).data('editData');
+
+
+
+            //INITIALISATION DES SELECT2 (MODIFICATION)
+            //Select2 types
+            initAjaxSelect2(`#modal_type_tf`, {dropdownParent:$(this),url:'/admin/technical-foul-params/search-type', searchFields: 'code',additionalFields:'explanation', placeholder:'Choisir le ' +
+                    'type de faute technique',
+                });
+
+            //Select2 classifications
+            initAjaxSelect2(`#modal_classification_tf`, {dropdownParent:$(this),url:'/admin/technical-foul-params/search-classification', searchFields: 'code',additionalFields:'explanation',
+                placeholder:'Choisir la classification de faute technique'});
+
+            //Select2 match
+            initAjaxSelect2(`#modal_game_tf`, {dropdownParent:$(this),url:'/admin/game/search', searchFields:'fbi_number',additionalFields:'schedule,category', placeholder:'Choisir le match'});
+
+            //Select2 des joueurs
+            initAjaxSelect2(`#modal_member_tf`, {dropdownParent:$(this),url:'/admin/member/search', searchFields: 'first_name,last_name', placeholder:'Choisir le membre',extraParams:{teamId:team}});
+
+            //On préremplit les champs avec les valeurs existantes
+            let optionType = new Option(data.typeCode, data.typeId,true,true);
+            $('#modal_type_tf').append(optionType);
+
+            let optionClassification = new Option(data.classificationCode, data.classificationId,true,true);
+            $('#modal_classification_tf').append(optionClassification);
+
+            let optionGame = new Option(data.gameFbiNumber, data.gameId,true,true);
+            $('#modal_game_tf').append(optionGame);
+
+            let optionMember = new Option(data.memberName, data.memberId,true,true);
+            $('#modal_member_tf').append(optionMember);
+
+            $('#modal_amount').val(data.amount);
+        });
+
+
+        //Fonction pour appeler la fonction de suppression
+        $(document).on('click','.btn-delete-technical-foul', function(){
+            deleteTechnicalFoul($(this).data('id'));
+        });
     });
 </script>
 <?php $this->endSection();
