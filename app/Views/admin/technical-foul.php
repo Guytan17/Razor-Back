@@ -119,10 +119,31 @@
         initAjaxSelect2(`#classification_tf`, {url:'/admin/technical-foul-params/search-classification', searchFields: 'code',additionalFields:'explanation', placeholder:'Choisir la classification de faute technique'});
 
         //Select2 classifications
-        initAjaxSelect2(`#game_tf`, {url:'/admin/game/search', searchFields: 'fbi_number',additionalFields:'schedule', placeholder:'Choisir le match'});
+        initAjaxSelect2(`#game_tf`, {url:'/admin/game/search', searchFields:'fbi_number',additionalFields:'schedule,category', placeholder:'Choisir le match'});
 
         //Select2 des joueurs
         initAjaxSelect2(`#member_tf`, {url:'/admin/member/search', searchFields: 'first_name,last_name', placeholder:'Choisir le membre'});
+
+        //Restriction du choix des joueurs à l'équipe ayant disputé le match si un match est sélectionné
+        $('#game_tf').on('select2:select', function(){
+           let selectedGame = $(this).select2('data');
+           let team;
+           if(selectedGame[0].home_club == 1){
+               team = selectedGame[0].home_team;
+           } else if (selectedGame[0].away_club == 1){
+               team = selectedGame[0].away_team;
+           }
+            console.log(selectedGame,team);
+            //Select2 des joueurs avec filtre de l'équipe
+            initAjaxSelect2(`#member_tf`, {url:'/admin/player/search', searchFields: 'first_name,last_name', placeholder:'Choisir le membre',extraParams:{id_team:team}});
+
+        });
+
+        //Réinitialisation du select avec tous les joueurs si la selection du match est retirée
+        $('#game_tf').on('select2:unselect', function(){
+            //Select2 des joueurs
+            initAjaxSelect2(`#member_tf`, {url:'/admin/member/search', searchFields: 'first_name,last_name', placeholder:'Choisir le membre'});
+        })
     });
 </script>
 <?php $this->endSection();

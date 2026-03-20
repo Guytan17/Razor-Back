@@ -159,9 +159,9 @@ class GameModel extends Model
         ];
     }
 
-    protected $select2SearchFields = ['fbi_number'];
-    protected $select2DisplayField = 'fbi_number';
-    protected $select2AdditionalFields = ['schedule'];
+    protected $select2SearchFields = ['fbi_number,home_team_name,away_team_name'];
+    protected $select2DisplayField = 'text';
+    protected $select2AdditionalFields = ['schedule','category','home_team','home_club','away_team','away_club'];
 
     public function reactiveGame($id) : bool{
         return $this->builder()
@@ -192,5 +192,40 @@ class GameModel extends Model
         $this->join('member', 'game.mvp = member.id','left');
         $this->where('game.id', $id);
         return $this->first();
+    }
+
+    public function searchGames($search='',$page=1,$limit=20) {
+        //Requête pour avoir les infos nécessaires liées au match
+        $this->select(
+            'game.id,
+            game.fbi_number,
+            game.schedule,
+            game.home_team,
+            game.away_team,
+            home_team.name as home_team_name,
+            away_team.name as away_team_name,
+            home_club.id as home_club,
+            away_club.id as away_club,
+            home_club.name as home_club_name,
+            away_club.name as away_club_name,
+            category.name as category,
+            CONCAT(fbi_number," - ", home_team.name," ",home_club.name," / ",away_team.name," ",away_club.name) as text');
+        $this->join('category', 'game.id_category = category.id','inner');
+        $this->join('team as home_team', 'game.home_team = home_team.id','inner');
+        $this->join('team as away_team', 'game.away_team = away_team.id','inner');
+        $this->join('club as home_club', 'home_team.id_club = home_club.id', 'left');
+        $this->join('club as away_club', 'away_team.id_club = away_club.id', 'left');
+
+
+        return $this->searchForSelect2(
+            search:$search,
+            page:$page,
+            limit:$limit,
+            searchFields: $this->select2SearchFields,
+            displayField: $this->select2DisplayField,
+            additionalFields: $this->select2AdditionalFields,
+            orderBy:'game.schedule',
+            orderDirection: 'DESC'
+        );
     }
 }

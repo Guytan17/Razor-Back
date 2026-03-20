@@ -265,7 +265,7 @@ class Game extends AdminController
         $limit = 25;
 
         //Utilisation de la méthode du Model (via le trait)
-        $result = $this->gameModel->quickSearchForSelect2($search, $page, $limit, 'fbi_number', 'ASC');
+        $result = $this->gameModel->searchGames($search, $page, $limit);
 
         //Réponse JSON
         return $this->response->setJSON($result);
