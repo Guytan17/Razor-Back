@@ -7,7 +7,7 @@
         <!-- START : ZONE CRÉATION -->
         <div class="col-md-4 mb-3">
             <div class="card">
-                <?= form_open_multipart('admin/technical-foul/insert') ?>
+                <?= form_open('admin/technical-foul/insert') ?>
                 <div class="card-header">
                     <span class="card-title h5">Création d'une faute technique</span>
                 </div>

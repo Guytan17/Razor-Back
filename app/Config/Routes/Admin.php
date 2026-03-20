@@ -88,7 +88,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
     //Routes pour les fautes techniques
     $routes->group('technical-foul',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'TechnicalFoul::index');
-        $routes->post('insert', 'TechnicalFoul::insert');
+        $routes->post('insert', 'TechnicalFoul::insertTechnicalFoul');
         $routes->post('update/(:num)', 'TechnicalFoul::update/$1');
         $routes->post('delete/(:num)', 'TechnicalFoul::delete/$1');
     });
