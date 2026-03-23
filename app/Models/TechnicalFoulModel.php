@@ -122,6 +122,7 @@ class TechnicalFoulModel extends Model
         $this->select('
             technical_foul.*,
             game.fbi_number as game_fbi_number,
+            game.schedule,
             type.code as type_code,
             classification.code as classification_code,
             CONCAT (member.first_name, " ", member.last_name) as member_name,

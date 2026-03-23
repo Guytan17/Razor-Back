@@ -12,6 +12,7 @@ use App\Models\LicenseCodeModel;
 use App\Models\RoleMemberModel;
 use App\Models\CoachModel;
 
+use App\Models\TechnicalFoulModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Member extends AdminController
@@ -35,6 +36,7 @@ class Member extends AdminController
         $this->playerm = new PlayerModel();
         $this->contactm = new ContactModel();
         $this->gameModel = new GameModel();
+        $this->technicalFoulModel = new TechnicalFoulModel();
     }
     public function index()
     {
@@ -59,6 +61,7 @@ class Member extends AdminController
             $member->player_teams = $this->playerm->getPlayersByIdMember($id);
             $member->contacts = $this->contactm->getContactsById($member->id,'member');
             $member->mvpGames = $this->gameModel->getGamesByMvpMember($id);
+            $member->technicalFouls = $this->technicalFoulModel->where('id_member',$id)->getTechnicalFoulsWithInfos();
         } else {
             $title = 'Ajouter un membre';
             $this->addBreadcrumb('Ajouter un membre');
