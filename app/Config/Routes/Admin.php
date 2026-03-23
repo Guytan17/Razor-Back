@@ -45,7 +45,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
     $routes->group('division',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Division::index');
         $routes->post('insert', 'Division::insertDivision'); //Sauvegarde création
-        $routes->post('update/(:num)', 'Division::updateLeague/$1'); //Sauvegarde édition
+        $routes->post('update/(:num)', 'Division::updateDivision/$1'); //Sauvegarde édition
         $routes->post('switch-active/(:num)', 'Division::switchActiveDivision/$1');//Activation/désactivation d'un championnat
         $routes->get('search', 'Division::searchDivision');
     });
@@ -89,8 +89,8 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
     $routes->group('technical-foul',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'TechnicalFoul::index');
         $routes->post('insert', 'TechnicalFoul::insertTechnicalFoul');
-        $routes->post('update/(:num)', 'TechnicalFoul::update/$1');
-        $routes->post('delete/(:num)', 'TechnicalFoul::delete/$1');
+        $routes->post('update/(:num)', 'TechnicalFoul::updateTechnicalFoul/$1');
+        $routes->post('delete/(:num)', 'TechnicalFoul::deleteTechnicalFoul/$1');
     });
 
     //Routes pour la gestion des codes licences

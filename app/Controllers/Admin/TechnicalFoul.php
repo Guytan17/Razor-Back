@@ -49,4 +49,34 @@ class TechnicalFoul extends AdminController
             return redirect()->back()->withInput();
         }
     }
+
+    public function updateTechnicalFoul($id){
+        try{
+            // Récupération des données
+            $dataTechnicalFoul=[
+                'id_game'=>$this->request->getPost('id_game'),
+                'id_member'=>$this->request->getPost('id_member'),
+                'id_type'=>$this->request->getPost('id_type'),
+                'id_classification'=>$this->request->getPost('id_classification'),
+                'amount' => $this->request->getPost('amount'),
+            ];
+
+            if($this->technicalFoulModel->update($id,$dataTechnicalFoul)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Faute technique modifiée avec succès',
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $this->technicalFoulModel->errors(),
+                ]);
+            }
+        } catch(\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
 }

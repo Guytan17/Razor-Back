@@ -174,8 +174,6 @@
            } else if (selectedGame[0].away_club == 1){
                team = selectedGame[0].away_team;
            }
-
-           console.log(team);
             //Select2 des joueurs avec filtre de l'équipe
             initAjaxSelect2(`#member_tf`, {url:'/admin/player/search', searchFields: 'first_name,last_name', placeholder:'Choisir le membre',extraParams:{id_team:team}});
 
@@ -227,8 +225,7 @@
                                     data-home-club-id='${escapeHtml(row.home_club_id)}'
                                     data-home-club-name='${escapeHtml(row.home_club_name)}'
                                     data-away-club-id='${escapeHtml(row.away_club_id)}'
-                                    data-away-club-name='${escapeHtml(row.away_club_name)}'
->
+                                    data-away-club-name='${escapeHtml(row.away_club_name)}'>
                                         <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="btn btn-sm btn-danger btn-delete-technical-foul"
@@ -261,6 +258,8 @@
             table.ajax.reload(null, false); // false pour garder la pagination
         };
 
+    });
+
         //Définition de la modal
         const myModal = new bootstrap.Modal('#modalTechnicalFoul');
 
@@ -270,6 +269,7 @@
             const btn = $(this);
 
             $('#modalTechnicalFoul').data('editData',{
+                id: btn.data('id'),
                 gameId: btn.data('game-id'),
                 gameFbiNumber: btn.data('game-fbi-number'),
                 memberId: btn.data('member-id'),
@@ -295,7 +295,7 @@
         //Fonction pour remplir la modal avec les données d'édition
         $('#modalTechnicalFoul').on('shown.bs.modal', function() {
             const data = $(this).data('editData');
-            console.log(data);
+
             if (data.homeClubId == 1){
                 team = data.homeTeamId
             } else if (data.awayClubId == 1){
@@ -315,7 +315,6 @@
             //Select2 match
             initAjaxSelect2(`#modal_game_tf`, {dropdownParent:$(this),url:'/admin/game/search', searchFields:'fbi_number',additionalFields:'schedule,category', placeholder:'Choisir le match'});
 
-            console.log(team);
             //Select2 des joueurs
             initAjaxSelect2(`#modal_member_tf`, {dropdownParent:$(this),url:'/admin/player/search', searchFields: 'first_name,last_name', placeholder:'Choisir le membre',extraParams:{id_team:team}});
 
@@ -332,14 +331,76 @@
             let optionMember = new Option(data.memberName, data.memberId,true,true);
             $('#modal_member_tf').append(optionMember);
 
-            $('#modal_amount').val(data.amount);
+            $('#modal_amount').val(data.amount).data('id', data.id);
+
         });
+
+        //initialisation du select2 joueur lors de la sélection d'un match
+        $('#modal_game_tf').on('change', function(){
+            let selectedGame = $(this).select2('data');
+            if (selectedGame[0].home_club == 1){
+                team=selectedGame[0].home_team;
+            } else if (selectedGame[0].away_club == 1){
+                team=selectedGame[0].away_team;
+            }
+
+            $('#modal_member_tf').empty();
+            //Select2 des joueurs
+            initAjaxSelect2(`#modal_member_tf`, {dropdownParent:$('#modalTechnicalFoul'),url:'/admin/player/search', searchFields: 'first_name,last_name', placeholder:'Choisir le membre',
+                extraParams:{id_team:team}});
+        })
 
 
         //Fonction pour appeler la fonction de suppression
         $(document).on('click','.btn-delete-technical-foul', function(){
             deleteTechnicalFoul($(this).data('id'));
         });
-    });
+
+
+    function saveTechnicalFoul () {
+        let idGame = $('#modal_game_tf').val();
+        let idMember = $('#modal_member_tf').val();
+        let idType = $('#modal_type_tf').val();
+        let idClassification = $('#modal_classification_tf').val();
+        let amount = $('#modal_amount').val();
+        let id = $('#modal_amount').data('id');
+
+        $.ajax({
+            url: baseUrl + 'admin/technical-foul/update/'+id,
+            type:'POST',
+            headers : {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            data: {
+                id_game: idGame,
+                id_member: idMember,
+                id_type: idType,
+                id_classification: idClassification,
+                amount: amount,
+                [csrfName]: csrfHash
+            },
+            dataType: 'json',
+            success: function(response) {
+                if(response.success){
+                    myModal.hide();
+                    Swal.fire({
+                        title : 'Succès !',
+                        text: response.message,
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    //Actualiser la table
+                    refreshTable();
+                } else {
+                    Swal.fire({
+                        title: 'Erreur !',
+                        html: getAjaxErrorMessage(response),
+                        icon: 'error'
+                    });
+                }
+            }
+        })
+    }
 </script>
 <?php $this->endSection();
