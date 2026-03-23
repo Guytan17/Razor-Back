@@ -263,7 +263,31 @@
                                 <span class="card-title h5">MVP</span>
                             </div>
                             <div class="card-body">
-
+                                <?php if($member->mvpGames){
+                                    foreach($member->mvpGames as $mvpGame){ ?>
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="card card-mvp-game">
+                                                    <a class="text-decoration-none" href="<?=base_url('admin/game/form/'.$mvpGame->id_game)?>">
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col text-center">
+                                                                    <span class="fw-semibold"><?= $mvpGame->home_club_name.' '.$mvpGame->home_team_name?></span> contre <span
+                                                                            class="fw-semibold"><?=$mvpGame->away_club_name.' '.$mvpGame->away_team_name?></span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col text-center">
+                                                                    <span class=""><?= $mvpGame->fbi_number.' - '.$mvpGame->schedule?></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                   <?php }
+                                } ?>
                             </div>
                         </div>
                     </div>
@@ -452,6 +476,11 @@ $(document).ready(function () {
 
     .delete-coach-button:hover,.delete-player-button:hover, .delete-contact-button:hover {
         scale:1.20;
+        cursor: pointer;
+    }
+
+    .card-mvp-game:hover {
+        scale:1.05;
         cursor: pointer;
     }
 </style>

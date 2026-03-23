@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\ContactModel;
+use App\Models\GameModel;
 use App\Models\MemberModel;
 use App\Models\PlayerModel;
 use App\Models\RoleModel;
@@ -23,6 +24,7 @@ class Member extends AdminController
     protected $coachm;
     protected $playerm;
     protected $contactm;
+    protected $gameModel;
 
     public function __construct(){
         $this->mm = new MemberModel();
@@ -32,6 +34,7 @@ class Member extends AdminController
         $this->coachm = new CoachModel();
         $this->playerm = new PlayerModel();
         $this->contactm = new ContactModel();
+        $this->gameModel = new GameModel();
     }
     public function index()
     {
@@ -55,6 +58,7 @@ class Member extends AdminController
             $member->coach_teams = $this->coachm->getCoachesByIdMember($id);
             $member->player_teams = $this->playerm->getPlayersByIdMember($id);
             $member->contacts = $this->contactm->getContactsById($member->id,'member');
+            $member->mvpGames = $this->gameModel->getGamesByMvpMember($id);
         } else {
             $title = 'Ajouter un membre';
             $this->addBreadcrumb('Ajouter un membre');

@@ -2,6 +2,7 @@
 
 namespace App\Entities;
 
+use App\Models\GameModel;
 use CodeIgniter\Entity\Entity;
 
 class Member extends Entity
@@ -41,4 +42,9 @@ class Member extends Entity
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime'
     ];
+
+    public function getFullName()
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
 }
