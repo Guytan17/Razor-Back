@@ -79,4 +79,25 @@ class TechnicalFoul extends AdminController
             ]);
         }
     }
+
+    public function deleteTechnicalFoul($id) {
+        try {
+            if($this->technicalFoulModel->delete($id)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'La faute technique a bien été supprimée'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $this->technicalFoulModel->errors(),
+                ]);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
 }

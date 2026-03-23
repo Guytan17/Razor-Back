@@ -402,5 +402,50 @@
             }
         })
     }
+
+    function deleteTechnicalFoul(id) {
+        Swal.fire({
+            title: `Êtes-vous sûr ?`,
+            text: `Voulez-vous vraiment supprimer cette faute technique ?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#28a745",
+            cancelButtonColor: "#6c757d",
+            confirmButtonText: `Oui !`,
+            cancelButtonText: "Annuler",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '<?= base_url('/admin/technical-foul/delete/') ?>'+id,
+                    type: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    data: {
+                        [csrfName]: csrfHash
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Succès !',
+                                text: response.message,
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                            refreshTable();
+                        } else {
+                            Swal.fire({
+                                title: 'Erreur !',
+                                text: 'Une erreur est survenue',
+                                icon: 'error'
+                            });
+                        }
+                    }
+                })
+            }
+        });
+    }
 </script>
 <?php $this->endSection();
