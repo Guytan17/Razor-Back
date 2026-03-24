@@ -54,7 +54,7 @@ class Team extends AdminController
         if($id != null) {
             $title = 'Modifier une équipe';
             $this->addBreadcrumb($title);
-            $team = $this->tm->find($id);
+            $team = $this->tm->withDeleted()->find($id);
             $team->coachs = $this->coachm->getCoachesByIdTeam($id);
             $team->players = $this->playerm->getPlayersByIdTeam($id);
             $team->divisions = $this->divisionm->getDivisionsByTeam($id);
