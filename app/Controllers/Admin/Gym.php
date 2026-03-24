@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Models\GameModel;
 use CodeIgniter\Model;
 use App\Models\AddressModel;
 use App\Models\GymClubModel;
@@ -14,10 +15,12 @@ class Gym extends AdminController
     protected $addressModel;
     protected $gymModel;
     protected $gymClubModel;
+    protected $gameModel;
     public function __construct(){
         $this->addressModel = new AddressModel();
         $this->gymModel = new GymModel();
         $this->gymClubModel = new GymClubModel();
+        $this->gameModel = new GameModel();
     }
     public function index()
     {
@@ -36,6 +39,7 @@ class Gym extends AdminController
             $this->addBreadcrumb('Ajouter un gymnase');
             $gym = $this->gymModel->getGymById($id);
             $gym['clubs']= $this->gymClubModel->getClubsByIdGym($id);
+            $gym['games']= $this->gameModel->getGamesByGym($id);
         } else {
             $title = 'Modification d\'un gymnase';
             $this->addBreadcrumb('Modifier un gymnase');
