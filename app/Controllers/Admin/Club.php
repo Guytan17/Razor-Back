@@ -5,16 +5,19 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Models\ClubModel;
 use App\Models\MediaModel;
+use App\Models\TeamModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Club extends AdminController
 {
     protected $cm;
     protected $mediaModel;
+    protected $teamModel;
 
     public function __construct(){
         $this->cm = new ClubModel();
         $this->mediaModel = new MediaModel();
+        $this->teamModel = new TeamModel();
     }
 
     public function index()
@@ -32,6 +35,7 @@ class Club extends AdminController
             $title = 'Modifier un club';
             $this->addBreadcrumb('Modifier un club');
             $club = $this->cm->getFullClub($id);
+            $club['teams'] = $this->teamModel->getTeamsByClub($id);
         } else {
             $title = 'Ajouter un club';
             $this->addBreadcrumb('Ajouter un club');

@@ -107,4 +107,12 @@ class TeamModel extends Model
             ->update(['deleted_at' => null, 'updated_at' => date('Y-m-d H:i:s')]);
     }
 
+    public function getTeamsByClub($id_club) {
+        $this->select('team.*,category.name as category_name,season.name as season_name');
+        $this->join('category', 'category.id = team.id_category');
+        $this->join('season', 'season.id = team.id_season');
+        $this->where('team.id_club', $id_club);
+        return $this->findAll();
+    }
+
 }

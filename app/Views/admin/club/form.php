@@ -71,7 +71,28 @@
                                     <span class="card-title fw-bold h5">Équipes du club</span>
                                 </div>
                                 <div class="card-body">
-
+                                <?php if(isset($club['teams'])){
+                                    $cpt_teams = 0;
+                                    foreach($club['teams'] as $team):
+                                        $cpt_teams++; ?>
+                                        <div class="row mb-3">
+                                            <div class="col">
+                                                <div class="card">
+                                                    <a class="card-team" href="<?=base_url('admin/team/form/'.$team->id)?>">
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col text-center">
+                                                                    <span class="fw-bold"><?= $team->name.' - ' ?></span> <span class="fw-semibold fst-italic"> <?= $team->category_name.' - 
+                                                                    '.$team->season_name ?></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach;
+                                }?>
                                 </div>
                             </div>
                         </div>
@@ -124,6 +145,16 @@ $(document).ready(function () {
 <style>
     #logoPreview {
        max-height: 320px;
+    }
+
+    .card-team{
+        text-decoration: none;
+        color: black;
+    }
+
+    .card-team:hover{
+        scale:1.05;
+        cursor: pointer;
     }
 </style>
 <?php echo form_close() ?>
