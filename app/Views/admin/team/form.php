@@ -175,7 +175,31 @@
                                     </div>
                                     <div class="row mb-3 overflow-auto">
                                         <div class="col" id="zone-division-list">
-
+                                        <?php if(isset($team->divisions)){
+                                            $cpt_divisions = 0 ;
+                                            foreach ($team->divisions as $division) :
+                                            $cpt_divisions ++ ?>
+                                                <div class="row row-division">
+                                                    <div class="col">
+                                                        <div class="card card-division">
+                                                            <div class="card-body p-1 d-flex align-items-center">
+                                                                <div class="row">
+                                                                    <div class="col-auto">
+                                                                        <span class="fs-4" id="delete-division-<?=$cpt_divisions?>"><i class="fas fa-trash-alt text-danger
+                                                                        delete-division-button"></i></span>
+                                                                    </div>
+                                                                    <div class="col d-flex align-items-center">
+                                                                        <span class="fw-semibold" ><?=$division['division_name']?> - <span class="fst-italic"><?=$division['category_name'].' - 
+                                                                        '.$division['season_name']?></span></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <input type="hidden" name="divisions[]" value="<?=$division['id']?>">
+                                                </div>
+                                            <?php endforeach;
+                                        }?>
                                         </div>
                                     </div>
                                 </div>
@@ -343,6 +367,12 @@
             $('#zone-division-list').prepend(row);
             $('#select-division').empty();
         })
+
+        // Gestion suppression championnat
+        $('#zone-division').on('click','.delete-division-button',function(){
+            nbDivisions --;
+            $(this).closest('.row-division').remove();
+        })
     });
 </script>
 <style>
@@ -358,7 +388,7 @@
         margin-bottom: 1rem;
     }
 
-    .delete-coach-button:hover,.delete-player-button:hover {
+    .delete-coach-button:hover,.delete-player-button:hover,.delete-division-button:hover {
         scale:1.2;
         cursor: pointer;
     }
