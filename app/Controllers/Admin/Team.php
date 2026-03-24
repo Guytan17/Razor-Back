@@ -7,6 +7,7 @@ use App\Models\CategoryModel;
 use App\Models\CoachModel;
 use App\Models\DivisionModel;
 use App\Models\DivisionTeamModel;
+use App\Models\GameModel;
 use App\Models\PlayerModel;
 use App\Models\TeamModel;
 use App\Models\SeasonModel;
@@ -23,6 +24,7 @@ class Team extends AdminController
     protected $playerm;
     protected $divisionm;
     protected $divisionTeamModel;
+    protected $gameModel;
 
     public function __construct(){
         $this->tm = new TeamModel();
@@ -33,6 +35,7 @@ class Team extends AdminController
         $this->playerm = new PlayerModel();
         $this->divisionm = new DivisionModel();
         $this->divisionTeamModel = new DivisionTeamModel();
+        $this->gameModel = new GameModel();
     }
     public function index()
     {
@@ -55,6 +58,20 @@ class Team extends AdminController
             $team->coachs = $this->coachm->getCoachesByIdTeam($id);
             $team->players = $this->playerm->getPlayersByIdTeam($id);
             $team->divisions = $this->divisionm->getDivisionsByTeam($id);
+            $team->games = $this->gameModel->getGamesByTeam($id);
+            foreach ($team->games as $game) {
+                if($game->home_team == $id) {
+                    $game->opponent_team_id = $game->away_team;
+                    $game->opponent_team_name = $game->away_team_name;
+                    $game->opponent_club_id = $game->away_club_id;
+                    $game->opponent_club_name = $game->away_club_name;
+                } else if($game->away_team == $id) {
+                    $game->opponent_team_id = $game->home_team;
+                    $game->opponent_team_name = $game->home_team_name;
+                    $game->opponent_club_id = $game->home_club_id;
+                    $game->opponent_club_name = $game->home_club_name;
+                }
+            }
 
         } else {
             $title = 'Ajouter une équipe';

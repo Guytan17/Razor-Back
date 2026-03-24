@@ -211,7 +211,33 @@
                                     <span class="card-title h5">Matchs</span>
                                 </div>
                                 <div class="card-body" id="zone-game">
+                                    <?php if(isset($team->games)){
+                                        $cpt_games = 0 ;
+                                        foreach ($team->games as $game) :
+                                        $cpt_games ++ ?>
+                                            <div class="row mb-3">
+                                                <div class="col">
+                                                    <div class="card">
+                                                        <a class="card-game" href="<?=base_url('admin/game/form/'.$game->id)?>">
+                                                            <div class="card-body">
+                                                                <div class="row">
+                                                                    <div class="col text-center">
+                                                                        <span class="fw-semibold">Le <?=format_date_fr($game->schedule,'EEE d MMMM y à HH:mm'); ?></span> contre <span
+                                                                                class="fw-bold"><?= $game->opponent_team_name.' - '.$game->opponent_club_name ?></span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col text-center">
 
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    <?php endforeach;
+                                    }?>
                                 </div>
                             </div>
                             <!-- END : MATCHS -->
@@ -382,6 +408,16 @@
 
     #zone-player-list, #zone-game-list {
         max-height : 500px;
+    }
+
+    .card-game{
+        text-decoration: none;
+        color: black;
+    }
+
+    .card-game:hover{
+        scale:1.05;
+        cursor: pointer;
     }
 
     .row-coach, .row-player, .row-game,.row-division{
