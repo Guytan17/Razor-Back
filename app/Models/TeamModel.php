@@ -106,4 +106,5 @@ class TeamModel extends Model
             ->where('id', $id)
             ->update(['deleted_at' => null, 'updated_at' => date('Y-m-d H:i:s')]);
     }
+
 }

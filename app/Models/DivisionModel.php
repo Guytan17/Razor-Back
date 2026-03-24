@@ -109,4 +109,14 @@ class DivisionModel extends Model
             ->where('id', $id)
             ->update(['deleted_at' => null, 'updated_at' => date('Y-m-d H:i:s')]);
     }
+
+    public function getDivisionsByTeam($id) : array{
+        $this->select('division.name as division_name, category.name as category_name,season.name as season_name');
+        $this->join('division_team', 'division_team.id_team = division.id');
+        $this->join('category', 'category.id = division.id_category');
+        $this->join('season', 'season.id = division.id_season');
+        $this->where('division_team.id_team', $id);
+
+        return $this->findAll();
+    }
 }

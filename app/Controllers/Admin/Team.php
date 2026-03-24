@@ -5,6 +5,7 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Models\CategoryModel;
 use App\Models\CoachModel;
+use App\Models\DivisionModel;
 use App\Models\PlayerModel;
 use App\Models\TeamModel;
 use App\Models\SeasonModel;
@@ -27,6 +28,7 @@ class Team extends AdminController
         $this->sm = new SeasonModel();
         $this->coachm = new CoachModel();
         $this->playerm = new PlayerModel();
+        $this->divisionm = new DivisionModel();
     }
     public function index()
     {
@@ -48,6 +50,7 @@ class Team extends AdminController
             $team = $this->tm->find($id);
             $team->coachs = $this->coachm->getCoachesByIdTeam($id);
             $team->players = $this->playerm->getPlayersByIdTeam($id);
+            $team->divisions = $this->divisionm->getDivisionsByTeam($id);
 
         } else {
             $title = 'Ajouter une équipe';
