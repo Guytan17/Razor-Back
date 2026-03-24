@@ -168,7 +168,33 @@
                                     <span class="card-title fw-bold h5">Matchs récents</span>
                                 </div>
                                 <div class="card-body" id="zone-game">
-
+                                    <?php if(isset($gym['games'])){
+                                        $cpt_games = 0;
+                                        foreach($gym['games'] as $game):
+                                            $cpt_games++; ?>
+                                            <div class="row mb-3">
+                                                <div class="col">
+                                                    <div class="card">
+                                                        <a class="card-game" href="<?=base_url('admin/game/form/'.$game->id)?>">
+                                                            <div class="card-body">
+                                                                <div class="row">
+                                                                    <div class="col text-center">
+                                                                        <span class="fw-bold"><?= $game->home_team_name.' '.$game->home_club_name ?></span> contre
+                                                                        <span class="fw-bold"><?=$game->away_team_name.' '.$game->away_club_name?></span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col text-center">
+                                                                        <span class="fw-semibold fst-italic"><?= format_date_fr($game->schedule,'EEE d MMMM y à HH:mm') ?></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php endforeach;
+                                    }?>
                                 </div>
                             </div>
                         </div>
@@ -259,6 +285,16 @@
 
   .delete-club-button:hover,.delete-game-button:hover {
       scale:1.2;
+      cursor: pointer;
+  }
+
+  .card-game{
+      text-decoration: none;
+      color: black;
+  }
+
+  .card-game:hover{
+      scale:1.05;
       cursor: pointer;
   }
 </style>

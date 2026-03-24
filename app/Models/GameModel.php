@@ -251,4 +251,16 @@ class GameModel extends Model
 
         return $this->findAll();
     }
+
+    public function getGamesByGym($idGym){
+        $this->select('game.*,home_team.name as home_team_name,away_team.name as away_team_name,home_club.name as home_club_name,away_club.name as away_club_name');
+        $this->join('team as home_team', 'game.home_team = home_team.id');
+        $this->join('team as away_team', 'game.away_team = away_team.id');
+        $this->join('club as home_club', 'home_team.id_club = home_club.id');
+        $this->join('club as away_club', 'away_team.id_club = away_club.id');
+        $this->where('game.id_gym', $idGym);
+        $this->orderBy('game.schedule','DESC');
+
+        return $this->findAll();
+    }
 }
