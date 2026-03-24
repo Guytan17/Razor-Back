@@ -38,13 +38,14 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('save', 'Game::saveGame'); //sauvegarde création
         $routes->post('save/(:num)', 'Game::saveGame/$1'); //sauvegarde édition
         $routes->post('switch-active/(:num)', 'Game::switchActiveGame/$1'); //activation/désactivation
+        $routes->get('search', 'Game::searchGame');
     });
 
     //Routes pour la gestion des championnats
     $routes->group('division',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Division::index');
         $routes->post('insert', 'Division::insertDivision'); //Sauvegarde création
-        $routes->post('update/(:num)', 'Division::updateLeague/$1'); //Sauvegarde édition
+        $routes->post('update/(:num)', 'Division::updateDivision/$1'); //Sauvegarde édition
         $routes->post('switch-active/(:num)', 'Division::switchActiveDivision/$1');//Activation/désactivation d'un championnat
         $routes->get('search', 'Division::searchDivision');
     });
@@ -82,6 +83,14 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('insert', 'Sponsor::insertSponsor'); //sauvegarde création
         $routes->post('update/(:num)', 'Sponsor::updateSponsor/$1'); //sauvegarde édition
         $routes->post('delete/(:num)', 'Sponsor::deleteSponsor/$1'); // suppression sponsor
+    });
+
+    //Routes pour les fautes techniques
+    $routes->group('technical-foul',['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'TechnicalFoul::index');
+        $routes->post('insert', 'TechnicalFoul::insertTechnicalFoul');
+        $routes->post('update/(:num)', 'TechnicalFoul::updateTechnicalFoul/$1');
+        $routes->post('delete/(:num)', 'TechnicalFoul::deleteTechnicalFoul/$1');
     });
 
     //Routes pour la gestion des codes licences

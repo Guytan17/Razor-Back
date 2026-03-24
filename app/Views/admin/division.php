@@ -209,7 +209,7 @@
        toggleActive($(this).data('id'));
     })
 
-    function saveLeague () {
+    function saveDivision () {
         let name = $('#modalNameInput').val();
         let id = $('#modalNameInput').data('id');
         let seasonId = $('#modalSelectIdSeason').val();
