@@ -88,13 +88,14 @@ class DivisionModel extends Model
 
     protected $select2SearchFields = ['name'];
     protected $select2DisplayField = 'name';
-    protected $select2AdditionalFields = ['season_name'];
+    protected $select2AdditionalFields = ['season_name','category_name'];
 
     //On surcharge le model avec la fonction permettant de rajouter le nom de la saison dans le select
-    public function searchWithSeasonName($search='',$page=1,$limit=20){
-        //jointure pour avoir le nom du club
-        $this->select('division.*,season.name as season_name');
+    public function searchWithSeasonNameAndCategoryName($search='',$page=1,$limit=20){
+        //jointure pour avoir le nom de la saison
+        $this->select('division.*,season.name as season_name,category.name as category_name');
         $this->join('season', 'division.id_season = season.id');
+        $this->join('category', 'division.id_category = category.id');
 
         return $this->searchForSelect2(
             search:$search,

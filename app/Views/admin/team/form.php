@@ -164,7 +164,20 @@
                                     <span class="card-title h5">Championnats et coupes</span>
                                 </div>
                                 <div class="card-body" id="zone-division">
+                                    <div class="row mb-3">
+                                        <div class="col p-3">
+                                            <div class="input-group">
+                                                <select class="form-select select-division" id="select-division">
+                                                </select>
+                                                <span class="input-group-text btn btn-sm btn-primary d-flex align-items-center" id="add-division"><i class="fas fa-plus"></i> Ajouter</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 overflow-auto">
+                                        <div class="col" id="zone-division-list">
 
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <!-- END : CHAMPIONNATS ET COUPES -->
@@ -193,14 +206,19 @@
 
         let nbCoachs = $('#zone-coach .card-coach').length ;
         let nbPlayers = $('zone-player .card-player').length ;
-        console.log(nbCoachs, nbPlayers);
+        let nbDivisions = $('#zone-division .card-division').length ;
+        console.log(nbCoachs, nbPlayers,nbDivisions);
 
         //initialisation select-coach
         initAjaxSelect2(`#select-coach`, {url:'/admin/member/search', searchFields: 'first_name,last_name',  additionalFields :'license_number', placeholder:'Rechercher un membre'});
 
-        //initialisation du selec-player
+        //initialisation du select-player
         initAjaxSelect2(`#select-player`, {url:'/admin/member/search', searchFields: 'first_name,last_name',  additionalFields :'license_number', placeholder:'Rechercher un membre'});
 
+        //initialisation du select-division
+        initAjaxSelect2(`#select-division`, {url:'/admin/division/search', searchFields: 'name',  additionalFields :['category_name','season_name'], placeholder:'Rechercher un championnat'});
+
+        //GESTION DES COACHS
         //Gestion ajout coach
         $('#add-coach').on('click', function(){
             let selectedMember = $('#select-coach').select2('data');
@@ -244,6 +262,7 @@
             $(this).closest('.row-coach').remove();
         })
 
+        //GESTION DES JOUEURS
         //Gestion ajout joueur
         $('#add-player').on('click', function(){
             let selectedMember = $('#select-player').select2('data');
@@ -286,6 +305,43 @@
         $('#zone-player').on('click','.delete-player-button',function(){
             nbPlayers --;
             $(this).closest('.row-player').remove();
+        })
+
+        //GESTION DES CHAMPIONNATS
+        //Gestion ajout championnat
+        $('#add-division').on('click', function(){
+            let selectedDivision = $('#select-division').select2('data');
+            //si aucun championnat n'est sélectionné
+            if (!selectedDivision.length) {
+                return;
+            }
+
+            //si un championnat est sélectionné
+            nbDivisions++;
+            let division = selectedDivision[0];
+            console.log(division);
+            let row = `
+            <div class="row row-division">
+                <div class="col">
+                    <div class="card card-division">
+                        <div class="card-body p-1 d-flex align-items-center">
+                            <div class="row">
+                               <div class="col-auto">
+                                   <span class="fs-4" id="delete-division-${nbDivisions}"><i class="fas fa-trash-alt text-danger delete-division-button"></i></span>
+                               </div>
+                                <div class="col d-flex align-items-center">
+                                    <span class="fw-semibold" >${division.text} - <span class="fst-italic">${division.category_name+' - '+division.season_name}</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="divisions[]" value="${division.id}">
+            </div>
+            `;
+
+            $('#zone-division-list').prepend(row);
+            $('#select-division').empty();
         })
     });
 </script>

@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\CategoryModel;
 use App\Models\CoachModel;
 use App\Models\DivisionModel;
+use App\Models\DivisionTeamModel;
 use App\Models\PlayerModel;
 use App\Models\TeamModel;
 use App\Models\SeasonModel;
@@ -20,6 +21,8 @@ class Team extends AdminController
     protected $catm;
     protected $coachm;
     protected $playerm;
+    protected $divisionm;
+    protected $divisionTeamModel;
 
     public function __construct(){
         $this->tm = new TeamModel();
@@ -29,6 +32,7 @@ class Team extends AdminController
         $this->coachm = new CoachModel();
         $this->playerm = new PlayerModel();
         $this->divisionm = new DivisionModel();
+        $this->divisionTeamModel = new DivisionTeamModel();
     }
     public function index()
     {
@@ -83,6 +87,7 @@ class Team extends AdminController
 
             $coachs = $this->request->getPost('coachs') ?? [];
             $players= $this->request->getPost('players') ?? [];
+            $divisions = $this->request->getPost('divisions') ?? [];
 
             //Préparation de la variable pour savoir si c'est une création
             $newTeam = empty($dataTeam['id']);
@@ -143,6 +148,21 @@ class Team extends AdminController
                     ];
                     $this->playerm->insert($dataPlayer);
                 }
+            }
+
+            //Gestion des championnats
+            if(!empty($divisions)) {
+                $this->divisionTeamModel->where('id_team', $team->id)->delete();
+                foreach($divisions as $division) {
+                    $dataDivisionTeam = [
+                        'id_team' => $team->id,
+                        'id_division' => $division,
+                    ];
+                    if(!$this->divisionTeamModel->insert($dataDivisionTeam)) {
+                        $this->error(implode('<br>',$this->divisionTeamModel->errors()));
+                    }
+                }
+
             }
 
 
