@@ -104,7 +104,35 @@
                                     <span class="card-title fw-bold h5">Gymnases du club</span>
                                 </div>
                                 <div class="card-body">
-
+                                    <?php if(isset($club['gyms'])){
+                                        $cpt_gyms = 0;
+                                        foreach($club['gyms'] as $gym):
+                                            $cpt_gyms++; ?>
+                                            <div class="row mb-3">
+                                                <div class="col">
+                                                    <div class="card">
+                                                        <a class="card-team" href="<?=base_url('admin/gym/form/'.$gym['id'])?>">
+                                                            <div class="card-body">
+                                                                <div class="row">
+                                                                    <div class="col text-center">
+                                                                        <span class="fw-bold"><?= $gym['gym_name']?></span><span class="fw-semibold fst-italic"><?=(isset($gym['gym_fbi_code'])&&!empty($gym['gym_fbi_code'])
+                                                                                    ?' - '.$gym['gym_fbi_code']:'').
+                                                                            ($gym['main_gym']==1?' - Gymnase 
+                                                                        principal':'') ?></span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col text-center">
+                                                                         <span class=""><?=$gym['gym_address'].', '.$gym['city']?></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php endforeach;
+                                    }?>
                                 </div>
                             </div>
 

@@ -42,4 +42,14 @@ class GymClubModel extends Model
         return $this->findAll();
     }
 
+    public function getGymsByIdClub($id_club) {
+        $this->select('gym_club.*,gym.id as id,gym.name as gym_name,gym.fbi_code as gym_fbi_code,address.address_1 as gym_address, city.label as city');
+        $this->join('gym','gym.id=gym_club.id_gym','inner');
+        $this->join('address','address.id=gym.id_address','left');
+        $this->join('city','city.id=address.id_city','left');
+        $this->where('gym_club.id_club', $id_club);
+
+        return $this->findAll();
+    }
+
 }
