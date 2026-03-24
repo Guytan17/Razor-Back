@@ -67,7 +67,7 @@ class DivisionModel extends Model
                     'division.id_category',
                     'season_name',
                     'category_name',
-
+                    'teams_name',
                 ],
             'joins' =>
             [
@@ -80,9 +80,28 @@ class DivisionModel extends Model
                     'table' => 'category',
                     'condition' => 'division.id_category = category.id',
                     'type' => 'INNER'
-                ]
+                ],
+                [
+                    'table' => 'division_team',
+                    'condition' => 'division_team.id_division = division.id',
+                    'type' => 'left'
+                ],
+                [
+                    'table' => 'team',
+                    'condition' => 'division_team.id_team = team.id',
+                    'type' => 'left'
+                ],
             ],
-            'select' => 'division.id,division.name,division.id_season,division.id_category,season.name as season_name,category.name as category_name,division.deleted_at',
+            'select' => '
+            division.id,
+            division.name,
+            division.id_season,
+            division.id_category,
+            season.name as season_name,
+            category.name as category_name,
+            division.deleted_at,
+            GROUP_CONCAT(team.name SEPARATOR ",") as teams_name',
+            'groupBy' => 'division.id',
         ];
     }
 

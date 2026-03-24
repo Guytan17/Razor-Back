@@ -51,7 +51,7 @@ class PlayerModel extends Model
     protected $select2DisplayField = 'first_name,last_name';
 
     //On surcharge le model avec la fonction permettant de rajouter le nom de la saison dans le select
-    public function searchWithTeamId($search='',$page=1,$limit=20,$teamId){
+    public function searchWithTeamId($teamId,$search='',$page=1,$limit=20){
         $builder = $this->builder();
 
         //jointure pour appliquer la condition d'équipe

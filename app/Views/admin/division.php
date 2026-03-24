@@ -58,7 +58,7 @@
                             <th>Nom du championnat</th>
                             <th>Saison</th>
                             <th>Catégorie</th>
-                            <!-- <th>Nombre de membres ayant ce rôle</th>-->
+                            <th>Équipes</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -171,7 +171,8 @@
                 {data: 'id'},
                 {data: 'name'},
                 {data: 'season_name'},
-                {data: 'category_name'}
+                {data: 'category_name'},
+                {data: 'teams_name'}
             ],
             language: {
                 url: baseUrl + 'assets/js/datatable/datatable-2.3.5-fr-FR.json',
