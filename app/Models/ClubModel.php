@@ -70,15 +70,23 @@ class ClubModel extends Model
                 'name',
                 'slug',
                 'color_1',
-                'color_2',
+                'color_2
+                image_url',
             ],
-            'joins' => [],
+            'joins' => [
+                [
+                    'table' => 'media',
+                    'condition' => 'media.entity_id = club.id AND media.entity_type = \'club\'',
+                    'type'=> 'left',
+                ]
+            ],
             'select' => [
-                'id,
+                'club.id as id,
                 name,
                 code,
                 CONCAT(color_1," - ",color_2) AS colors,
-                deleted_at
+                club.deleted_at as deleted_at,
+                media.file_path as image_url
                 '
             ]
         ];

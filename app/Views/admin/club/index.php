@@ -42,6 +42,7 @@
                     <tr>
                         <th>Actions</th>
                         <th>ID</th>
+                        <th>Logo</th>
                         <th>Nom</th>
                         <th>Code FBI</th>
                         <th>Couleurs</th>
@@ -71,6 +72,12 @@
                     model: 'ClubModel'
                 },
             },
+            columnDefs: [
+                {
+                    target: "_all",
+                    className: "align-middle",
+                }
+            ],
             columns: [{
                 data: null,
                 defaultContent: '',
@@ -109,6 +116,20 @@
                     }
                 },
                 {data : 'id'},
+                {
+                    className: 'dt-center',
+                    data: null,
+                    orderable: false,
+                    render: function (data, type, row) {
+                        if (row.image_url) {
+                            return `<img style="height:40px;" src='${baseUrl}/${row.image_url}'>
+                                    `;
+                        } else {
+                            return `<img style="height:40px;" src='${baseUrl}/assets/img/default.png'>
+                                    `;
+                        }
+                    }
+                },
                 {data : 'name'},
                 {data: 'code'},
                 {data : 'colors'},
