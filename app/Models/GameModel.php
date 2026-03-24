@@ -238,4 +238,17 @@ class GameModel extends Model
         $this->where('game.mvp', $idMember);
         return $this->findAll();
     }
+
+    public function getGamesByTeam($idTeam){
+        $this->select('game.*,home_team.name as home_team_name,away_team.name as away_team_name,home_club.name as home_club_name,home_club.id as home_club_id,away_club.name as away_club_name,away_club.id as away_club_id');
+        $this->join('team as home_team', 'game.home_team = home_team.id');
+        $this->join('team as away_team', 'game.away_team = away_team.id');
+        $this->join('club as home_club', 'home_team.id_club = home_club.id');
+        $this->join('club as away_club', 'away_team.id_club = away_club.id');
+
+        $this->where('game.home_team', $idTeam);
+        $this->orWhere('game.away_team', $idTeam);
+
+        return $this->findAll();
+    }
 }
