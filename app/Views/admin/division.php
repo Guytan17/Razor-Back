@@ -191,7 +191,7 @@
                                     data-season-name='${escapeHtml(row.season_name)}'
                                     data-category-id='${row.id_category}'
                                     data-category-name='${escapeHtml(row.category_name)}'
-                                    data-teams='${escapeHtml(row.teams_name)}'>
+                                    data-teams='${row.teams_data}'>
                                         <i class="fas fa-edit"></i>
                                 </button>
                                ${toggleButton}
@@ -231,41 +231,43 @@
     $(document).on('click','.btn-edit-division', function() {
         const btn = $(this);
         const seasonId = btn.data('season-id');
-        const seasonName = btn.data('season-name');
         const categoryId = btn.data('category-id');
-        const categoryName = btn.data('category-name');
-        const teamsName = btn.data('teams');
-        const teamsArray = teamsName ? teamsName.split(',') : [];
+        const teams = btn.data('teams');
+        console.log(teams);
 
         $('#modalNameInput').val(btn.data('name'));
         $('#modalNameInput').data('id',btn.data('id'));
         $('#modalSelectIdSeason').val(String(seasonId));
         $('#modalSelectIdCategory').val(String(categoryId));
+        $('#zone-modal-teams').empty()
 
         //Boucle pour afficher les équipes déjà affiliées au championnat
-        teamsArray.forEach(team => {
-            let rowTeam = `
+        if(teams && teams.length>0 ) {
+
+            teams.filter(team => team !== null).forEach(team => {
+                nbTeams++;
+                let rowTeam = `
             <div class="row mb-3 row-team">
                 <div class="col">
                     <div class="card card-team">
                         <div class="card-body p-1 d-flex align-items-center">
                             <div class="row">
                                <div class="col-auto">
-                                   <span class="fs-4 delete-team"><i class="fas fa-trash-alt text-danger delete-team-button"></i></span>
+                                   <span class="fs-4"><i class="fas fa-trash-alt text-danger delete-team-button"></i></span>
                                </div>
                                 <div class="col d-flex align-items-center">
-                                    <span class="fw-semibold" >${team}</span>
+                                    <span class="fw-semibold" id="modal-team-${nbTeams}" data-team="${team}">${team.name +' - '+team.category+' - '+team.season}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <input type="hidden" name="teams[]" value="${team.id}">
             </div>
             `;
 
-        $('#zone-modal-teams').append(rowTeam);
-        });
+                $('#zone-modal-teams').append(rowTeam);
+            });
+        }
 
 
         myModal.show();
@@ -277,8 +279,8 @@
     })
 
     //Fonction au clic sur l'ajout d'une équipe (édition)
-
-    $(document).on('click', '#add-team', function(){
+    $('#add-team').on('click', function(){
+        nbTeams++;
         let selectedTeam = $('#modalSelectTeam').select2('data');
 
         // si aucune équipe n'est sélectionnée lors du clic, on bloque la création de la row
@@ -288,26 +290,31 @@
         let team = selectedTeam[0];
 
         let row = `
-            <div class="row row-team">
+            <div class="row mb-3 row-team">
                 <div class="col">
                     <div class="card card-team">
                         <div class="card-body p-1 d-flex align-items-center">
                             <div class="row">
                                <div class="col-auto">
-                                   <span class="fs-4 delete-team"><i class="fas fa-trash-alt text-danger delete-team-button"></i></span>
+                                   <span class="fs-4"><i class="fas fa-trash-alt text-danger delete-team-button"></i></span>
                                </div>
                                 <div class="col d-flex align-items-center">
-                                    <span class="fw-semibold" >${team.text}</span>
+                                    <span class="fw-semibold" id="modal-team-${nbTeams}" data-team="${team}">${team.text}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <input type="hidden" name="teams[]" value="${team.id}">
             </div>
         `;
 
         $('#zone-modal-teams').prepend(row);
+        $('#modalSelectTeam').empty();
+    })
+
+    //action sur le bouton pour supprimer une équipe
+    $('#zone-modal-teams').on('click','.delete-team-button', function(){
+        $(this).closest('.row-team').remove();
     })
 
     function saveDivision () {
@@ -315,6 +322,14 @@
         let id = $('#modalNameInput').data('id');
         let seasonId = $('#modalSelectIdSeason').val();
         let categoryId = $('#modalSelectIdCategory').val();
+        let teams = [];
+        for (let i = 0; i < nbTeams; i++) {
+            let teamRow = $('#modal-team-'+i) ?? null;
+            if (teamRow !== null) {
+                team = teamRow.data('team');
+            }
+            console.log(team);
+        }
 
         $.ajax({
             url: baseUrl + 'admin/division/update/'+id,
@@ -399,4 +414,10 @@
         });
     }
 </script>
+<style>
+    .delete-team-button:hover {
+        scale:1.20;
+        cursor:pointer;
+    }
+</style>
 <?php $this->endSection(); ?>

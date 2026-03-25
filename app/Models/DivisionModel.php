@@ -91,6 +91,16 @@ class DivisionModel extends Model
                     'condition' => 'division_team.id_team = team.id',
                     'type' => 'left'
                 ],
+                [
+                    'table' => 'category as category_team',
+                    'condition' => 'category_team.id = team.id_category',
+                    'type' => 'LEFT'
+                ],
+                [
+                    'table' => 'season as season_team',
+                    'condition' => 'season_team.id = team.id_season',
+                    'type' => 'LEFT'
+                ]
             ],
             'select' => '
             division.id,
@@ -100,7 +110,17 @@ class DivisionModel extends Model
             season.name as season_name,
             category.name as category_name,
             division.deleted_at,
-            GROUP_CONCAT(team.name SEPARATOR ",") as teams_name',
+            GROUP_CONCAT(team.name SEPARATOR ",") as teams_name,
+            JSON_ARRAYAGG( 
+                IF (team.id IS NULL,NULL,
+                    JSON_OBJECT(
+                    "id",team.id,
+                    "name",team.name,
+                    "season",season_team.name,
+                    "category",category_team.name
+                    )
+                )
+            ) as teams_data',
             'groupBy' => 'division.id',
         ];
     }

@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Models\CategoryModel;
 use App\Models\DivisionModel;
+use App\Models\DivisionTeamModel;
 use App\Models\SeasonModel;
 
 class Division extends AdminController
@@ -11,11 +12,13 @@ class Division extends AdminController
     protected $dm;
     protected $sm;
     protected $cm;
+    protected $divisionTeamModel;
 
     public function __construct(){
         $this->dm = new DivisionModel();
         $this->sm = new SeasonModel();
         $this->cm = new CategoryModel();
+        $this->divisionTeamModel = new DivisionTeamModel();
     }
 
     public function index()
@@ -60,8 +63,24 @@ class Division extends AdminController
                 'name'=>$this->request->getPost('name'),
                 'id_season'=>$this->request->getPost('id_season'),
                 'id_category'=>$this->request->getPost('id_category'),
-
             ];
+            $teams = $this->request->getPost('teams');
+            dd($teams);
+
+            //gestion des équipes liées au championnat
+            $this->divisionTeamModel->where('id_division', $id)->delete();
+            if(!empty($teams)) {
+                foreach($teams as $team) {
+                    $dataDivisionTeam = [
+                        'id_team' => $team['id'],
+                        'id_division' => $id,
+                    ];
+                    if(!$this->divisionTeamModel->insert($dataDivisionTeam)) {
+                        $this->error(implode('<br>',$this->divisionTeamModel->errors()));
+                    }
+                }
+
+            }
 
             if($this->dm->update($id,$dataDivision)){
                 return $this->response->setJSON([
