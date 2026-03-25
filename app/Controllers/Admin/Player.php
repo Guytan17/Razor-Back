@@ -32,8 +32,7 @@ class Player extends AdminController
         $limit = 25;
 
         //Utilisation de la méthode du Model (via le trait)
-        $result = $this->playerModel->searchWithTeamId($search,$page,$limit,$idTeam
-        );
+        $result = $this->playerModel->searchWithTeamId($idTeam,$search,$page,$limit);
 
         //Réponse JSON
         return $this->response->setJSON($result);

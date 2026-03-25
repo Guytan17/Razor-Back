@@ -255,7 +255,7 @@ class Team extends AdminController
         }
 
         //Utilisation de la méthode du Model (via le trait)
-        $result = $this->tm->searchForSelect2(
+        $result = $this->tm->searchWithCategoryAndSeason(
             search: $search,
             page: $page,
             limit: $limit,

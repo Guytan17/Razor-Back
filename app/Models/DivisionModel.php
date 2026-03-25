@@ -67,7 +67,7 @@ class DivisionModel extends Model
                     'division.id_category',
                     'season_name',
                     'category_name',
-
+                    'teams_name',
                 ],
             'joins' =>
             [
@@ -80,9 +80,48 @@ class DivisionModel extends Model
                     'table' => 'category',
                     'condition' => 'division.id_category = category.id',
                     'type' => 'INNER'
+                ],
+                [
+                    'table' => 'division_team',
+                    'condition' => 'division_team.id_division = division.id',
+                    'type' => 'left'
+                ],
+                [
+                    'table' => 'team',
+                    'condition' => 'division_team.id_team = team.id',
+                    'type' => 'left'
+                ],
+                [
+                    'table' => 'category as category_team',
+                    'condition' => 'category_team.id = team.id_category',
+                    'type' => 'LEFT'
+                ],
+                [
+                    'table' => 'season as season_team',
+                    'condition' => 'season_team.id = team.id_season',
+                    'type' => 'LEFT'
                 ]
             ],
-            'select' => 'division.id,division.name,division.id_season,division.id_category,season.name as season_name,category.name as category_name,division.deleted_at',
+            'select' => '
+            division.id,
+            division.name,
+            division.id_season,
+            division.id_category,
+            season.name as season_name,
+            category.name as category_name,
+            division.deleted_at,
+            GROUP_CONCAT(team.name SEPARATOR ",") as teams_name,
+            JSON_ARRAYAGG( 
+                IF (team.id IS NULL,NULL,
+                    JSON_OBJECT(
+                    "id",team.id,
+                    "name",team.name,
+                    "season",season_team.name,
+                    "category",category_team.name
+                    )
+                )
+            ) as teams_data',
+            'groupBy' => 'division.id',
         ];
     }
 
