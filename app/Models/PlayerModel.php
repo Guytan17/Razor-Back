@@ -59,9 +59,6 @@ class PlayerModel extends Model
         $builder->join('member', 'player.id_member = member.id');
         $builder->where('player.id_team',$teamId);
 
-        // log de la requête SQL générée
-        log_message('debug', 'SQL: ' . $builder->getCompiledSelect(false));
-
         return $this->searchForSelect2(
             search:$search,
             page:$page,

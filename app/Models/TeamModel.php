@@ -99,7 +99,7 @@ class TeamModel extends Model
     }
 
     protected $select2SearchFields = ['name'];
-    protected $select2DisplayField = 'name';
+    protected $select2DisplayField = 'name,category_name,season_name';
 
     public function reactiveTeam($id) : bool{
         return $this->builder()
@@ -113,6 +113,22 @@ class TeamModel extends Model
         $this->join('season', 'season.id = team.id_season');
         $this->where('team.id_club', $id_club);
         return $this->findAll();
+    }
+
+    public function searchWithCategoryAndSeason($search='',$page=1,$limit=20,$conditions=[]) {
+        $this->select('team.*,category.name as category_name,season.name as season_name');
+        $this->join('category', 'category.id = team.id_category');
+        $this->join('season', 'season.id = team.id_season');
+
+        return $this->searchForSelect2(
+            search:$search,
+            page:$page,
+            limit:$limit,
+            searchFields: $this->select2SearchFields,
+            displayField: $this->select2DisplayField,
+            conditions:$conditions,
+            orderBy: 'team.id'
+        );
     }
 
 }

@@ -78,9 +78,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <label class="form-label" for="modalNameInput">Nom du championnat <span class="text-danger">*</span></label>
-                    <input class="form-control" id="modalNameInput" type="text">
-                    <div class="row">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label class="form-label" for="modalNameInput">Nom du championnat <span class="text-danger">*</span></label>
+                            <input class="form-control" id="modalNameInput" type="text">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
                         <div class="col">
                             <label class="form-label" for="id_season">Saison <span class="text-danger">*</span></label>
                             <select class="form-select" name="modalSelectIdSeason" id="modalSelectIdSeason">
@@ -90,7 +94,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col">
                             <label class="form-label" for="id_category">Catégorie <span class="text-danger">*</span></label>
                             <select class="form-select" name="modalSelectIdCategory" id="modalSelectIdCategory">
@@ -100,6 +104,31 @@
                             </select>
                         </div>
                     </div>
+                    <!--START : Zone pour ajouter des équipes -->
+                    <div class="row">
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-header text-center">
+                                    <span class="card-title fw-bold h5">Équipes engagées</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-3">
+                                        <div class="col">
+                                            <div class="input-group">
+                                                <select class="form-select select-team" id="modalSelectTeam">
+                                                </select>
+                                                <span class="input-group-text btn btn-sm btn-primary d-flex align-items-center" id="add-team"><i class="fas fa-plus"></i> Ajouter</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="zone-modal-teams">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--END : Zone pour ajouter des équipes -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
@@ -159,7 +188,10 @@
                                     data-id='${row.id}'
                                     data-name='${escapeHtml(row.name)}'
                                     data-season-id='${row.id_season}'
-                                    data-category-id='${row.id_category}'>
+                                    data-season-name='${escapeHtml(row.season_name)}'
+                                    data-category-id='${row.id_category}'
+                                    data-category-name='${escapeHtml(row.category_name)}'
+                                    data-teams='${escapeHtml(row.teams_name)}'>
                                         <i class="fas fa-edit"></i>
                                 </button>
                                ${toggleButton}
@@ -186,21 +218,55 @@
         window.refreshTable = function () {
             table.ajax.reload(null, false); // false pour garder la pagination
         };
+
+        //initialisation modalSelectTeam
+        initAjaxSelect2(`#modalSelectTeam`, {dropdownParent:$('#modalDivision') ,url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher un équipe',extraParams:{id_club: 1}});
     });
 
     //Définition de la modal
     const myModal = new bootstrap.Modal('#modalDivision');
+    let nbTeams = $('#zone-modal-teams .row-team').length;
 
     //Fonction pour ouvrir la modal avec les données préremplies
     $(document).on('click','.btn-edit-division', function() {
         const btn = $(this);
         const seasonId = btn.data('season-id');
+        const seasonName = btn.data('season-name');
         const categoryId = btn.data('category-id');
+        const categoryName = btn.data('category-name');
+        const teamsName = btn.data('teams');
+        const teamsArray = teamsName ? teamsName.split(',') : [];
 
         $('#modalNameInput').val(btn.data('name'));
         $('#modalNameInput').data('id',btn.data('id'));
         $('#modalSelectIdSeason').val(String(seasonId));
         $('#modalSelectIdCategory').val(String(categoryId));
+
+        //Boucle pour afficher les équipes déjà affiliées au championnat
+        teamsArray.forEach(team => {
+            let rowTeam = `
+            <div class="row mb-3 row-team">
+                <div class="col">
+                    <div class="card card-team">
+                        <div class="card-body p-1 d-flex align-items-center">
+                            <div class="row">
+                               <div class="col-auto">
+                                   <span class="fs-4 delete-team"><i class="fas fa-trash-alt text-danger delete-team-button"></i></span>
+                               </div>
+                                <div class="col d-flex align-items-center">
+                                    <span class="fw-semibold" >${team}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="teams[]" value="${team.id}">
+            </div>
+            `;
+
+        $('#zone-modal-teams').append(rowTeam);
+        });
+
 
         myModal.show();
     });
@@ -208,6 +274,40 @@
     //Fonction pour appeler la fonction de désactivation/activation
     $(document).on('click','.btn-toggleActive-division', function(){
        toggleActive($(this).data('id'));
+    })
+
+    //Fonction au clic sur l'ajout d'une équipe (édition)
+
+    $(document).on('click', '#add-team', function(){
+        let selectedTeam = $('#modalSelectTeam').select2('data');
+
+        // si aucune équipe n'est sélectionnée lors du clic, on bloque la création de la row
+        if (!selectedTeam.length) {
+            return;
+        }
+        let team = selectedTeam[0];
+
+        let row = `
+            <div class="row row-team">
+                <div class="col">
+                    <div class="card card-team">
+                        <div class="card-body p-1 d-flex align-items-center">
+                            <div class="row">
+                               <div class="col-auto">
+                                   <span class="fs-4 delete-team"><i class="fas fa-trash-alt text-danger delete-team-button"></i></span>
+                               </div>
+                                <div class="col d-flex align-items-center">
+                                    <span class="fw-semibold" >${team.text}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="teams[]" value="${team.id}">
+            </div>
+        `;
+
+        $('#zone-modal-teams').prepend(row);
     })
 
     function saveDivision () {
