@@ -65,21 +65,19 @@ class Division extends AdminController
                 'id_category'=>$this->request->getPost('id_category'),
             ];
             $teams = $this->request->getPost('teams');
-            dd($teams);
 
             //gestion des équipes liées au championnat
             $this->divisionTeamModel->where('id_division', $id)->delete();
             if(!empty($teams)) {
                 foreach($teams as $team) {
                     $dataDivisionTeam = [
-                        'id_team' => $team['id'],
+                        'id_team' => $team,
                         'id_division' => $id,
                     ];
                     if(!$this->divisionTeamModel->insert($dataDivisionTeam)) {
                         $this->error(implode('<br>',$this->divisionTeamModel->errors()));
                     }
                 }
-
             }
 
             if($this->dm->update($id,$dataDivision)){

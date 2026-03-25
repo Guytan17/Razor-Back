@@ -256,7 +256,7 @@
                                    <span class="fs-4"><i class="fas fa-trash-alt text-danger delete-team-button"></i></span>
                                </div>
                                 <div class="col d-flex align-items-center">
-                                    <span class="fw-semibold" id="modal-team-${nbTeams}" data-team="${team}">${team.name +' - '+team.category+' - '+team.season}</span>
+                                    <span class="fw-semibold span-team" id="modal-team-${nbTeams}" data-team-id="${team.id}">${team.name +' - '+team.category+' - '+team.season}</span>
                                 </div>
                             </div>
                         </div>
@@ -289,6 +289,8 @@
         }
         let team = selectedTeam[0];
 
+        console.log(team);
+
         let row = `
             <div class="row mb-3 row-team">
                 <div class="col">
@@ -299,7 +301,7 @@
                                    <span class="fs-4"><i class="fas fa-trash-alt text-danger delete-team-button"></i></span>
                                </div>
                                 <div class="col d-flex align-items-center">
-                                    <span class="fw-semibold" id="modal-team-${nbTeams}" data-team="${team}">${team.text}</span>
+                                    <span class="fw-semibold span-team" id="modal-team-${nbTeams}" data-team-id='${team.id}'>${team.text}</span>
                                 </div>
                             </div>
                         </div>
@@ -323,13 +325,13 @@
         let seasonId = $('#modalSelectIdSeason').val();
         let categoryId = $('#modalSelectIdCategory').val();
         let teams = [];
-        for (let i = 0; i < nbTeams; i++) {
-            let teamRow = $('#modal-team-'+i) ?? null;
-            if (teamRow !== null) {
-                team = teamRow.data('team');
-            }
-            console.log(team);
-        }
+        $('.span-team').each(function () {
+            let teamData = $(this).data('team-id');
+            teams.push(teamData);
+        })
+
+        console.log(teams);
+
 
         $.ajax({
             url: baseUrl + 'admin/division/update/'+id,
@@ -341,6 +343,7 @@
                 name: name,
                 id_season: seasonId,
                 id_category: categoryId,
+                teams: teams,
                 [csrfName]: csrfHash
             },
             dataType: 'json',
