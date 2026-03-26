@@ -162,4 +162,27 @@ class Club extends AdminController
         //Réponse JSON
         return $this->response->setJSON($result);
     }
+
+    public function importClubs(){
+        try {
+            $CSVFile = $this->request->getFile('import_csv');
+            $handle = fopen($CSVFile, 'r');
+            $row = 1;
+            if ($handle !== false) {
+                while (($data = fgetcsv($handle, 1000, ',')) !== false) {
+                    $num = count($data);
+                    echo "<p>$num champs à la ligne $row :</p><br>";
+                    for ($i = 0; $i < $num; $i++) {
+                        echo "<p>".$data[$i]."</p><br>";
+                    }
+                    $row++;
+                }
+            }
+            fclose($handle);
+        } catch (\Exception $e) {
+            $this->error($e->getMessage());
+            return redirect()->back()->withInput();
+        }
+
+    }
 }
