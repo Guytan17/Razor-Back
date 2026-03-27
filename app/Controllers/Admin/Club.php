@@ -71,7 +71,7 @@ class Club extends AdminController
             //Enregistrement en BDD
             if(!$this->cm->save($dataClub)){
                 $this->error(implode('<br>',$this->cm->errors()));
-                return $this->redirect('/admin/member');
+                return $this->redirect('/admin/club');
             }
 
             //Récupération de l'ID et gestion des messages de validation
@@ -161,5 +161,66 @@ class Club extends AdminController
 
         //Réponse JSON
         return $this->response->setJSON($result);
+    }
+
+    public function importClubs(){
+        try {
+            $CSVFile = $this->request->getFile('import_csv');
+            $clubs = [];
+            $handle = fopen($CSVFile, 'r');
+            if ($handle !== false) {
+                $dataKey= fgetcsv($handle, 1000, ',','"');
+                $dataKey = preg_replace('/^\xEF\xBB\xBF/', '', $dataKey);
+                $cptKeys = count($dataKey);
+                while (($line = fgets($handle)) !== false) {
+
+                    //on enlève les espaces devant et derrière chaque ligne
+                    $line = trim($line);
+
+                    //On enlève les éventuels guillemets autour de la ligne
+                    if($line[0] === '"' && substr($line, -1) === '"') {
+                        $line = substr($line, 1, -1);
+                    }
+
+                    //on retire les doubles guillemets s'il y en a
+                    $line = str_replace('""', '"', $line);
+
+                    //on transforme la ligne string en array
+                    $dataValue=str_getcsv($line,',','"');
+
+                    if (count($dataValue) === $cptKeys) {
+                        $clubs[] = array_combine($dataKey, $dataValue);
+                    }
+                }
+                fclose($handle);
+
+                $existingClubs = array_column($this->cm->findAll(),'code','id');
+
+                foreach ($clubs as $club) {
+                    $dataClub = [
+                        'code' => $club['cd_org'],
+                        'name' => $club['lb_org'],
+                        'color_1' => $club['couleur_locale'],
+                        'color_2' => $club['couleur_exterieur'],
+                    ];
+                    if (!in_array($dataClub['code'], $existingClubs)) {
+                        if(!$this->cm->insert($dataClub)){
+                            $this->error(implode('<br>',$this->cm->errors()));
+                            return $this->redirect('/admin/club');
+                        }
+                   }
+                }
+
+                //Message de validation
+                $this->success('Clubs importés avec succès');
+            }
+
+            return $this->redirect('/admin/club');
+
+        } catch (\Exception $e) {
+            $this->error($e->getMessage());
+            return redirect()->back()->withInput();
+        }
+
     }
 }

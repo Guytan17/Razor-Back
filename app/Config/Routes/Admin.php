@@ -39,6 +39,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('save/(:num)', 'Game::saveGame/$1'); //sauvegarde édition
         $routes->post('switch-active/(:num)', 'Game::switchActiveGame/$1'); //activation/désactivation
         $routes->get('search', 'Game::searchGame');
+        $routes->post('import', 'Game::importGames');
     });
 
     //Routes pour la gestion des championnats
@@ -59,6 +60,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('save/(:num)', 'Club::saveClub/$1'); //sauvegarde édition
         $routes->post('switch-active/(:num)', 'Club::switchActiveClub/$1'); //activation/désactivation
         $routes->get('search', 'Club::searchClub');
+        $routes->post('import', 'Club::importClubs');
     });
 
     //Routes pour la gestion des gymnases

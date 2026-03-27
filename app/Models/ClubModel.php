@@ -65,13 +65,12 @@ class ClubModel extends Model
     {
         return [
             'searchable_fields' => [
-                'id',
+                'club.id',
                 'code',
                 'name',
                 'slug',
                 'color_1',
-                'color_2
-                image_url',
+                'color_2',
             ],
             'joins' => [
                 [
