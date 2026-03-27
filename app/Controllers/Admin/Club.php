@@ -166,19 +166,36 @@ class Club extends AdminController
     public function importClubs(){
         try {
             $CSVFile = $this->request->getFile('import_csv');
+            $clubs = [];
             $handle = fopen($CSVFile, 'r');
-            $row = 1;
             if ($handle !== false) {
-                while (($data = fgetcsv($handle, 1000, ',')) !== false) {
-                    $num = count($data);
-                    echo "<p>$num champs à la ligne $row :</p><br>";
-                    for ($i = 0; $i < $num; $i++) {
-                        echo "<p>".$data[$i]."</p><br>";
+                $dataKey= fgetcsv($handle, 1000, ',','"');
+                $cptKeys = count($dataKey);
+                while (($line = fgets($handle)) !== false) {
+
+                    //on enlève les espaces devant et derrière chaque ligne
+                    $line = trim($line);
+                    //On enlève les éventuels guillemets autour de la ligne
+                    if($line[0] === '"' && substr($line, -1) === '"') {
+                        $line = substr($line, 1, -1);
                     }
-                    $row++;
+
+                    //on retire les doubles guillemets s'il y en a
+                    $line = str_replace('""', '"', $line);
+
+                    //on transforme la ligne string en array
+                    $dataValue=str_getcsv($line,',','"');
+
+                    if (count($dataValue) === $cptKeys) {
+                        $clubs[] = array_combine($dataKey, $dataValue);
+                    }
                 }
+                fclose($handle);
+                    dd($clubs);
             }
-            fclose($handle);
+
+
+
         } catch (\Exception $e) {
             $this->error($e->getMessage());
             return redirect()->back()->withInput();
