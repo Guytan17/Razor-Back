@@ -13,7 +13,8 @@
         "php": "^8.4",
         "codeigniter4/framework": "^4.0",
         "codeigniter4/shield": "^1.2",
-      "ext-intl": "*"
+      "ext-intl": "*",
+      "ext-iconv": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9",

@@ -52,10 +52,10 @@ class GymModel extends Model
     {
         return [
             'searchable_fields' => [
-                'id',
-                'name',
-                'fbi_code',
-                'gym_city'
+                'gym.id',
+                'gym.name',
+                'gym.fbi_code',
+                'city.label'
             ],
             'joins' => [
                 [

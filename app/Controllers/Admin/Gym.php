@@ -224,6 +224,7 @@ class Gym extends AdminController
             $CSVFile = $this->request->getFile('import_csv');
             $gyms = [];
             $handle = fopen($CSVFile, 'r');
+            $unsavedGyms = [];
             if($handle !== false){
                 //extraction de la première ligne avec les libellés de colonnes
                 $dataKey= fgetcsv($handle, 1000, ',','"');
@@ -252,7 +253,75 @@ class Gym extends AdminController
 
                 fclose($handle);
 
+                //on récupère les codes fbi des gymnases existants associés aux ID
+                $existingGyms = array_column($this->gymModel->findAll(),'fbi_code','id');
+
+
+                foreach ($gyms as $gym){
+                    $idCity=0;
+                    $idAddress = 0;
+                    log_message('debug','les id city et id addresse sont : '.print_r($idCity, true).' et '.print_r($idAddress, true));
+                    //On teste si le gymnase n'existe pas déjà via le code FBI, sinon on ne l'enregistre pas
+                    if (!in_array($gym['N_national_salle'],$existingGyms)){
+                        //Gestion de la ville
+                        $cityCSV = normalizeCity($gym['commune']);
+
+                        //On normalise les villes en filtrant avec le code postal
+                        $cities = $this->cityModel->where('zip_code',$gym['code_postal'])->findAll();
+                        foreach ($cities as $city){
+                            dd($cityCSV,normalizeCity($city['label']));
+                            if(normalizeCity($city['label']) === $cityCSV){
+                                $idCity = $city['id'];
+                                break;
+                            }
+                        }
+
+                        //Gestion de l'adresse
+                        $dataAddress = [
+                            'address_1' => $gym['Adresse_11'],
+                            'address_2' => $gym['Adresse_21'],
+                            'id_city' => $idCity,
+                        ];
+
+                        if($dataAddress['id_city'] != 0){
+                            if($this->addressModel->insert($dataAddress,true)){
+                                $idAddress=$this->addressModel->getInsertID();
+                            } else {
+                                $this->error(implode('<br>',$this->gymModel->errors()));
+                                return $this->redirect('/admin/gym');
+                            }
+                        }
+
+                        //Gestion du gymnase
+                        $dataGym = [
+                            'name' => $gym['Nom_de_la_salle1'].(!empty($gym['autre_nom_de_salle'])?' - '.$gym['autre_nom_de_salle']:''),
+                            'fbi_code' => $gym['N_national_salle'],
+                            'id_address' => $idAddress,
+                        ];
+
+                        if($dataGym['id_address'] != 0){
+                            if(!$this->gymModel->insert($dataGym)){
+                                $this->error(implode('<br>',$this->gymModel->errors()));
+                                return $this->redirect('/admin/gym');
+                            }
+                        } else {
+                            $unsavedGyms[]= [
+                                'gym_name' => $gym['Nom_de_la_salle1'].(!empty($gym['autre_nom_de_salle'])?' - '.$gym['autre_nom_de_salle']:''),
+                                'address_1' => $gym['Adresse_11'],
+                                'address_2' => $gym['Adresse_21'],
+                                'zip_code' => $gym['code_postal'],
+                                'city' =>$gym['commune']
+                            ];
+                        }
+                    }
+                }
             }
+            //Message de validation
+            $this->success('Gymnases importés avec succès');
+
+            log_message('debug','Les gymnases suivants n\'ont pas pu être enregistré car la ville n\' pas été reconnue :'.print_r($unsavedGyms,true));
+
+            return $this->redirect('/admin/gym');
 
         } catch(\Exception $e) {
             $this->error($e->getMessage());
