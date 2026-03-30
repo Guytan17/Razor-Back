@@ -98,7 +98,7 @@ class GymModel extends Model
     }
 
 
-    public function getGymById(int $id) {
+    public function getGymById($id) {
         $this->select('gym.*, address.address_1,address.address_2,address.id_city,address.gps_location,city.zip_code,city.label,city.department_name,city.department_number,city.region_name');
         $this->join('address', 'gym.id_address = address.id');
         $this->join('city', 'address.id_city = city.id');

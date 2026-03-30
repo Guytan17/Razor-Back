@@ -29,12 +29,19 @@
             <div class="card">
                 <div class="card-header hstack text-center">
                     <div class="card-title h3">Listes des gymnases</div>
-                    <a href="" class="btn btn-sm btn-primary ms-auto p-1 mx-1">
-                        <i class="fas fa-file-circle-plus"></i> Importer un fichier CSV
-                    </a>
-                    <a href="<?= base_url('/admin/gym/form')?>" class="btn btn-sm btn-primary p-1 mx-1">
-                        <i class="fas fa-plus"></i> Créer un gymnase
-                    </a>
+                    <div class="ms-auto hstack">
+                        <?= form_open_multipart('admin/gym/import');?>
+                        <label class="btn btn-sm btn-primary p-1 mx-1" for="import-csv"><i class="fas fa-file-circle-plus"></i> Importer un fichier CSV</label>
+                        <input class="d-none" type="file" name="import_csv" id="import-csv" >
+                        <button class=d-none type="submit" id="import-csv-submit-btn">
+                            Valider l'import
+                        </button>
+                        <?= form_close() ;?>
+                        <a href="<?= base_url('/admin/gym/form')?>" class="btn btn-sm btn-primary p-1 mx-1">
+                            <i class="fas fa-plus"></i> Créer un gymnase
+                        </a>
+                    </div>
+
                 </div>
                 <div class="card-body">
                     <table class="table table-sm table-striped" id="gymsTable">
@@ -158,6 +165,12 @@
                     }
                 });
             }
+
+            //Fonction qui simule le clic sur le bouton submit lors de la sélection d'un CSV
+            $('#import-csv').on('change', function(e) {
+                $('#import-csv-submit-btn').click();
+                $(this).val('');
+            })
         });
 
     </script>

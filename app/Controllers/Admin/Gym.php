@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Models\CityModel;
 use App\Models\GameModel;
 use CodeIgniter\Model;
 use App\Models\AddressModel;
@@ -16,11 +17,13 @@ class Gym extends AdminController
     protected $gymModel;
     protected $gymClubModel;
     protected $gameModel;
+    protected $cityModel;
     public function __construct(){
         $this->addressModel = new AddressModel();
         $this->gymModel = new GymModel();
         $this->gymClubModel = new GymClubModel();
         $this->gameModel = new GameModel();
+        $this->cityModel = new CityModel();
     }
     public function index()
     {
@@ -214,5 +217,47 @@ class Gym extends AdminController
 
         //Réponse JSON
         return $this->response->setJSON($result);
+    }
+
+    public function importGyms(){
+        try {
+            $CSVFile = $this->request->getFile('import_csv');
+            $gyms = [];
+            $handle = fopen($CSVFile, 'r');
+            if($handle !== false){
+                //extraction de la première ligne avec les libellés de colonnes
+                $dataKey= fgetcsv($handle, 1000, ',','"');
+
+                //suppression des caractères invisibles en début de fichier
+                $dataKey = preg_replace('/^\xEF\xBB\xBF/', '', $dataKey);
+
+                $cptKeys = count($dataKey);
+
+                //lecture des lignes de données tant qu'il y en a
+                while (($line = fgets($handle)) !== false) {
+
+                    //on enlève les espaces devant et derrière chaque ligne
+                    $line = trim($line);
+
+                    //on retire les doubles guillemets s'il y en a
+                    $line = str_replace('""', '"', $line);
+
+                    //on transforme la ligne string en array
+                    $dataValue=str_getcsv($line,',','"');
+
+                    if (count($dataValue) === $cptKeys) {
+                        $gyms[] = array_combine($dataKey, $dataValue);
+                    }
+                }
+
+                fclose($handle);
+
+            }
+
+        } catch(\Exception $e) {
+            $this->error($e->getMessage());
+            return redirect()->back()->withInput();
+
+        }
     }
 }

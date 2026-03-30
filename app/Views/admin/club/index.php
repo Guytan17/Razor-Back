@@ -153,19 +153,19 @@
         window.refreshTable = function () {
             table.ajax.reload(null, false); // false pour garder la pagination
         };
+
+        //Fonction qui simule le clic sur le bouton submit lors de la sélection d'un CSV
+        $('#import-csv').on('change', function(e) {
+            $('#import-csv-submit-btn').click();
+            $(this).val('');
+        })
+
+        //Fonction pour appeler la fonction de désactivation/activation
+        $(document).on('click','.btn-toggleActive-club', function(){
+            toggleActive($(this).data('id'));
+        });
     });
 
-    //Fonction qui simule le clic sur le bouton submit lors de la sélection d'un CSV
-    $('#import-csv').on('change', function(e) {
-        console.log('fichier sélectionné');
-        $('#import-csv-submit-btn').click();
-        $(this).val('');
-    })
-
-    //Fonction pour appeler la fonction de désactivation/activation
-    $(document).on('click','.btn-toggleActive-club', function(){
-        toggleActive($(this).data('id'));
-    });
 
     function toggleActive(clubId) {
         // Effectuer la requête AJAX

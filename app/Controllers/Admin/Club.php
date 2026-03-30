@@ -167,11 +167,20 @@ class Club extends AdminController
         try {
             $CSVFile = $this->request->getFile('import_csv');
             $clubs = [];
+
+            //variable qui ouvre et lit le fichier
             $handle = fopen($CSVFile, 'r');
             if ($handle !== false) {
+
+                //extraction de la première ligne avec les libellés de colonnes
                 $dataKey= fgetcsv($handle, 1000, ',','"');
+
+                //suppression des caractères invisibles en début de fichier
                 $dataKey = preg_replace('/^\xEF\xBB\xBF/', '', $dataKey);
+
                 $cptKeys = count($dataKey);
+
+                //lecture des lignes de données tant qu'il y en a
                 while (($line = fgets($handle)) !== false) {
 
                     //on enlève les espaces devant et derrière chaque ligne
@@ -194,8 +203,10 @@ class Club extends AdminController
                 }
                 fclose($handle);
 
+                //on récupère les codes fbi existants des clubs associés aux ID
                 $existingClubs = array_column($this->cm->findAll(),'code','id');
 
+                //création pour chaque ligne des données à enregistrer en BDD
                 foreach ($clubs as $club) {
                     $dataClub = [
                         'code' => $club['cd_org'],
@@ -203,6 +214,8 @@ class Club extends AdminController
                         'color_1' => $club['couleur_locale'],
                         'color_2' => $club['couleur_exterieur'],
                     ];
+
+                    //enregistrement en BDD si le code FBI n'existe pas déjà
                     if (!in_array($dataClub['code'], $existingClubs)) {
                         if(!$this->cm->insert($dataClub)){
                             $this->error(implode('<br>',$this->cm->errors()));
