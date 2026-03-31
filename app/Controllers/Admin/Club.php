@@ -167,6 +167,7 @@ class Club extends AdminController
         try {
             $CSVFile = $this->request->getFile('import_csv');
             $clubs = [];
+            $cptClubs = 0;
 
             //variable qui ouvre et lit le fichier
             $handle = fopen($CSVFile, 'r');
@@ -217,7 +218,9 @@ class Club extends AdminController
 
                     //enregistrement en BDD si le code FBI n'existe pas déjà
                     if (!in_array($dataClub['code'], $existingClubs)) {
-                        if(!$this->cm->insert($dataClub)){
+                        if($this->cm->insert($dataClub)){
+                            $cptClubs++;
+                        } else {
                             $this->error(implode('<br>',$this->cm->errors()));
                             return $this->redirect('/admin/club');
                         }
@@ -225,7 +228,7 @@ class Club extends AdminController
                 }
 
                 //Message de validation
-                $this->success('Clubs importés avec succès');
+                $this->success($cptClubs.' clubs importés avec succès');
             }
 
             return $this->redirect('/admin/club');
