@@ -33,7 +33,7 @@
                 <div class="card-header">
                     <span class="card-title h5">Liste des types de faute technique</span>
                 </div>
-                <div class="card-body">
+                <div class="card-body overflow-auto">
                     <table class="table table-striped" id="typesTable">
                         <thead >
                         <tr>
@@ -107,7 +107,7 @@
                 <div class="card-header">
                     <span class="card-title h5">Liste des classifications de faute technique</span>
                 </div>
-                <div class="card-body">
+                <div class="card-body overflow-auto">
                     <table class="table table-striped" id="classificationsTable">
                         <thead >
                         <tr>

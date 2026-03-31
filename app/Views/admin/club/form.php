@@ -9,7 +9,11 @@
         <div class="col">
             <div class="card">
                 <div class="card-header text-center">
+                    <?php if (isset($club) && $club): ?>
+                    <span class="card-title h3">Modification de <?=$club['name'] ?></span>
+                    <?php else: ?>
                     <span class="card-title h3">Création d'un club</span>
+                    <?php endif; ?>
                 </div>
                 <div class="card-body">
                     <!-- START : INFO GENERALES DU CLUB -->
@@ -63,67 +67,28 @@
                         </div>
                     </div>
                     <!-- END : INFO GENERALES DU CLUB -->
-                    <div class="row mb-3">
-                        <!-- START : EQUIPES -->
-                        <div class="col-md-6 mb-3">
-                            <div class="card">
-                                <div class="card-header text-center">
-                                    <span class="card-title fw-bold h5">Équipes du club</span>
-                                </div>
-                                <div class="card-body">
-                                <?php if(isset($club['teams'])){
-                                    $cpt_teams = 0;
-                                    foreach($club['teams'] as $team):
-                                        $cpt_teams++; ?>
-                                        <div class="row mb-3">
-                                            <div class="col">
-                                                <div class="card">
-                                                    <a class="card-team" href="<?=base_url('admin/team/form/'.$team->id)?>">
-                                                        <div class="card-body">
-                                                            <div class="row">
-                                                                <div class="col text-center">
-                                                                    <span class="fw-bold"><?= $team->name.' - ' ?></span> <span class="fw-semibold fst-italic"> <?= $team->category_name.' - 
-                                                                    '.$team->season_name ?></span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    <?php endforeach;
-                                }?>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- END : EQUIPES -->
-                        <!-- START : GYMNASES -->
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-header text-center">
-                                    <span class="card-title fw-bold h5">Gymnases du club</span>
-                                </div>
-                                <div class="card-body">
-                                    <?php if(isset($club['gyms'])){
-                                        $cpt_gyms = 0;
-                                        foreach($club['gyms'] as $gym):
-                                            $cpt_gyms++; ?>
+                    <?php if(isset($club)){ ?>
+                        <div class="row mb-3">
+                            <!-- START : EQUIPES -->
+                            <div class="col-md-6 mb-3">
+                                <div class="card">
+                                    <div class="card-header text-center">
+                                        <span class="card-title fw-bold h5">Équipes du club</span>
+                                    </div>
+                                    <div class="card-body">
+                                    <?php if(!empty($club['teams'])){
+                                        $cpt_teams = 0;
+                                        foreach($club['teams'] as $team):
+                                            $cpt_teams++; ?>
                                             <div class="row mb-3">
                                                 <div class="col">
                                                     <div class="card">
-                                                        <a class="card-team" href="<?=base_url('admin/gym/form/'.$gym['id'])?>">
+                                                        <a class="card-team" href="<?=base_url('admin/team/form/'.$team->id)?>">
                                                             <div class="card-body">
                                                                 <div class="row">
                                                                     <div class="col text-center">
-                                                                        <span class="fw-bold"><?= $gym['gym_name']?></span><span class="fw-semibold fst-italic"><?=(isset($gym['gym_fbi_code'])&&!empty($gym['gym_fbi_code'])
-                                                                                    ?' - '.$gym['gym_fbi_code']:'').
-                                                                            ($gym['main_gym']==1?' - Gymnase 
-                                                                        principal':'') ?></span>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col text-center">
-                                                                         <span class=""><?=$gym['gym_address'].', '.$gym['city']?></span>
+                                                                        <span class="fw-bold"><?= $team->name.' - ' ?></span> <span class="fw-semibold fst-italic"> <?= $team->category_name.' - 
+                                                                        '.$team->season_name ?></span>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -132,14 +97,65 @@
                                                 </div>
                                             </div>
                                         <?php endforeach;
-                                    }?>
+                                    } else {?>
+                                        <div class="row">
+                                            <div class="col">
+                                                <span class="fst-italic">Il n'y a pas d'équipe enregistrée pour ce club</span>
+                                            </div>
+                                        </div>
+                                        <?php } ?>
+                                    </div>
                                 </div>
                             </div>
-
+                            <!-- END : EQUIPES -->
+                            <!-- START : GYMNASES -->
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header text-center">
+                                        <span class="card-title fw-bold h5">Gymnases du club</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <?php if(!empty($club['gyms'])){
+                                            $cpt_gyms = 0;
+                                            foreach($club['gyms'] as $gym):
+                                                $cpt_gyms++; ?>
+                                                <div class="row mb-3">
+                                                    <div class="col">
+                                                        <div class="card">
+                                                            <a class="card-team" href="<?=base_url('admin/gym/form/'.$gym['id'])?>">
+                                                                <div class="card-body">
+                                                                    <div class="row">
+                                                                        <div class="col text-center">
+                                                                            <span class="fw-bold"><?= $gym['gym_name']?></span><span class="fw-semibold fst-italic"><?=(isset($gym['gym_fbi_code'])&&!empty($gym['gym_fbi_code'])
+                                                                                        ?' - '.$gym['gym_fbi_code']:'').
+                                                                                ($gym['main_gym']==1?' - Gymnase 
+                                                                            principal':'') ?></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col text-center">
+                                                                             <span class=""><?=$gym['gym_address'].', '.$gym['city']?></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach;
+                                        }else {?>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <span class="fst-italic">Aucun gymnase n'est rattaché à ce club</span>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END : GYMNASES -->
                         </div>
-                        <!-- END : GYMNASES -->
-                    </div>
-
+                    <?php } ?>
                 </div>
                 <div class="card-footer text-end">
                     <button type="submit" class="btn btn-primary mx-2"><i class="fas fa-save"></i> Valider</button>

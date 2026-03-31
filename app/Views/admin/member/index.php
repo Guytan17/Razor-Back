@@ -35,7 +35,7 @@
                         <i class="fas fa-plus"></i> Créer un membre
                     </a>
                 </div>
-                <div class="card-body">
+                <div class="card-body overflow-auto">
                     <table class="table table-sm table-striped" id="membersTable">
                         <thead>
                         <tr>

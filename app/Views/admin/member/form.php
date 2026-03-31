@@ -256,76 +256,90 @@
                     </div>
                 </div>
                 <!-- START : STATS DU JOUEUR -->
-                <div class="row m-3">
-                    <div class="col-md-6 mb-3">
-                        <div class="card">
-                            <div class="card-header text-center">
-                                <span class="card-title h5">MVP</span>
-                            </div>
-                            <div class="card-body">
-                                <?php if($member->mvpGames){
-                                    foreach($member->mvpGames as $mvpGame){ ?>
-                                        <div class="row mb-3">
-                                            <div class="col">
-                                                <div class="card">
-                                                    <a class="card-mvp-game" href="<?=base_url('admin/game/form/'.$mvpGame->id_game)?>">
-                                                        <div class="card-body">
-                                                            <div class="row">
-                                                                <div class="col text-center">
-                                                                    <span class="fw-semibold"><?= $mvpGame->home_club_name.' '.$mvpGame->home_team_name?></span> contre <span
-                                                                     class="fw-semibold"><?=$mvpGame->away_club_name.' '.$mvpGame->away_team_name?></span>
+                <?php if(isset($member)){ ?>
+                    <div class="row m-3">
+                        <div class="col-md-6 mb-3">
+                            <div class="card">
+                                <div class="card-header text-center">
+                                    <span class="card-title h5">MVP</span>
+                                </div>
+                                <div class="card-body">
+                                    <?php if(isset($member->mvpGames) && !empty($member->mvpGames)){
+                                        foreach($member->mvpGames as $mvpGame){ ?>
+                                            <div class="row mb-3">
+                                                <div class="col">
+                                                    <div class="card">
+                                                        <a class="card-mvp-game" href="<?=base_url('admin/game/form/'.$mvpGame->id_game)?>">
+                                                            <div class="card-body">
+                                                                <div class="row">
+                                                                    <div class="col text-center">
+                                                                        <span class="fw-semibold"><?= $mvpGame->home_club_name.' '.$mvpGame->home_team_name?></span> contre <span
+                                                                         class="fw-semibold"><?=$mvpGame->away_club_name.' '.$mvpGame->away_team_name?></span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col text-center">
+                                                                        <span class=""><?= $mvpGame->fbi_number.' - '.$mvpGame->schedule?></span>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="row">
-                                                                <div class="col text-center">
-                                                                    <span class=""><?= $mvpGame->fbi_number.' - '.$mvpGame->schedule?></span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </a>
+                                                        </a>
+                                                    </div>
                                                 </div>
                                             </div>
+                                       <?php }
+                                    } else {?>
+                                        <div class="row">
+                                            <div class="col">
+                                                <span class="fst-italic">Ce joueur n'a pas encore été MVP</span>
+                                            </div>
                                         </div>
-                                   <?php }
-                                } ?>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header text-center">
+                                    <span class="card-title h5">Fautes techniques</span>
+                                </div>
+                                <div class="card-body">
+                                    <?php if(isset($member->technicalFouls) && !empty($member->technicalFouls)){
+                                        foreach($member->technicalFouls as $technicalFoul){ ?>
+                                            <div class="row mb-3">
+                                                <div class="col">
+                                                    <div class="card">
+                                                        <a class="card-technical-foul" href="<?=base_url('admin/game/form/'.$technicalFoul['id_game'])?>">
+                                                            <div class="card-body">
+                                                                <div class="row">
+                                                                    <div class="col text-center">
+                                                                        <span class="fw-semibold"><?= $technicalFoul['home_club_name'].' '.$technicalFoul['home_team_name']?></span> contre <span
+                                                                                class="fw-semibold"><?=$technicalFoul['away_club_name'].' '.$technicalFoul['away_team_name']?></span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col text-center">
+                                                                        <?= $technicalFoul['game_fbi_number'].' - '.$technicalFoul['schedule'].' - ' ?> <span class="fw-bold"><?=$technicalFoul['amount'].' €'?></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php }
+                                    } else {?>
+                                        <div class="row">
+                                            <div class="col">
+                                                <span class="fst-italic">Ce joueur n'a pas reçu de faute technique</span>
+                                            </div>
+                                        </div>
+                                    <?php } ?>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header text-center">
-                                <span class="card-title h5">Fautes techniques</span>
-                            </div>
-                            <div class="card-body">
-                                <?php if($member->technicalFouls){
-                                    foreach($member->technicalFouls as $technicalFoul){ ?>
-                                        <div class="row mb-3">
-                                            <div class="col">
-                                                <div class="card">
-                                                    <a class="card-technical-foul" href="<?=base_url('admin/game/form/'.$technicalFoul['id_game'])?>">
-                                                        <div class="card-body">
-                                                            <div class="row">
-                                                                <div class="col text-center">
-                                                                    <span class="fw-semibold"><?= $technicalFoul['home_club_name'].' '.$technicalFoul['home_team_name']?></span> contre <span
-                                                                            class="fw-semibold"><?=$technicalFoul['away_club_name'].' '.$technicalFoul['away_team_name']?></span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col text-center">
-                                                                    <?= $technicalFoul['game_fbi_number'].' - '.$technicalFoul['schedule'].' - ' ?> <span class="fw-bold"><?=$technicalFoul['amount'].' €'?></span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    <?php }
-                                } ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <?php } ?>
                 <!-- END : STATS DU JOUEUR -->
                 <!-- END : ZONE INFOS BASKET -->
                 <div class="card-footer text-end">

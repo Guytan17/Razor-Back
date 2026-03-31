@@ -8,7 +8,11 @@
             <?= form_open('admin/game/save'. (isset($game) ? '/'.$game->id : '')) ?>
             <div class="card">
                 <div class="card-header text-center">
-                    <span class="card-title h3">Création d'un match</span>
+                    <?php if(isset($game)){ ?>
+                        <span class="card-title h3">Modification du match <?= $game->fbi_number ?></span>
+                    <?php } else {?>
+                        <span class="card-title h3">Création d'un match</span>
+                    <?php } ?>
                 </div>
                 <div class="card-body">
                     <!-- START : CHOIX DE L'HORAIRE ET DU GYMNASE -->
@@ -283,7 +287,7 @@
                         </div>
                         <!--START: SERVICES -->
                         <div class="col-md-6 mb-3">
-                            <div class="card h-100">
+                            <div class="card">
                                 <div class="card-header">
                                     <div class="row">
                                         <div class="col text-center">
@@ -642,9 +646,11 @@
                                     </select>
                                 </div>
                                 <div class="col-6">
-                                    <select class="form-select" name="services[${nbServices}][id_member]" id="service_member_${nbServices}">
+                                    <div class="input-group">
+                                        <select class="form-select" name="services[${nbServices}][id_member]" id="service_member_${nbServices}">
 
-                                    </select>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">

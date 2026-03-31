@@ -44,7 +44,7 @@
                 <div class="card-header">
                     <span class="card-title h5">Liste des saisons </span>
                 </div>
-                <div class="card-body">
+                <div class="card-body overflow-auto">
                     <table class="table table-striped" id="seasonsTable">
                         <thead >
                         <tr>

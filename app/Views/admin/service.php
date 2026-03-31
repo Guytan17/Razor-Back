@@ -28,7 +28,7 @@
                 <div class="card-header">
                     <span class="card-title h5">Liste des services </span>
                 </div>
-                <div class="card-body">
+                <div class="card-body overflow-auto">
                     <table class="table table-striped" id="servicesTable">
                         <thead >
                         <tr>

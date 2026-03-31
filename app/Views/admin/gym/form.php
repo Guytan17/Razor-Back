@@ -162,42 +162,50 @@
                         </div>
                         <!-- END : CLUBS -->
                         <!-- START : MATCHS -->
-                        <div class="col-md-6 mb-3">
-                            <div class="card">
-                                <div class="card-header text-center">
-                                    <span class="card-title fw-bold h5">Matchs récents</span>
-                                </div>
-                                <div class="card-body" id="zone-game">
-                                    <?php if(isset($gym['games'])){
-                                        $cpt_games = 0;
-                                        foreach($gym['games'] as $game):
-                                            $cpt_games++; ?>
-                                            <div class="row mb-3">
-                                                <div class="col">
-                                                    <div class="card">
-                                                        <a class="card-game" href="<?=base_url('admin/game/form/'.$game->id)?>">
-                                                            <div class="card-body">
-                                                                <div class="row">
-                                                                    <div class="col text-center">
-                                                                        <span class="fw-bold"><?= $game->home_team_name.' '.$game->home_club_name ?></span> contre
-                                                                        <span class="fw-bold"><?=$game->away_team_name.' '.$game->away_club_name?></span>
+                        <?php if(isset($gym)){?>
+                            <div class="col-md-6 mb-3">
+                                <div class="card">
+                                    <div class="card-header text-center">
+                                        <span class="card-title fw-bold h5">Matchs récents</span>
+                                    </div>
+                                    <div class="card-body" id="zone-game">
+                                        <?php if(!empty($gym['games'])){
+                                            $cpt_games = 0;
+                                            foreach($gym['games'] as $game):
+                                                $cpt_games++; ?>
+                                                <div class="row mb-3">
+                                                    <div class="col">
+                                                        <div class="card">
+                                                            <a class="card-game" href="<?=base_url('admin/game/form/'.$game->id)?>">
+                                                                <div class="card-body">
+                                                                    <div class="row">
+                                                                        <div class="col text-center">
+                                                                            <span class="fw-bold"><?= $game->home_team_name.' '.$game->home_club_name ?></span> contre
+                                                                            <span class="fw-bold"><?=$game->away_team_name.' '.$game->away_club_name?></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col text-center">
+                                                                            <span class="fw-semibold fst-italic"><?= format_date_fr($game->schedule,'EEE d MMMM y à HH:mm') ?></span>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row">
-                                                                    <div class="col text-center">
-                                                                        <span class="fw-semibold fst-italic"><?= format_date_fr($game->schedule,'EEE d MMMM y à HH:mm') ?></span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </a>
+                                                            </a>
+                                                        </div>
                                                     </div>
                                                 </div>
+                                            <?php endforeach;
+                                        } else {?>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <span class="fst-italic">Il n'y a pas de match enregistré dans ce gymnase</span>
+                                                </div>
                                             </div>
-                                        <?php endforeach;
-                                    }?>
+                                        <?php } ?>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        <?php } ?>
                         <!-- START : MATCHS -->
                     </div>
                     <!-- END : ÉLÉMENTS RATTACHÉS AU GYMNASE -->
