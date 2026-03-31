@@ -319,20 +319,58 @@ class Gym extends AdminController
                         $already_saved_gyms[] = $gym;
                     }
                 }
-                            }
+            }
+
+            //création de la variable $filename pour la transmettre à la vue redirigée
+            $filename='';
+
+            //Gestion du fichier des erreurs d'importation à télécharger
+            if(!empty($unsavedGyms)){
+                //Définition du chemin du fichier créé (dans le dossier writable sur le serveur) et du nom
+                $filename = 'unsaved_gyms'.date('YmdHis').'.csv';
+                $filepath = WRITEPATH.'uploads/'.$filename;
+
+                //ouverture du fichier pour écriture
+                $file = fopen($filepath, 'w');
+
+                foreach ($unsavedGyms as &$unsavedGym) {
+                    $unsavedGym['erreur'] = 'Ville non reconnue';
+                }
+                unset($unsavedGym);
+
+                //définition des entêtes du CSV
+                fputcsv($file, array_keys(($unsavedGyms[0])));
+
+                foreach ($unsavedGyms as $unsavedGym){
+                    fputcsv($file, $unsavedGym);
+                }
+                fclose($file);
+            }
+
             //Message de validation
             $this->success($cpt_saved_gyms.'gymnases ont été importés avec succès, '.$cpt_unsaved_gyms.' ont échoué');
 
-            log_message('debug','Les gymnases suivants n\'ont pas pu être enregistré car la ville n\' pas été reconnue :'.print_r($unsavedGyms,true));
+            //transmission du filename à la vue redirigée pour la bouton de téléchargement du fichier
+            $data = [
+                'filename' => $filename,
+            ];
 
-            log_message('debug','Les gymnases suivants était déjà enregistrés :'.print_r($already_saved_gyms,true));
-
-            return $this->redirect('/admin/gym');
+            return $this->redirect('/admin/gym',$data);
 
         } catch(\Exception $e) {
             $this->error($e->getMessage());
             return redirect()->back()->withInput();
 
         }
+    }
+
+    public function downloadUnsavedGym($filename){
+        $filePath = WRITEPATH . 'uploads/'.$filename;
+
+        if (!file_exists($filePath)) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        return $this->response->download($filePath, null);
     }
 }

@@ -6,19 +6,11 @@
     <!-- START : ZONE POUR LES TOASTS -->
     <div class="row mb-3">
         <div class="col-12">
-            <?php if (session()->has('success')): ?>
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <?= session('success') ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <?php if(isset($filename)&&!empty($filename)){ ?>
+                <div class="alert alert-warning">
+                    <a class="btn btn-warning" href="admin/gym/download-unsaved/<?=$filename?>"> Télécharger le CSV des gymnases non-enregistrés </a>
                 </div>
-            <?php endif; ?>
-
-            <?php if (session()->has('error')): ?>
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <?= session('error') ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            <?php endif; ?>
+            <?php } ?>
         </div>
     </div>
     <!-- END : ZONE POUR LES TOASTS -->

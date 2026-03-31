@@ -73,6 +73,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('delete/(:num)', 'Gym::deleteGym/$1'); //Suppression d'un gymnase
         $routes->get('search', 'Gym::searchGym');
         $routes->post('import', 'Gym::importGyms');
+        $routes->get('download-unsaved/(:any)', 'Gym::downloadUnsavedGym/$1');
     });
 
     //Routes pour les villes
