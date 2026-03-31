@@ -223,8 +223,11 @@ class Gym extends AdminController
         try {
             $CSVFile = $this->request->getFile('import_csv');
             $gyms = [];
-            $handle = fopen($CSVFile, 'r');
+            $already_saved_gyms = [];
+            $cpt_saved_gyms = 0;
+            $cpt_unsaved_gyms = 0;
             $unsavedGyms = [];
+            $handle = fopen($CSVFile, 'r');
             if($handle !== false){
                 //extraction de la première ligne avec les libellés de colonnes
                 $dataKey= fgetcsv($handle, 1000, ',','"');
@@ -235,32 +238,24 @@ class Gym extends AdminController
                 $cptKeys = count($dataKey);
 
                 //lecture des lignes de données tant qu'il y en a
-                while (($line = fgets($handle)) !== false) {
-
-                    //on enlève les espaces devant et derrière chaque ligne
-                    $line = trim($line);
-
-                    //on retire les doubles guillemets s'il y en a
-                    $line = str_replace('""', '"', $line);
-
-                    //on transforme la ligne string en array
-                    $dataValue=str_getcsv($line,',','"');
-
+                while (($dataValue = fgetcsv($handle,1000,',','"')) !== false) {
                     if (count($dataValue) === $cptKeys) {
+                        $gyms[] = array_combine($dataKey, $dataValue);
+                    } else {
+                        $dataValue = trim($dataValue[0]);
+                        $dataValue = str_getcsv($dataValue,',','"');
                         $gyms[] = array_combine($dataKey, $dataValue);
                     }
                 }
-
                 fclose($handle);
 
                 //on récupère les codes fbi des gymnases existants associés aux ID
                 $existingGyms = array_column($this->gymModel->findAll(),'fbi_code','id');
 
-
                 foreach ($gyms as $gym){
                     $idCity=0;
                     $idAddress = 0;
-                    log_message('debug','les id city et id addresse sont : '.print_r($idCity, true).' et '.print_r($idAddress, true));
+
                     //On teste si le gymnase n'existe pas déjà via le code FBI, sinon on ne l'enregistre pas
                     if (!in_array($gym['N_national_salle'],$existingGyms)){
                         //Gestion de la ville
@@ -269,12 +264,23 @@ class Gym extends AdminController
                         //On normalise les villes en filtrant avec le code postal
                         $cities = $this->cityModel->where('zip_code',$gym['code_postal'])->findAll();
                         foreach ($cities as $city){
-                            dd($cityCSV,normalizeCity($city['label']));
                             if(normalizeCity($city['label']) === $cityCSV){
                                 $idCity = $city['id'];
                                 break;
                             }
                         }
+
+                        if($idCity === 0){
+                            foreach ($cities as $city){
+                                //si la ville n'a pas été trouvée, on reteste en modifiant saint et sainte pour coller à la seed
+                                $cityCSV = str_replace(['saint','sainte'],['st','ste'],$cityCSV);
+                                if (normalizeCity($city['label']) === $cityCSV) {
+                                    $idCity = $city['id'];
+                                    break;
+                                }
+                            }
+                        }
+
 
                         //Gestion de l'adresse
                         $dataAddress = [
@@ -300,26 +306,26 @@ class Gym extends AdminController
                         ];
 
                         if($dataGym['id_address'] != 0){
+                            $cpt_saved_gyms++;
                             if(!$this->gymModel->insert($dataGym)){
                                 $this->error(implode('<br>',$this->gymModel->errors()));
                                 return $this->redirect('/admin/gym');
                             }
                         } else {
-                            $unsavedGyms[]= [
-                                'gym_name' => $gym['Nom_de_la_salle1'].(!empty($gym['autre_nom_de_salle'])?' - '.$gym['autre_nom_de_salle']:''),
-                                'address_1' => $gym['Adresse_11'],
-                                'address_2' => $gym['Adresse_21'],
-                                'zip_code' => $gym['code_postal'],
-                                'city' =>$gym['commune']
-                            ];
+                            $cpt_unsaved_gyms++;
+                            $unsavedGyms[]= $gym;
                         }
+                    } else {
+                        $already_saved_gyms[] = $gym;
                     }
                 }
-            }
+                            }
             //Message de validation
-            $this->success('Gymnases importés avec succès');
+            $this->success($cpt_saved_gyms.'gymnases ont été importés avec succès, '.$cpt_unsaved_gyms.' ont échoué');
 
             log_message('debug','Les gymnases suivants n\'ont pas pu être enregistré car la ville n\' pas été reconnue :'.print_r($unsavedGyms,true));
+
+            log_message('debug','Les gymnases suivants était déjà enregistrés :'.print_r($already_saved_gyms,true));
 
             return $this->redirect('/admin/gym');
 
