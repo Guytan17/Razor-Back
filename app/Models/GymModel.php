@@ -52,10 +52,10 @@ class GymModel extends Model
     {
         return [
             'searchable_fields' => [
-                'id',
-                'name',
-                'fbi_code',
-                'gym_city'
+                'gym.id',
+                'gym.name',
+                'gym.fbi_code',
+                'city.label'
             ],
             'joins' => [
                 [
@@ -98,7 +98,7 @@ class GymModel extends Model
     }
 
 
-    public function getGymById(int $id) {
+    public function getGymById($id) {
         $this->select('gym.*, address.address_1,address.address_2,address.id_city,address.gps_location,city.zip_code,city.label,city.department_name,city.department_number,city.region_name');
         $this->join('address', 'gym.id_address = address.id');
         $this->join('city', 'address.id_city = city.id');
