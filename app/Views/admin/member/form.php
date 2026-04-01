@@ -242,11 +242,11 @@
                             <label class="form-label" for="balance">Dette (en €)</label>
                             <input class="form-control" type="number" name="balance" id="balance" min="0" step="0.5" value="<?= $member->balance ?? 0 ?>">
                         </div>
-                        <div class="col-md-auto ms-2">
+                        <div class="col-lg-6 ms-auto">
                             <label class="form-label ms-2">Disponibilité</label>
                             <div class="form-check form-switch m-2">
                                 <input class="form-check-input form-switch" type="checkbox" role="switch" name="available" id="available" <?= isset($member->available) && $member->available == 1 ? 'checked' : '' ?>>
-                                <label class="form-check-label mx-2" for="available"><?= isset($member->available) && $member->available == 1 ? 'Disponible' : 'Indisponible' ?></label>
+                                <label class="form-check-label mx-2" for="available" id="available_label"><?= isset($member->available) && $member->available == 1 ? 'Disponible' : 'Indisponible' ?></label>
                             </div>
                         </div>
                     </div>
@@ -501,6 +501,15 @@ $(document).ready(function () {
         nbPlayers --;
         $(this).closest('.row-player').remove();
     })
+
+    //Gestion du clic sur le switch pour la disponibilité
+    $('#available').on('change', function(){
+        if($(this).is(':checked')){
+            $('#available_label').text('Disponible');
+        } else {
+            $('#available_label').text('Indisponible');
+        }
+    });
 })
 </script>
 <style>
