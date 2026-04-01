@@ -166,22 +166,33 @@
 </div>
 <script>
 $(document).ready(function () {
+    let logoId = $('#logoPreview').data('logo-id');
+    console.log(logoId);
+
+    //Apparition et disparition du bouton de suppression de l'image
+    $('.logo-hover').on('mouseenter', function() {
+        if(logoId != null){
+            $(this).find('.position-absolute').fadeIn(50);
+        }
+    }).on('mouseleave', function() {
+        $(this).find('.position-absolute').fadeOut(50);
+    });
+
+    $('#logo').on('change',function () {
+        logoId = 0;
+        console.log(logoId);
+    })
+
     // Initialiser l'aperçu du logo
     initImagePreview('#logo', '#logoPreview', '<?= esc(base_url('/assets/img/default.png'),'js') ?>', 2);
-
-    //Apparition du bouton de suppression de l'image
-    $('.logo-hover').on('mouseenter mouseleave', function(){
-        $(this).find('.position-absolute').fadeToggle(50);
-    });
 
     // Action du clic sur le bouton de suppression d'une image
     $('.delete-logo').on('click', function(e){
         e.preventDefault();
-        let logoId = $('#logoPreview').data('logo-id') ;
-        console.log(logoId);
         $(this).append(`<input type="hidden" name="delete-logo" value="${logoId}" id='delete-logo' />`);
         $('#logoPreview').attr('src', "<?= base_url('/assets/img/default.png') ?>");
         $('#logo').val('');
+        logoId = null;
     });
 })
 
