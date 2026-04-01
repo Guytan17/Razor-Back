@@ -207,8 +207,17 @@
                             <!-- END : CHAMPIONNATS ET COUPES -->
                             <!-- START : MATCHS -->
                             <div class="card mb-3">
-                                <div class="card-header text-center">
-                                    <span class="card-title h5">Matchs</span>
+                                <div class="card-header">
+                                    <div class="row">
+                                        <div class="col text-center">
+                                            <span class="card-title h5">Matchs</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <a class="btn btn-sm btn-primary" href="<?= base_url('admin/game/form');?>">
+                                                <i class="fas fa-plus"></i> Créer un match
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="card-body" id="zone-game">
                                     <?php if(isset($team->games)){
