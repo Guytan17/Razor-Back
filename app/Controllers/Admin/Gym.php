@@ -38,14 +38,15 @@ class Gym extends AdminController
         $this->addBreadcrumb('Listes des gymnases', '/admin/gym');
 
         if ($id != null) {
-            $title = 'Ajout d\'un gymnase';
-            $this->addBreadcrumb('Ajouter un gymnase');
+            $title = 'Modification d\'un gymnase';
+            $this->addBreadcrumb('Modifier un gymnase');
+
             $gym = $this->gymModel->getGymById($id);
             $gym['clubs']= $this->gymClubModel->getClubsByIdGym($id);
             $gym['games']= $this->gameModel->getGamesByGym($id);
         } else {
-            $title = 'Modification d\'un gymnase';
-            $this->addBreadcrumb('Modifier un gymnase');
+            $title = 'Ajout d\'un gymnase';
+            $this->addBreadcrumb('Ajouter un gymnase');
         }
         $data = [
             'title' => $title,
