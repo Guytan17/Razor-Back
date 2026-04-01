@@ -65,7 +65,7 @@
                         <tr>
                             <th>Actions</th>
                             <th>ID</th>
-<!--                            <th>Logo</th>-->
+                            <th>Logo</th>
                             <th>Nom du sponsor</th>
                             <th>Niveau d'importance</th>
                         </tr>
@@ -185,8 +185,25 @@
                     }
                 },
                 {data: 'sponsor_id'},
+                {
+                    className: 'dt-center',
+                    data: null,
+                    orderable: false,
+                    render: function (data, type, row) {
+                        if (row.logo_url) {
+                            return `<img style="height:40px;" src='${baseUrl}/${row.logo_url}'>
+                                    `;
+                        } else {
+                            return `<img style="height:40px;" src='${baseUrl}/assets/img/default.png'>
+                                    `;
+                        }
+                    }
+                },
                 {data: 'name'},
-                {data: 'rank'},
+                {
+                    className: 'dt-left',
+                    data: 'rank'
+                },
             ],
             language: {
                 url: baseUrl + 'assets/js/datatable/datatable-2.3.5-fr-FR.json',
