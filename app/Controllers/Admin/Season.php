@@ -33,13 +33,12 @@ class Season extends AdminController
             if($this->sm->insert($dataSeason)){
                 $this->success('Saison créée avec succès');
             } else {
-                foreach ($this->sm->errors() as $error) {
-                    $this->error($error);
-                }
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->sm->errors()));
+
             }
             return $this->redirect('admin/season');
         } catch (\Exception $e) {
-            $this->error = $e->getMessage();
+            $this->error($e->getMessage());
             return redirect()->back()->withInput();
         }
     }

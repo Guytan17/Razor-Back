@@ -3,6 +3,25 @@
 <?= $this->section('content') ?>
 
 <div class="container-fluid">
+    <!-- START : ZONE POUR LES ALERTES BOOTSTRAP -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <?php if (session()->has('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= session('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php if (session()->has('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= session('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <!-- END : ZONE POUR LES ALERTES BOOTSTRAP -->
     <div class="row">
         <div class="col-md-4 mb-3">
             <!-- START : ZONE CREATION -->
@@ -15,19 +34,19 @@
                     <div class="row">
                        <div class="col">
                            <label class="form-label" for="name">Nom de la saison <span class="text-danger">*</span></label>
-                           <input class="form-control" type="text" name="name" id="name" value="<?=old('name')?>" required>
+                           <input class="form-control" type="text" name="name" id="name" value="<?=esc(old('name'))?>" required>
                        </div>
                     </div>
                     <div class="row">
                         <div class="col">
-                            <label class="form-label" for="start_date">Date de début de saison</label>
-                            <input class="form-control" type="date" name="start_date" id="start_date" value="<?=old('start_date')?>">
+                            <label class="form-label" for="start_date">Date de début de saison <span class="text-danger">*</span></label>
+                            <input class="form-control" type="date" name="start_date" id="start_date" value="<?=esc(old('start_date'))?>" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
-                            <label class="form-label" for="end_date">Date de fin de saison</label>
-                            <input class="form-control" type="date" name="end_date" id="end_date" value="<?=old('start_date')?>">
+                            <label class="form-label" for="end_date">Date de fin de saison <span class="text-danger">*</span></label>
+                            <input class="form-control" type="date" name="end_date" id="end_date" value="<?=esc(old('end_date'))?>" required>
                         </div>
                     </div>
                 </div>

@@ -20,8 +20,8 @@ class SeasonModel extends Model
     // Validation
     protected $validationRules      = [
         'name' => 'required|max_length[255]',
-        'start_date' => 'valid_date|permit_empty',
-        'end_date' => 'valid_date|permit_empty',
+        'start_date' => 'valid_date|date_before[end_date]',
+        'end_date' => 'valid_date|date_after[start_date]',
     ];
     protected $validationMessages   = [
         'name' => [
@@ -30,9 +30,11 @@ class SeasonModel extends Model
         ],
         'start_date' => [
             'valid_date' => 'La date de début saison doit être valide',
+            'date_before' => 'La date de début de saison doit être antérieure à celle de fin de saison'
         ],
         'end_date' => [
             'valid_date' => 'La date de fin de saison doit être valide',
+            'date_after' => 'La date de fin de saison doit être ultérieure à celle de début de saison'
         ]
     ];
 
