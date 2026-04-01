@@ -3,6 +3,26 @@
 <?= $this->section('content') ?>
 
 <div class="container-fluid">
+    <!-- START : ZONE POUR LES ALERTES BOOTSTRAP -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <?php if (session()->has('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= session('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php if (session()->has('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= session('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <!-- END : ZONE POUR LES ALERTES BOOTSTRAP -->
+
     <div class="row">
         <div class="col-md-4 mb-3">
             <!-- START : ZONE CREATION -->
@@ -13,7 +33,7 @@
                 </div>
                 <div class="card-body">
                     <label class="form-label" for="name">Nom du rôle <span class="text-danger">*</span></label>
-                    <input class="form-control" type="text" name="name" id="name" value="<?=old('name')?>" required>
+                    <input class="form-control" type="text" name="name" id="name" value="<?=esc(old('name'))?>" required>
                 </div>
                 <div class="card-footer text-end">
                     <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Créer le rôle</button>
@@ -70,7 +90,6 @@
 </div>
 <script>
     var baseUrl = "<?=base_url();?>";
-
     $(document).ready(function() {
         table = $('#rolesTable').DataTable({
             processing: true,
@@ -109,7 +128,7 @@
                     }
                 },
                 {data: 'id'},
-                {data: 'name'},
+                {data: 'name'}
             ],
             language: {
                 url: baseUrl + 'assets/js/datatable/datatable-2.3.5-fr-FR.json',

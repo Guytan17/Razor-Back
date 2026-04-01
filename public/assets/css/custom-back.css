@@ -53,3 +53,8 @@
 #top-navbar .dropstart .dropdown-toggle::before{
     display: none;
 }
+
+/*permet de casser les mots trop longs dans les datatable pour éviter un bug d'affichage*/
+table.dataTable td {
+    word-break: break-word;
+}
