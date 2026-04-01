@@ -3,6 +3,26 @@
 <?php $this->section('content'); ?>
 
 <div class="container-fluid">
+    <!-- START : ZONE POUR LES ALERTES BOOTSTRAP -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <?php if (session()->has('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= session('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php if (session()->has('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= session('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <!-- END : ZONE POUR LES ALERTES BOOTSTRAP -->
+
     <div class="row">
         <!-- START : ZONE CRÉATION -->
         <div class="col-md-4 mb-3">
@@ -14,39 +34,39 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col-6">
-                            <label class="form-label" for="type_tf">Type</label>
+                            <label class="form-label" for="type_tf">Type <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <select class="form-select" name="id_type" id="type_tf"></select>
+                                <select class="form-select" name="id_type" id="type_tf" required></select>
                             </div>
                         </div>
                         <div class="col-6">
-                            <label class="form-label" for="classification_tf">Classification</label>
+                            <label class="form-label" for="classification_tf">Classification <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <select class="form-select" name="id_classification" id="classification_tf"></select>
+                                <select class="form-select" name="id_classification" id="classification_tf" required></select>
                             </div>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col">
-                            <label class="form-label" for="game_tf">Match</label>
+                            <label class="form-label" for="game_tf">Match <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <select class="form-select" name="id_game" id="game_tf"></select>
+                                <select class="form-select" name="id_game" id="game_tf" required></select>
                             </div>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col">
-                            <label class="form-label" for="member_tf">Joueur</label>
+                            <label class="form-label" for="member_tf">Joueur <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <select class="form-select" name="id_member" id="member_tf"></select>
+                                <select class="form-select" name="id_member" id="member_tf" required></select>
                             </div>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col">
-                            <label class="form-label" for="amount">Montant</label>
+                            <label class="form-label" for="amount">Montant <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <input class="form-control" type="number" name="amount" id="amount" value="<?= esc($technical_foul['amount'] ?? '') ?>">
+                                <input class="form-control" type="number" name="amount" id="amount" value="<?= esc(old('amount')); ?>" required>
                                 <span class="input-group-text text-decoration">€</span>
                             </div>
                         </div>
