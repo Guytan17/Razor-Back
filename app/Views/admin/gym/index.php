@@ -3,7 +3,7 @@
 <?php $this->section('content') ?>
 
 <div class="container-fluid">
-    <!-- START : ZONE POUR LES TOASTS -->
+    <!-- START : ZONE POUR LE BOUTON DE TÉLÉCHARGEMENT DU CSV D'ERREURS -->
     <div class="row mb-3">
         <div class="col-12">
             <?php if(isset($filename)&&!empty($filename)){ ?>
@@ -13,7 +13,7 @@
             <?php } ?>
         </div>
     </div>
-    <!-- END : ZONE POUR LES TOASTS -->
+    <!-- END : ZONE POUR LE BOUTON DE TÉLÉCHARGEMENT DU CSV D'ERREURS -->
 
     <!-- START : ZONE INDEX DES GYMNASES -->
     <div class="row">
