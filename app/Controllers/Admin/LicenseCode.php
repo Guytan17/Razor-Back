@@ -32,9 +32,7 @@ class LicenseCode extends AdminController
             if ($this->lcm->insert($dataLicenseCode)) {
                 $this->success('Code licence créé avec succès');
             } else {
-                foreach ($this->lcm->errors() as $error) {
-                    $this->error($error);
-                }
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->lcm->errors()));
             }
             return $this->redirect('admin/license-code');
         } catch (\Exception $e) {

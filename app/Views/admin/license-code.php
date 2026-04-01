@@ -3,6 +3,26 @@
 <?php $this->section('content') ;?>
 
 <div  class="container-fluid">
+    <!-- START : ZONE POUR LES ALERTES BOOTSTRAP -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <?php if (session()->has('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= session('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php if (session()->has('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= session('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <!-- END : ZONE POUR LES ALERTES BOOTSTRAP -->
+
     <div class="row">
         <div class="col-md-4 mb-3">
             <!-- START : ZONE CREATION -->
@@ -13,11 +33,11 @@
                 </div>
                 <div class="card-body">
                     <label class="form-label" for="code">Code <span class="text-danger">*</span></label>
-                    <input class="form-control" type="text" name="code" id="code" value="<?=old('code')?>" required>
+                    <input class="form-control" type="text" name="code" id="code" value="<?=esc(old('code'))?>" required>
                     <div class="row mt-2">
                         <div class="col">
                             <label class="form-label" for="explanation">Explication du code <span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" name="explanation" id="explanation" value="<?=old('explanation')?>" required>
+                            <input class="form-control" type="text" name="explanation" id="explanation" value="<?=esc(old('explanation'))?>" required>
                         </div>
                     </div>
                 </div>
