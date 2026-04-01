@@ -4,6 +4,26 @@
 
 
 <div class="container-fluid">
+    <!-- START : ZONE POUR LES ALERTES BOOTSTRAP -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <?php if (session()->has('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= session('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php if (session()->has('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= session('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <!-- END : ZONE POUR LES ALERTES BOOTSTRAP -->
+
     <div class="row">
         <!-- START : ZONE CRÉATION -->
         <div class="col-md-4 mb-3">
@@ -24,7 +44,7 @@
                         <div class="row mb-3">
                             <div class="col">
                                 <label class="form-label" for="name">Nom du sponsor <span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" name="name" id="name" required>
+                                <input class="form-control" type="text" name="name" id="name" value="<?=esc(old('name')); ?>" required>
                             </div>
                         </div>
                         <!-- IMPORTANCE DU SPONSOR -->
@@ -33,7 +53,7 @@
                                 <label class="form-label" for="rank">Niveau d'importance du sponsor <span class="text-danger">*</span></label>
                                 <select class="form-select" name="rank" id="rank" required>
                                     <?php for ($i = 1; $i <= 9; $i++): ?>
-                                    <option value="<?= $i ?>">Rang <?= $i ?></option>
+                                    <option value="<?= $i ?>" <?=old('rank') === $i ? 'selected' : '';?>>Rang <?= $i ?></option>
                                     <?php endfor; ?>
                                 </select>
                             </div>
@@ -42,7 +62,7 @@
                         <div class="row mb-3">
                             <div class="col">
                                 <label class="form-label" for="specifications">Caractéristiques et instructions</label>
-                                <textarea class="form-control" name="specifications" id="specifications" rows="3"></textarea>
+                                <textarea class="form-control" name="specifications" id="specifications" rows="3"><?=(esc(old('specifications'))) ?></textarea>
                             </div>
                         </div>
                     </div>

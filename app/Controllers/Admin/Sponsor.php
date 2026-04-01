@@ -35,31 +35,32 @@ class Sponsor extends AdminController
             ];
             $logo = $this->request->getFile('logo');
 
-
             if($this->sponsorModel->insert($dataSponsor)){
                 $this->success('Sponsor créé avec succès');
                 $id = $this->sponsorModel->getInsertID();
             } else {
-                foreach ($this->sponsorModel->errors() as $error) {
-                    $this->error($error);
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->sponsorModel->errors()));
+            }
+
+            if($logo->isvalid()){
+                //Gestion du logo
+                $dataLogo = [
+                    'entity_id' => $id,
+                    'entity_type' => 'sponsor',
+                    'title' => 'Logo de ' . $dataSponsor['name'],
+                    'alt' => 'Logo de ' . $dataSponsor['name'],
+                ];
+
+                $uploadResultLogo = upload_file($logo,'logos/sponsor/'.$id, $logo->getName(),$dataLogo,false);
+
+                if(is_array($uploadResultLogo) && isset($uploadResultLogo['status']) && $uploadResultLogo['status'] == 'error'){
+                    $this->error("Erreur lors de l'upload du logo :".$uploadResultLogo['message']);
                 }
             }
 
-            //Gestion du logo
-            $dataLogo = [
-                'entity_id' => $id,
-                'entity_type' => 'sponsor',
-                'title' => 'Logo de ' . $dataSponsor['name'],
-                'alt' => 'Logo de ' . $dataSponsor['name'],
-            ];
-
-            $uploadResultLogo = upload_file($logo,'logos/sponsor/'.$id, $logo->getName(),$dataLogo,false);
-            if(is_array($uploadResultLogo) && isset($uploadResultLogo['status']) && $uploadResultLogo['status'] == 'error'){
-                $this->error("Erreur lors de l'upload du logo :".$uploadResultLogo['message']);
-            }
             return $this->redirect('admin/sponsor');
         } catch (\Exception $e) {
-            $this->error = $e->getMessage();
+            $this->error($e->getMessage());
             return redirect()->back()->withInput();
         }
     }
@@ -86,7 +87,7 @@ class Sponsor extends AdminController
             if(!empty($deleteLogo && !isset($logo))){
                 $this->mediaModel->delete($deleteLogo);
             }
-            if(isset($logo)){
+            if($logo->isvalid()){
                 $dataLogo = [
                     'entity_id' => $id,
                     'entity_type' => 'sponsor',
