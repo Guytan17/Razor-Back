@@ -4,6 +4,26 @@
 
 <?php echo form_open('admin/gym/save'. (isset($gym) && $gym ? '/'.$gym['id'] : '')) ?>
 <div class="container-fluid">
+    <!-- START : ZONE POUR LES ALERTES BOOTSTRAP -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <?php if (session()->has('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= session('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php if (session()->has('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= session('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <!-- END : ZONE POUR LES ALERTES BOOTSTRAP -->
+
     <div class="row">
         <div class="col">
             <div class="card">
@@ -22,34 +42,34 @@
                         <div class="col-md-6 mb-3">
                             <div class="row mb-3">
                                 <div class="col">
-                                    <label class="form-label" for="name">Nom du Gymnase</label>
-                                    <input class="form-control" type="text" name="name" id="name" value="<?=esc($gym['name'] ?? '') ;?>">
+                                    <label class="form-label" for="name">Nom du Gymnase <span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" name="name" id="name" value="<?=esc(old('name',$gym['name'] ?? '')) ;?>" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
-                                    <label class="form-label" for="fbi_code">Code FBI</label>
-                                    <input class="form-control" type="text" name="fbi_code" id="fbi_code" value="<?=esc($gym['fbi_code'] ?? '') ;?>">
+                                    <label class="form-label" for="fbi_code">Code FBI <span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" name="fbi_code" id="fbi_code" value="<?=esc(old('fbi_code',$gym['fbi_code'] ?? ''));?>" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
                                     <input type="hidden" name="id_address" value="<?=esc($gym['id_address'] ?? '');?>"">
-                                    <label class="form-label" for="address_1">Adresse</label>
-                                    <input class="form-control" type="text" name="address_1" id="address_1" value="<?=esc($gym['address_1'] ?? '');?>">
+                                    <label class="form-label" for="address_1">Adresse <span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" name="address_1" id="address_1" value="<?=esc(old('address_1',$gym['address_1'] ?? ''));?>" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
                                     <label class="form-label" for="address_2">Complément d'adresse <span class="fst-italic">(facultatif)</span></label>
-                                    <input class="form-control" type="text" name="address_2" id="address_2" value="<?=esc($gym['address_2'] ?? '');?>">
+                                    <input class="form-control" type="text" name="address_2" id="address_2" value="<?=esc(old('address_2',$gym['address_2'] ?? ''));?>">
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
-                                    <label class="form-label" for="select-city">Ville</label>
+                                    <label class="form-label" for="select-city">Ville <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <select class="form-select" name="city" id="select-city">
+                                        <select class="form-select" name="city" id="select-city" required>
                                             <?php if (isset($gym['id_city'])) { ?>
                                             <option value="<?= $gym['id_city']?>"> <?= $gym['label'].' '.$gym['zip_code'] ?></option>
                                             <?php } ?>
@@ -94,7 +114,7 @@
                                             (⚠️ Point Google Map non-vérifié)
                                         <?php } ?>
                                     </label>
-                                    <input class="form-control" type="text" name="gps_location" id="gps_location" value="<?=esc($gym['gps_location'] ?? '') ;?>">
+                                    <input class="form-control" type="text" name="gps_location" id="gps_location" value="<?=esc(old('gps_location',$gym['gps_location'] ?? ''));?>">
                                 </div>
                             </div>
                         </div>

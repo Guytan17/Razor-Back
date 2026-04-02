@@ -83,16 +83,14 @@ class Gym extends AdminController
 
             //Enregistrement de l'adresse et récupération de l'ID de la nouvelle adresse
             if(!$this->addressModel->save($dataAddress)){
-                $this->error(implode('<br>',$this->addressModel->errors()));
-                return $this->redirect('/admin/gym');
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->addressModel->errors()));
             } elseif ($newGym){
                 $dataGym['id_address'] = $this->addressModel->getInsertID();
             }
 
             //Enregistrement du gymnase
             if(!$this->gymModel->saveGym($dataGym)){
-                $this->error(implode('<br>',$this->gymModel->errors()));
-                return $this->redirect('/admin/gym');
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->gymModel->errors()));
             } elseif ($newGym){
                 $dataGym['id'] = $this->gymModel->getInsertID();
             }
