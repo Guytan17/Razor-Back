@@ -176,7 +176,7 @@ class Member extends AdminController
                         'details' => $contact['details']
                     ];
                     if(!$this->contactm->save($dataContact)){
-                        $this->error(implode('<br>',$this->contactm->errors()));
+                        return redirect()->back()->withInput()->with('error',implode('<br>',$this->contactm->errors()));
                     }
                 }
             }
@@ -193,7 +193,9 @@ class Member extends AdminController
                         'id_team' => intval($coach),
                     ];
 
-                    $this->coachm->insert($dataCoach);
+                    if(!$this->coachm->insert($dataCoach)){
+                        return redirect()->back()->withInput()->with('error',implode('<br>',$this->coachm->errors()));
+                    }
                 }
             }
 
@@ -209,7 +211,9 @@ class Member extends AdminController
                         'id_team' => intval($player),
                     ];
 
-                    $this->playerm->insert($dataPlayer);
+                    if(!$this->playerm->insert($dataPlayer)){
+                        return redirect()->back()->withInput()->with('error',implode('<br>',$this->playerm->errors()));
+                    }
                 }
             }
 

@@ -87,11 +87,12 @@
                                         <div class="row">
                                             <div class="col-6">
                                                 <label class="form-label" for="phone_number">Numéro de telephone</label>
-                                                <input class="form-control" type="text" id="phone_number<?=$nbContacts?>" name="contacts[<?=$nbContacts?>][phone_number]" value="<?= esc(old('phone_number'.$nbContacts,$contact['phone_number']));?>">
+                                                <input class="form-control" type="text" id="phone_number<?=$nbContacts?>" name="contacts[<?=$nbContacts?>][phone_number]" value="<?= esc(old('contact.'
+                                                        .$nbContacts.'.phone_number',$contact['phone_number']));?>">
                                             </div>
                                             <div class="col-6">
                                                 <label class="form-label" for="mail">Adresse e-mail</label>
-                                                <input class="form-control" type="text" id="mail<?=$nbContacts?>" name="contacts[<?=$nbContacts?>][mail]" value="<?= esc(old('mail'.$nbContacts,$contact['mail']));?>">
+                                                <input class="form-control" type="text" id="mail<?=$nbContacts?>" name="contacts[<?=$nbContacts?>][mail]" value="<?= esc(old('contact.'.$nbContacts.'.mail',$contact['mail']));?>">
                                             </div>
                                         </div>
                                     </div>
@@ -99,14 +100,14 @@
                                         <div class="row">
                                             <div class="col">
                                                 <label class="form-label" for="details">Détails du contact <span class="fw-lighter fst-italic">(optionnel, max. 255 caractères)</span></label>
-                                                <textarea class="form-control" name="contacts[<?=$nbContacts?>][details]}" id="details<?=$nbContacts?>" rows="2" ><?= esc(old('details'.$nbContacts,$contact['details']));?></textarea>
+                                                <textarea class="form-control" name="contacts[<?=$nbContacts?>][details]}" id="details<?=$nbContacts?>" rows="2" ><?= esc(old('contact.' .$nbContacts.'.details',$contact['details']));?></textarea>
                                             </div>
                                             <div class="col-auto d-flex align-items-center">
                                                 <span class="fs-4" id="delete-contact-"><i class="fas fa-trash-alt text-danger delete-contact-button"></i></span>
                                             </div>
                                         </div>
                                     </div>
-                                    <input type="hidden" id="contact-id-input<?=$nbContacts?>" name="contacts[<?=$nbContacts?>][id]" value="<?= esc(old('contact-id-input'.$nbContacts,$contact['id']));
+                                    <input type="hidden" id="contact-id-input<?=$nbContacts?>" name="contacts[<?=$nbContacts?>][id]" value="<?= esc(old('contact.'.$nbContacts.'.id',$contact['id']));
                                     ?>">
                                 </div>
                                 <!-- START : ZONE HTML POUR STOCKER LES ID DES CONTACTS SUPPRIMES -->
