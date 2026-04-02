@@ -33,11 +33,11 @@
                 </div>
                 <div class="card-body">
                     <label class="form-label" for="code">Code <span class="text-danger">*</span></label>
-                    <input class="form-control" type="text" name="code" id="code" value="<?=esc(old('code'))?>" required>
+                    <input class="form-control" type="text" name="code" id="code" value="<?=old('code')?>" required>
                     <div class="row mt-2">
                         <div class="col">
                             <label class="form-label" for="explanation">Explication du code <span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" name="explanation" id="explanation" value="<?=esc(old('explanation'))?>" required>
+                            <input class="form-control" type="text" name="explanation" id="explanation" value="<?=old('explanation')?>" required>
                         </div>
                     </div>
                 </div>

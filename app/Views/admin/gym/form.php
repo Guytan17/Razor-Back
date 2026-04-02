@@ -43,26 +43,26 @@
                             <div class="row mb-3">
                                 <div class="col">
                                     <label class="form-label" for="name">Nom du Gymnase <span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="name" id="name" value="<?=esc(old('name',$gym['name'] ?? '')) ;?>" required>
+                                    <input class="form-control" type="text" name="name" id="name" value="<?=old('name',esc($gym['name'] ?? '')) ;?>" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
                                     <label class="form-label" for="fbi_code">Code FBI <span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="fbi_code" id="fbi_code" value="<?=esc(old('fbi_code',$gym['fbi_code'] ?? ''));?>" required>
+                                    <input class="form-control" type="text" name="fbi_code" id="fbi_code" value="<?=old('fbi_code',esc($gym['fbi_code'] ?? ''));?>" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
                                     <input type="hidden" name="id_address" value="<?=esc($gym['id_address'] ?? '');?>"">
                                     <label class="form-label" for="address_1">Adresse <span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="address_1" id="address_1" value="<?=esc(old('address_1',$gym['address_1'] ?? ''));?>" required>
+                                    <input class="form-control" type="text" name="address_1" id="address_1" value="<?=old('address_1',esc($gym['address_1'] ?? ''));?>" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
                                     <label class="form-label" for="address_2">Complément d'adresse <span class="fst-italic">(facultatif)</span></label>
-                                    <input class="form-control" type="text" name="address_2" id="address_2" value="<?=esc(old('address_2',$gym['address_2'] ?? ''));?>">
+                                    <input class="form-control" type="text" name="address_2" id="address_2" value="<?=old('address_2',esc($gym['address_2'] ?? ''));?>">
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -114,7 +114,7 @@
                                             (⚠️ Point Google Map non-vérifié)
                                         <?php } ?>
                                     </label>
-                                    <input class="form-control" type="text" name="gps_location" id="gps_location" value="<?=esc(old('gps_location',$gym['gps_location'] ?? ''));?>">
+                                    <input class="form-control" type="text" name="gps_location" id="gps_location" value="<?=old('gps_location',esc($gym['gps_location'] ?? ''));?>">
                                 </div>
                             </div>
                         </div>

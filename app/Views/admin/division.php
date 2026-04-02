@@ -34,7 +34,7 @@
                     <div class="row mb-2">
                         <div class="col">
                             <label class="form-label" for="name">Nom du championnat <span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" name="name" id="name" value="<?=esc(old('name'))?>" required>
+                            <input class="form-control" type="text" name="name" id="name" value="<?=old('name')?>" required>
                         </div>
                     </div>
                     <div class="row mb-2">

@@ -14,11 +14,11 @@
                 </div>
                 <div class="card-body">
                     <label class="form-label" for="code-type">Code du type<span class="text-danger">*</span></label>
-                    <input class="form-control" type="text" name="code_type" id="code-type" value="<?=esc(old('code-type'))?>" required>
+                    <input class="form-control" type="text" name="code_type" id="code-type" value="<?= old('code-type')?>" required>
                     <div class="row mt-2">
                         <div class="col">
                             <label class="form-label" for="explanation-type">Explication du code <span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" name="explanation_type" id="explanation-type" value="<?=esc(old('explanation-type'))?>" required>
+                            <input class="form-control" type="text" name="explanation_type" id="explanation-type" value="<?=old('explanation-type')?>" required>
                         </div>
                     </div>
                 </div>

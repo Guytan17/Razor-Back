@@ -44,7 +44,7 @@
                         <div class="row mb-3">
                             <div class="col">
                                 <label class="form-label" for="name">Nom du sponsor <span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" name="name" id="name" value="<?=esc(old('name')); ?>" required>
+                                <input class="form-control" type="text" name="name" id="name" value="<?=old('name'); ?>" required>
                             </div>
                         </div>
                         <!-- IMPORTANCE DU SPONSOR -->
@@ -62,7 +62,7 @@
                         <div class="row mb-3">
                             <div class="col">
                                 <label class="form-label" for="specifications">Caractéristiques et instructions</label>
-                                <textarea class="form-control" name="specifications" id="specifications" rows="3"><?=(esc(old('specifications'))) ?></textarea>
+                                <textarea class="form-control" name="specifications" id="specifications" rows="3"><?= old('specifications'); ?></textarea>
                             </div>
                         </div>
                     </div>

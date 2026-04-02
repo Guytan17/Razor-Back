@@ -66,7 +66,7 @@
                         <div class="col">
                             <label class="form-label" for="amount">Montant <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <input class="form-control" type="number" name="amount" id="amount" value="<?= esc(old('amount')); ?>" required>
+                                <input class="form-control" type="number" name="amount" id="amount" value="<?= old('amount'); ?>" required>
                                 <span class="input-group-text text-decoration">€</span>
                             </div>
                         </div>

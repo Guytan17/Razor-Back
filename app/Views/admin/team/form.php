@@ -40,16 +40,16 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label class="form-label" for="name">Nom de l'équipe <span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" name="name" id="name" value="<?= esc(old('name',$team->name ?? '' ));?>" required>
+                            <input class="form-control" type="text" name="name" id="name" value="<?= old('name',esc($team->name ?? '' ));?>" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label" for="select-club">Club <span class="text-danger">*</span></label>
                             <select class="form-select" name="id_club" id="select-club" required>
-<!--                                --><?php //foreach ($clubs as $club) : ?>
-<!--                                    <option value="--><?php //= $club['id'] ?><!--" --><?php //= old('id_club') === $club['id'] ? 'selected' : (isset($team->id_club) && $team->id_club == $club['id']  ? 'selected' : ''); ?><!-->-->
-<!--                                        --><?php //= $club['name']?>
-<!--                                    </option>-->
-<!--                                --><?php //endforeach; ?>
+                                <?php foreach ($clubs as $club) : ?>
+                                    <option value="<?= $club['id'] ?>" <?= old('id_club') === $club['id'] ? 'selected' : (isset($team->id_club) && $team->id_club == $club['id']  ? 'selected' : ''); ?>>
+                                        <?= $club['name']?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                     </div>

@@ -65,23 +65,23 @@
                             <div class="row mb-3">
                                 <div class="col">
                                     <label class="form-label" for="code">Code FBI du club <span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="code" id="code" value="<?= esc(old('code',$club['code'] ?? '')); ?>" required>
+                                    <input class="form-control" type="text" name="code" id="code" value="<?= old('code',esc($club['code'] ?? '')); ?>" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
                                     <label class="form-label" for="name">Nom du club <span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="name" id="name" value="<?= esc(old('name',$club['name'] ?? '')); ?>" required>
+                                    <input class="form-control" type="text" name="name" id="name" value="<?= old('name',esc($club['name'] ?? '')); ?>" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label class="form-label" for="color_1">Couleur 1</label>
-                                    <input class="form-control" type="text" name="color_1" id="color_1" value="<?= esc(old('color_1',$club['color_1'] ?? '')); ?>">
+                                    <input class="form-control" type="text" name="color_1" id="color_1" value="<?= old('color_1',esc($club['color_1'] ?? '')); ?>">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label" for="color_2">Couleur 2</label>
-                                    <input class="form-control" type="text" name="color_2" id="color_2" value="<?= esc(old('color_2',$club['color_2'] ?? '')); ?>" >
+                                    <input class="form-control" type="text" name="color_2" id="color_2" value="<?= old('color_2',esc($club['color_2'] ?? '')); ?>" >
                                 </div>
                             </div>
                         </div>

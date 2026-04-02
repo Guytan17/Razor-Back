@@ -34,19 +34,19 @@
                     <div class="row">
                        <div class="col">
                            <label class="form-label" for="name">Nom de la saison <span class="text-danger">*</span></label>
-                           <input class="form-control" type="text" name="name" id="name" value="<?=esc(old('name'))?>" required>
+                           <input class="form-control" type="text" name="name" id="name" value="<?=old('name')?>" required>
                        </div>
                     </div>
                     <div class="row">
                         <div class="col">
                             <label class="form-label" for="start_date">Date de début de saison <span class="text-danger">*</span></label>
-                            <input class="form-control" type="date" name="start_date" id="start_date" value="<?=esc(old('start_date'))?>" required>
+                            <input class="form-control" type="date" name="start_date" id="start_date" value="<?=old('start_date')?>" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
                             <label class="form-label" for="end_date">Date de fin de saison <span class="text-danger">*</span></label>
-                            <input class="form-control" type="date" name="end_date" id="end_date" value="<?=esc(old('end_date'))?>" required>
+                            <input class="form-control" type="date" name="end_date" id="end_date" value="<?=old('end_date')?>" required>
                         </div>
                     </div>
                 </div>
