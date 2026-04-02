@@ -37,21 +37,19 @@ class Division extends AdminController
     public function insertDivision () {
         try {
             //Récupération des données
-            $dataLeague =[
+            $dataDivision =[
                 'name' => $this->request->getPost('name'),
                 'id_season' => $this->request->getPost('id_season'),
                 'id_category' => $this->request->getPost('id_category'),
             ];
-            if ($this->dm->insert($dataLeague)) {
+            if ($this->dm->insert($dataDivision)) {
                 $this->success('Championnat créé avec succès');
             } else {
-                foreach ($this->dm->errors() as $error) {
-                    $this->error($error);
-                }
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->dm->errors()));
             }
             return $this->redirect('admin/division');
         } catch (\Exception $e) {
-            $this->error = $e->getMessage();
+            $this->error($e->getMessage());
             return redirect()->back()->withInput();
         }
     }
