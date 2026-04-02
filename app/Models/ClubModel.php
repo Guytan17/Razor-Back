@@ -40,7 +40,7 @@ class ClubModel extends Model
     protected $validationMessages   = [
         'code' => [
             'required' => 'Le code du club est obligatoire',
-            'max_length' => 'Le du club ne peut pas excéder 10 caractères'
+            'max_length' => 'Le code du club ne peut pas excéder 10 caractères'
         ],
         'name' => [
             'required' => 'Le nom du club est obligatoire',

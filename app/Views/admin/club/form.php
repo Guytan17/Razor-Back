@@ -5,6 +5,26 @@
 <?php echo form_open_multipart('/admin/club/save' . (isset($club) && $club ? "/". $club['id'] : "")); ?>
 
 <div class="container-fluid">
+    <!-- START : ZONE POUR LES ALERTES BOOTSTRAP -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <?php if (session()->has('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= session('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php if (session()->has('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= session('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <!-- END : ZONE POUR LES ALERTES BOOTSTRAP -->
+
     <div class="row">
         <div class="col">
             <div class="card">
@@ -45,23 +65,23 @@
                             <div class="row mb-3">
                                 <div class="col">
                                     <label class="form-label" for="code">Code FBI du club <span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="code" id="code" value="<?= esc($club['code'] ?? '') ; ?>" required>
+                                    <input class="form-control" type="text" name="code" id="code" value="<?= esc(old('code',$club['code'] ?? '')); ?>" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
                                     <label class="form-label" for="name">Nom du club <span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="name" id="name" value="<?= esc($club['name'] ?? '') ; ?>" required>
+                                    <input class="form-control" type="text" name="name" id="name" value="<?= esc(old('name',$club['name'] ?? '')); ?>" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label class="form-label" for="color_1">Couleur 1</label>
-                                    <input class="form-control" type="text" name="color_1" id="color_1" value="<?= (isset($club['color_1'])) ? esc($club['color_1']) : '' ; ?>">
+                                    <input class="form-control" type="text" name="color_1" id="color_1" value="<?= esc(old('color_1',$club['color_1'] ?? '')); ?>">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label" for="color_2">Couleur 2</label>
-                                    <input class="form-control" type="text" name="color_2" id="color_2" value="<?= isset($club['color_2']) ? esc($club['color_2']) : '' ; ?>" >
+                                    <input class="form-control" type="text" name="color_2" id="color_2" value="<?= esc(old('color_2',$club['color_2'] ?? '')); ?>" >
                                 </div>
                             </div>
                         </div>
@@ -166,12 +186,15 @@
 </div>
 <script>
 $(document).ready(function () {
-    let logoId = $('#logoPreview').data('logo-id');
-    console.log(logoId);
+    let logoId = $('#logoPreview').data('logo-id') ?? null;
+
+    let hasLogo = logoId ? true : false;
+
+    console.log(logoId, hasLogo);
 
     //Apparition et disparition du bouton de suppression de l'image
     $('.logo-hover').on('mouseenter', function() {
-        if(logoId != null){
+        if(hasLogo) {
             $(this).find('.position-absolute').fadeIn(50);
         }
     }).on('mouseleave', function() {
@@ -179,7 +202,7 @@ $(document).ready(function () {
     });
 
     $('#logo').on('change',function () {
-        logoId = 0;
+        hasLogo = true;
         console.log(logoId);
     })
 
@@ -192,7 +215,8 @@ $(document).ready(function () {
         $(this).append(`<input type="hidden" name="delete-logo" value="${logoId}" id='delete-logo' />`);
         $('#logoPreview').attr('src', "<?= base_url('/assets/img/default.png') ?>");
         $('#logo').val('');
-        logoId = null;
+        $(this).closest('.position-absolute').fadeOut(50);
+        hasLogo = false;
     });
 })
 
