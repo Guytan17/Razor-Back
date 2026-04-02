@@ -33,13 +33,11 @@ class Category extends AdminController
             if ($this->cm->insert($dataCategory)){
                 $this->success('Catégorie créée avec succès');
             } else {
-                foreach ($this->cm->errors() as $error) {
-                    $this->error($error);
-                }
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->cm->errors()));
             }
             return $this->redirect('admin/category');
         } catch(\Exception $e) {
-            $this->error = $e->getMessage();
+            $this->error($e->getMessage());
             return redirect()->back()->withInput();
         }
     }

@@ -51,4 +51,22 @@ class CustomRules
 
         return true;
     }
+
+    //fonction pour tester si une date est ultérieure à une autre
+    public function date_after ($date, $field,$data):bool{
+        if(empty($date) || empty($data[$field])){
+            return true; //si l'une des 2 valeurs à comparer est vide, on laisse passer
+        }
+
+        return strtotime($date) > strtotime($data[$field]);
+    }
+
+    //fonction pour tester si une date est ultérieure à une autre
+    public function date_before ($date, $field,$data):bool{
+        if(empty($date) || empty($data[$field])){
+            return true; //si l'une des 2 valeurs à comparer est vide, on laisse passer
+        }
+
+        return strtotime($date) < strtotime($data[$field]);
+    }
 }

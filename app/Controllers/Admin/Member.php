@@ -11,7 +11,6 @@ use App\Models\RoleModel;
 use App\Models\LicenseCodeModel;
 use App\Models\RoleMemberModel;
 use App\Models\CoachModel;
-
 use App\Models\TechnicalFoulModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -26,6 +25,7 @@ class Member extends AdminController
     protected $playerm;
     protected $contactm;
     protected $gameModel;
+    protected $technicalFoulModel;
 
     public function __construct(){
         $this->mm = new MemberModel();
@@ -72,6 +72,7 @@ class Member extends AdminController
             'license_codes' => $license_codes,
             'member' => $member ?? null,
         ];
+
         return $this->render('admin/member/form',$data);
     }
 
@@ -132,7 +133,7 @@ class Member extends AdminController
 
             //Enregistrement en BDD
             if(!$this->mm->save($member)){
-                $this->error(implode('<br>',$this->mm->errors()));
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->mm->errors()));
             }
 
             //On récupère l'ID si c'est une création pour les tables d'asso
@@ -175,7 +176,7 @@ class Member extends AdminController
                         'details' => $contact['details']
                     ];
                     if(!$this->contactm->save($dataContact)){
-                        $this->error(implode('<br>',$this->contactm->errors()));
+                        return redirect()->back()->withInput()->with('error',implode('<br>',$this->contactm->errors()));
                     }
                 }
             }
@@ -192,7 +193,9 @@ class Member extends AdminController
                         'id_team' => intval($coach),
                     ];
 
-                    $this->coachm->insert($dataCoach);
+                    if(!$this->coachm->insert($dataCoach)){
+                        return redirect()->back()->withInput()->with('error',implode('<br>',$this->coachm->errors()));
+                    }
                 }
             }
 
@@ -208,7 +211,9 @@ class Member extends AdminController
                         'id_team' => intval($player),
                     ];
 
-                    $this->playerm->insert($dataPlayer);
+                    if(!$this->playerm->insert($dataPlayer)){
+                        return redirect()->back()->withInput()->with('error',implode('<br>',$this->playerm->errors()));
+                    }
                 }
             }
 

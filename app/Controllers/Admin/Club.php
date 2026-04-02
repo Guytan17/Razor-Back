@@ -70,8 +70,7 @@ class Club extends AdminController
 
             //Enregistrement en BDD
             if(!$this->cm->save($dataClub)){
-                $this->error(implode('<br>',$this->cm->errors()));
-                return $this->redirect('/admin/club');
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->cm->errors()));
             }
 
             //Récupération de l'ID et gestion des messages de validation

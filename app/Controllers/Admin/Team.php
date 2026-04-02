@@ -124,8 +124,7 @@ class Team extends AdminController
             //Enregistrement en BDD
             if($newTeam || $team->hasChanged()) {
                 if(!$this->tm->save($team)){
-                    $this->error(implode('<br>',$this->tm->errors()));
-                    return $this->redirect('/admin/team');
+                    return redirect()->back()->withInput()->with('error',implode('<br>',$this->tm->errors()));
                 }
             }
 

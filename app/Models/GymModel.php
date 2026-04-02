@@ -126,8 +126,8 @@ class GymModel extends Model
 
         $rules['fbi_code'] =
             $idGym != null
-            ? 'max_length[255]'
-            : 'max_length[255]|is_unique[gym.fbi_code]'
+            ? 'max_length[10]'
+            : 'max_length[10]|is_unique[gym.fbi_code]'
         ;
 
         //Mise en place des règles de validation

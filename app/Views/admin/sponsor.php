@@ -4,6 +4,26 @@
 
 
 <div class="container-fluid">
+    <!-- START : ZONE POUR LES ALERTES BOOTSTRAP -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <?php if (session()->has('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= session('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php if (session()->has('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= session('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <!-- END : ZONE POUR LES ALERTES BOOTSTRAP -->
+
     <div class="row">
         <!-- START : ZONE CRÉATION -->
         <div class="col-md-4 mb-3">
@@ -24,7 +44,7 @@
                         <div class="row mb-3">
                             <div class="col">
                                 <label class="form-label" for="name">Nom du sponsor <span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" name="name" id="name" required>
+                                <input class="form-control" type="text" name="name" id="name" value="<?=old('name'); ?>" required>
                             </div>
                         </div>
                         <!-- IMPORTANCE DU SPONSOR -->
@@ -33,7 +53,7 @@
                                 <label class="form-label" for="rank">Niveau d'importance du sponsor <span class="text-danger">*</span></label>
                                 <select class="form-select" name="rank" id="rank" required>
                                     <?php for ($i = 1; $i <= 9; $i++): ?>
-                                    <option value="<?= $i ?>">Rang <?= $i ?></option>
+                                    <option value="<?= $i ?>" <?=old('rank') === $i ? 'selected' : '';?>>Rang <?= $i ?></option>
                                     <?php endfor; ?>
                                 </select>
                             </div>
@@ -42,7 +62,7 @@
                         <div class="row mb-3">
                             <div class="col">
                                 <label class="form-label" for="specifications">Caractéristiques et instructions</label>
-                                <textarea class="form-control" name="specifications" id="specifications" rows="3"></textarea>
+                                <textarea class="form-control" name="specifications" id="specifications" rows="3"><?= old('specifications'); ?></textarea>
                             </div>
                         </div>
                     </div>
@@ -59,13 +79,13 @@
                 <div class="card-header">
                     <span class="card-title h5">Liste des sponsors</span>
                 </div>
-                <div class="card-body">
+                <div class="card-body overflow-auto">
                     <table class="table table-striped" id="sponsorsTable">
                         <thead>
                         <tr>
                             <th>Actions</th>
                             <th>ID</th>
-<!--                            <th>Logo</th>-->
+                            <th>Logo</th>
                             <th>Nom du sponsor</th>
                             <th>Niveau d'importance</th>
                         </tr>
@@ -185,8 +205,25 @@
                     }
                 },
                 {data: 'sponsor_id'},
+                {
+                    className: 'dt-center',
+                    data: null,
+                    orderable: false,
+                    render: function (data, type, row) {
+                        if (row.logo_url) {
+                            return `<img style="height:40px;" src='${baseUrl}/${row.logo_url}'>
+                                    `;
+                        } else {
+                            return `<img style="height:40px;" src='${baseUrl}/assets/img/default.png'>
+                                    `;
+                        }
+                    }
+                },
                 {data: 'name'},
-                {data: 'rank'},
+                {
+                    className: 'dt-left',
+                    data: 'rank'
+                },
             ],
             language: {
                 url: baseUrl + 'assets/js/datatable/datatable-2.3.5-fr-FR.json',

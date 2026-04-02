@@ -3,6 +3,26 @@
 <?= $this->section('content') ?>
 
 <div class="container-fluid">
+    <!-- START : ZONE POUR LES ALERTES BOOTSTRAP -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <?php if (session()->has('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= session('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php if (session()->has('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= session('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <!-- END : ZONE POUR LES ALERTES BOOTSTRAP -->
+
     <div class="row">
         <div class="col-md-4 mb-3">
             <!-- START : ZONE CREATION -->
@@ -20,11 +40,11 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <label class="form-label" for="gender">Genre de la catégorie</label>
-                            <select class="form-select" name="gender" id="gender">
-                                <option value="mixed">Mixte</option>
-                                <option value="man">Masculin</option>
-                                <option value="woman">Féminin</option>
+                            <label class="form-label" for="gender">Genre de la catégorie <span class="text-danger">*</span></label>
+                            <select class="form-select" name="gender" id="gender" required>
+                                <option value="mixed" <?= old('gender') === 'mixed' ? 'selected' : '';?>>Mixte</option>
+                                <option value="man" <?= old('gender') === 'man' ? 'selected' : '';?>>Masculin</option>
+                                <option value="woman" <?= old('gender') === 'woman' ? 'selected' : '';?>>Féminin</option>
                             </select>
                         </div>
                     </div>
@@ -42,7 +62,7 @@
                 <div class="card-header">
                     <span class="card-title h5">Liste des catégories</span>
                 </div>
-                <div class="card-body">
+                <div class="card-body overflow-auto">
                     <table class="table table-striped" id="categoriesTable">
                         <thead >
                         <tr>

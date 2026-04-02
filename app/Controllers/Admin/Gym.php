@@ -38,14 +38,15 @@ class Gym extends AdminController
         $this->addBreadcrumb('Listes des gymnases', '/admin/gym');
 
         if ($id != null) {
-            $title = 'Ajout d\'un gymnase';
-            $this->addBreadcrumb('Ajouter un gymnase');
+            $title = 'Modification d\'un gymnase';
+            $this->addBreadcrumb('Modifier un gymnase');
+
             $gym = $this->gymModel->getGymById($id);
             $gym['clubs']= $this->gymClubModel->getClubsByIdGym($id);
             $gym['games']= $this->gameModel->getGamesByGym($id);
         } else {
-            $title = 'Modification d\'un gymnase';
-            $this->addBreadcrumb('Modifier un gymnase');
+            $title = 'Ajout d\'un gymnase';
+            $this->addBreadcrumb('Ajouter un gymnase');
         }
         $data = [
             'title' => $title,
@@ -82,16 +83,14 @@ class Gym extends AdminController
 
             //Enregistrement de l'adresse et récupération de l'ID de la nouvelle adresse
             if(!$this->addressModel->save($dataAddress)){
-                $this->error(implode('<br>',$this->addressModel->errors()));
-                return $this->redirect('/admin/gym');
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->addressModel->errors()));
             } elseif ($newGym){
                 $dataGym['id_address'] = $this->addressModel->getInsertID();
             }
 
             //Enregistrement du gymnase
             if(!$this->gymModel->saveGym($dataGym)){
-                $this->error(implode('<br>',$this->gymModel->errors()));
-                return $this->redirect('/admin/gym');
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->gymModel->errors()));
             } elseif ($newGym){
                 $dataGym['id'] = $this->gymModel->getInsertID();
             }

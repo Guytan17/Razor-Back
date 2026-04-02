@@ -22,16 +22,16 @@ class RoleModel extends Model
 
     // Validation
     protected $validationRules      = [
-        'name' => 'required|max_length[255]',
-        'slug' => 'max_length[255]',
+        'name' => 'required|max_length[50]',
+        'slug' => 'max_length[50]',
     ];
     protected $validationMessages   = [
         'name' => [
             'required' => 'Le nom du rôle est obligatoire',
-            'max_length' => 'Le nom du rôle ne peut pas excéder 255 caractères'
+            'max_length' => 'Le nom du rôle ne peut pas excéder 50 caractères'
         ],
         'slug' => [
-            'max_length' => 'Le slug ne peut pas excéder 255 caractères'
+            'max_length' => 'Le slug ne peut pas excéder 50 caractères'
         ]
     ];
 

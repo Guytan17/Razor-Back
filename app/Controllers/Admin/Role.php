@@ -32,13 +32,11 @@ class Role extends AdminController
             if ($this->rm->insert($dataRole)){
                 $this->success('Rôle créé avec succès');
             } else {
-                foreach ($this->rm->errors() as $error) {
-                    $this->error($error);
-                }
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->rm->errors()));
             }
             return $this->redirect('admin/role');
         } catch(\Exception $e) {
-            $this->error = $e->getMessage();
+            $this->error($e->getMessage());
             return redirect()->back()->withInput();
         }
     }

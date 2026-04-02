@@ -107,8 +107,7 @@ class Game extends AdminController
 
             //Enregistrement en BDD
             if(!$this->gameModel->save($dataGame)){
-                $this->error(implode('<br>',$this->gameModel->errors()));
-                return $this->redirect('/admin/game');
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->gameModel->errors()));
             }
             if($newGame){
                 $id=$this->gameModel->getInsertID();
@@ -138,7 +137,7 @@ class Game extends AdminController
                         'amount' => $technicalFoul ['amount'],
                     ];
                     if(!$this->technicalFoulModel->save($dataTechnicalFoul)){
-                        $this->error(implode('<br>',$this->technicalFoulModel->errors()));
+                        return redirect()->back()->withInput()->with('error',implode('<br>',$this->technicalFoulModel->errors()));
                     }
                 }
             }
@@ -194,7 +193,7 @@ class Game extends AdminController
                             'details' => $service['details']
                         ];
                         if(!$this->serviceGameModel->insert($dataService)){
-                            $this->error(implode('<br>',$this->serviceGameModel->errors()));
+                            return redirect()->back()->withInput()->with('error',implode('<br>',$this->serviceGameModel->errors()));
                         }
                     }
                 }

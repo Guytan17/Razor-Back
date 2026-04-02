@@ -14,7 +14,7 @@
                 </div>
                 <div class="card-body">
                     <label class="form-label" for="code-type">Code du type<span class="text-danger">*</span></label>
-                    <input class="form-control" type="text" name="code_type" id="code-type" value="<?=old('code-type')?>" required>
+                    <input class="form-control" type="text" name="code_type" id="code-type" value="<?= old('code-type')?>" required>
                     <div class="row mt-2">
                         <div class="col">
                             <label class="form-label" for="explanation-type">Explication du code <span class="text-danger">*</span></label>
@@ -33,7 +33,7 @@
                 <div class="card-header">
                     <span class="card-title h5">Liste des types de faute technique</span>
                 </div>
-                <div class="card-body">
+                <div class="card-body overflow-auto">
                     <table class="table table-striped" id="typesTable">
                         <thead >
                         <tr>
@@ -88,11 +88,11 @@
                 </div>
                 <div class="card-body">
                     <label class="form-label" for="code-classification">Code de la classification<span class="text-danger">*</span></label>
-                    <input class="form-control" type="text" name="code_classification" id="code-classification" value="<?=old('code-classification')?>" required>
+                    <input class="form-control" type="text" name="code_classification" id="code-classification" value="<?= esc(old('code-classification'))?>" required>
                     <div class="row mt-2">
                         <div class="col">
                             <label class="form-label" for="explanation-classification">Explication du code <span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" name="explanation_classification" id="explanation-classification" value="<?=old('explanation-classification')?>" required>
+                            <input class="form-control" type="text" name="explanation_classification" id="explanation-classification" value="<?=esc(old('explanation-classification'))?>" required>
                         </div>
                     </div>
                 </div>
@@ -107,7 +107,7 @@
                 <div class="card-header">
                     <span class="card-title h5">Liste des classifications de faute technique</span>
                 </div>
-                <div class="card-body">
+                <div class="card-body overflow-auto">
                     <table class="table table-striped" id="classificationsTable">
                         <thead >
                         <tr>

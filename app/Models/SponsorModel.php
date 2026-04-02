@@ -48,11 +48,9 @@ class SponsorModel extends Model
         return [
             'searchable_fields' => [
                 'sponsor.id',
-                'name',
-                'rank',
-                'specifications',
-                'logo_url',
-                'logo_id'
+                'sponsor.name',
+                'sponsor.rank',
+                'sponsor.specifications',
             ],
             'joins' => [
                 [

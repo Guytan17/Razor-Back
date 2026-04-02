@@ -3,6 +3,26 @@
 <?php $this->section('content'); ?>
 
 <div class="container-fluid">
+    <!-- START : ZONE POUR LES ALERTES BOOTSTRAP -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <?php if (session()->has('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= session('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php if (session()->has('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= session('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <!-- END : ZONE POUR LES ALERTES BOOTSTRAP -->
+
     <div class="row">
         <div class="col-md-4 mb-3">
             <div class="card">
@@ -19,20 +39,20 @@
                     </div>
                     <div class="row mb-2">
                         <div class="col">
-                            <label class="form-label" for="id_season">Saison</label>
+                            <label class="form-label" for="id_season">Saison <span class="text-danger">*</span></label>
                             <select class="form-select" name="id_season" id="id_season" required>
                                 <?php foreach($seasons as $season):?>
-                                    <option value="<?= $season['id'] ?>"><?= $season['name'] ?></option>
+                                    <option value="<?= $season['id'] ?>" <?= old('id_season') === $season['id'] ? 'selected' : '' ; ?>><?= $season['name'] ?></option>
                                 <?php endforeach ; ?>
                             </select>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
-                            <label class="form-label" for="id_category">Catégorie</label>
+                            <label class="form-label" for="id_category">Catégorie <span class="text-danger">*</span></label>
                             <select class="form-select" name="id_category" id="id_category" required>
                                 <?php foreach($categories as $category):?>
-                                    <option value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
+                                    <option value="<?= $category['id'] ?>" <?= old('id_category') === $category['id'] ? 'selected' : '' ; ?>><?= $category['name'] ?></option>
                                 <?php endforeach ; ?>
                             </select>
                         </div>
@@ -49,7 +69,7 @@
                 <div class="card-header">
                     <span class="card-title h5">Liste des championnats</span>
                 </div>
-                <div class="card-body">
+                <div class="card-body overflow-auto">
                     <table class="table table-striped" id="divisionsTable">
                         <thead >
                         <tr>

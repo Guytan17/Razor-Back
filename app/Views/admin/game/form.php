@@ -3,19 +3,43 @@
 <?php $this->section('content') ?>
 
 <div class="container-fluid">
+    <!-- START : ZONE POUR LES ALERTES BOOTSTRAP -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <?php if (session()->has('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= session('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php if (session()->has('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= session('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <!-- END : ZONE POUR LES ALERTES BOOTSTRAP -->
+
     <div class="row">
         <div class="col">
             <?= form_open('admin/game/save'. (isset($game) ? '/'.$game->id : '')) ?>
             <div class="card">
                 <div class="card-header text-center">
-                    <span class="card-title h3">Création d'un match</span>
+                    <?php if(isset($game)){ ?>
+                        <span class="card-title h3">Modification du match <?= $game->fbi_number ?></span>
+                    <?php } else {?>
+                        <span class="card-title h3">Création d'un match</span>
+                    <?php } ?>
                 </div>
                 <div class="card-body">
                     <!-- START : CHOIX DE L'HORAIRE ET DU GYMNASE -->
                     <div class="row d-flex justify-content-center">
                         <div class="col-md-6 hstack mb-3">
                             <label class="form-label mx-3" for="schedule">Horaire<span class="text-danger">*</span></label>
-                            <input class="form-control" type="datetime-local" name="schedule" id="schedule" required value="<?= esc($game->schedule ?? '') ?>">
+                            <input class="form-control" type="datetime-local" name="schedule" id="schedule" value="<?= old('schedule',esc($game->schedule ?? '')) ?>" required>
                         </div>
                         <div class="col-md-6 hstack mb-3">
                             <label class="form-label mx-3" for="select-gym">Gymnase<span class="text-danger">*</span></label>
@@ -57,11 +81,11 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label mx-3" for="fbi_number">Numéro FBI</label>
-                                    <input class="form-control" type="text" name="fbi_number" id="fbi_number" value="<?= esc($game->fbi_number ?? '') ?>">
+                                    <input class="form-control" type="text" name="fbi_number" id="fbi_number" value="<?= old('fbi_number',esc($game->fbi_number ?? '')) ?>">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label mx-3" for="e_marque_code">Code E-Marque</label>
-                                    <input class="form-control" type="text" name="e_marque_code" id="e_marque_code" value="<?= esc($game->e_marque_code ?? '') ?>">
+                                    <input class="form-control" type="text" name="e_marque_code" id="e_marque_code" value="<?= old('e_marque_code',esc($game->e_marque_code ?? '')) ?>">
                                 </div>
                             </div>
                         </div>
@@ -113,8 +137,7 @@
                                                             <label class="form-label me-3" for="home-score-input">Score de <?= $game->home_club_name ?></label>
                                                         </div>
                                                         <div class="col-6">
-                                                            <input class="form-control fw-bold fs-4 score-input" type="number" name="home_score" id="home-score-input" value="<?= esc
-                                                            ($game->score_home) ?? '' ?>">
+                                                            <input class="form-control fw-bold fs-4 score-input" type="number" name="home_score" id="home-score-input" value="<?= old('home-score-input',esc($game->score_home ?? '' ))?>">
                                                         </div>
                                                     </div>
                                                 <?php endif; ?>
@@ -182,8 +205,7 @@
                                                             <label class="form-label me-3" for="away-score-input">Score de <?= $game->away_club_name?></label>
                                                         </div>
                                                         <div class="col-6">
-                                                            <input class="form-control fw-bold fs-4 score-input" type="number" name="away_score" id="away-score-input" value="<?= esc($game->score_away) ?? ''
-                                                            ?>">
+                                                            <input class="form-control fw-bold fs-4 score-input" type="number" name="away_score" id="away-score-input" value="<?= old('away-score-input',esc($game->score_away ?? ''))?>">
                                                         </div>
                                                     </div>
                                                 <?php endif; ?>
@@ -238,13 +260,16 @@
                                                                     <div class="col-6">
                                                                         <label class="form-label" for="type_tf_<?= $nbTechnicalFouls ?>">Type</label>
                                                                         <div class="input-group mb-3">
-                                                                            <select class="form-select" name="technical_fouls[<?= $nbTechnicalFouls ?>][type]" id="type_tf_<?= $nbTechnicalFouls ?>"></select>
+                                                                            <select class="form-select" name="technical_fouls[<?= $nbTechnicalFouls ?>][type]" id="type_tf_<?= $nbTechnicalFouls ?>"
+                                                                                    required
+                                                                            ></select>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-6">
                                                                         <label class="form-label" for="classification_tf_<?= $nbTechnicalFouls ?>">Classification</label>
                                                                         <div class="input-group mb-3">
-                                                                            <select class="form-select" name="technical_fouls[<?= $nbTechnicalFouls ?>][classification]" id="classification_tf_<?= $nbTechnicalFouls ?>"></select>
+                                                                            <select class="form-select" name="technical_fouls[<?= $nbTechnicalFouls ?>][classification]" id="classification_tf_<?=
+                                                                            $nbTechnicalFouls ?>" required></select>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -252,14 +277,16 @@
                                                                     <div class="col-8">
                                                                         <label class="form-label" for="player_tf_<?= $nbTechnicalFouls ?>">Joueur</label>
                                                                         <div class="input-group mb-3">
-                                                                            <select class="form-select" name="technical_fouls[<?= $nbTechnicalFouls ?>][player]" id="player_tf_<?= $nbTechnicalFouls ?>"></select>
+                                                                            <select class="form-select" name="technical_fouls[<?= $nbTechnicalFouls ?>][player]" id="player_tf_<?= $nbTechnicalFouls
+                                                                            ?>" required></select>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-4">
                                                                         <label class="form-label" for="amount_tf_<?= $nbTechnicalFouls ?>">Montant</label>
                                                                         <div class="input-group">
                                                                             <input class="form-control" type="number" name="technical_fouls[<?= $nbTechnicalFouls ?>][amount]" id="amount_tf_<?=
-                                                                            $nbTechnicalFouls ?>" value="<?= esc($technical_foul['amount'] ?? '') ?>">
+                                                                            $nbTechnicalFouls ?>" value="<?= old('technical_fouls.'.$nbTechnicalFouls.'.amount',esc($technical_foul['amount'] ?? ''));
+                                                                            ?>">
                                                                             <span class="input-group-text text-decoration">€</span>
                                                                         </div>
                                                                     </div>
@@ -283,7 +310,7 @@
                         </div>
                         <!--START: SERVICES -->
                         <div class="col-md-6 mb-3">
-                            <div class="card h-100">
+                            <div class="card">
                                 <div class="card-header">
                                     <div class="row">
                                         <div class="col text-center">
@@ -306,7 +333,9 @@
                                                             <div class="row mb-2">
                                                                 <div class="col-6">
                                                                     <select class="form-select" name="services[<?= $nbServices ?>][id_service]" id="service_type_<?= $nbServices ?>">
-                                                                        <option value="<?= $service['id_service'] ?>"><?= $service['service_label'] ?></option>
+                                                                        <option value="<?= $service['id_service'] ?>" <?= old('services.'.$nbServices.'.id_service') === $service['id_service'] ? 'selected' : '' ?>>
+                                                                            <?= $service['service_label'] ?>
+                                                                        </option>
                                                                     </select>
                                                                 </div>
                                                                 <div class="col-6">
@@ -319,7 +348,7 @@
                                                             <div class="row">
                                                                 <div class="col">
                                                                     <input class="form-control" type="text" name="services[<?= $nbServices ?>][details]" id="service_details_<?= $nbServices ?>"
-                                                                           placeholder="Précisions (facultatif)" value="<?= esc($service['details'] ?? '') ?>">
+                                                                    placeholder="Précisions (facultatif)" value="<?= old('services.'.$nbServices.'.details',esc($service['details'] ?? ''),'attr'); ?>">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -642,9 +671,11 @@
                                     </select>
                                 </div>
                                 <div class="col-6">
-                                    <select class="form-select" name="services[${nbServices}][id_member]" id="service_member_${nbServices}">
+                                    <div class="input-group">
+                                        <select class="form-select" name="services[${nbServices}][id_member]" id="service_member_${nbServices}">
 
-                                    </select>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">

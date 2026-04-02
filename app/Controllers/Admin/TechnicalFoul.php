@@ -38,11 +38,8 @@ class TechnicalFoul extends AdminController
                 $this->success('Faute technique créée avec succès');
                 return $this->redirect('/admin/technical-foul');
             } else {
-                $this->error(implode('<br>',$this->technicalFoulModel->errors()));
-                return $this->redirect('/admin/technical-foul');
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->technicalFoulModel->errors()));
             }
-
-
 
         } catch (\Exception $e) {
             $this->error($e->getMessage());
