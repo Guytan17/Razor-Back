@@ -16,11 +16,11 @@ class Role extends Migration
             ],
             'name'=>[
                 'type'=>'VARCHAR',
-                'constraint'=>'255',
+                'constraint'=>'50',
             ],
             'slug'=>[
                 'type'=>'VARCHAR',
-                'constraint'=>'255',
+                'constraint'=>'50',
                 'unique'=>true,
             ],
         ]);

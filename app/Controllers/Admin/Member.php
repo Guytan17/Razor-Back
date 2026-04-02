@@ -11,7 +11,6 @@ use App\Models\RoleModel;
 use App\Models\LicenseCodeModel;
 use App\Models\RoleMemberModel;
 use App\Models\CoachModel;
-
 use App\Models\TechnicalFoulModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -26,6 +25,7 @@ class Member extends AdminController
     protected $playerm;
     protected $contactm;
     protected $gameModel;
+    protected $technicalFoulModel;
 
     public function __construct(){
         $this->mm = new MemberModel();
@@ -72,6 +72,7 @@ class Member extends AdminController
             'license_codes' => $license_codes,
             'member' => $member ?? null,
         ];
+
         return $this->render('admin/member/form',$data);
     }
 
@@ -132,7 +133,7 @@ class Member extends AdminController
 
             //Enregistrement en BDD
             if(!$this->mm->save($member)){
-                $this->error(implode('<br>',$this->mm->errors()));
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->mm->errors()));
             }
 
             //On récupère l'ID si c'est une création pour les tables d'asso

@@ -5,6 +5,26 @@
 <?php echo form_open('/admin/member/save' . (isset($member) && $member ? '/' . $member->id : '')); ?>
 
 <div class="container-fluid">
+    <!-- START : ZONE POUR LES ALERTES BOOTSTRAP -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <?php if (session()->has('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= session('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php if (session()->has('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= session('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <!-- END : ZONE POUR LES ALERTES BOOTSTRAP -->
+
     <div class="row mb-3">
         <div class="col">
             <div class="card">
@@ -21,17 +41,18 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label" for="last_name">Nom <span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" name="last_name" id="last_name" value="<?= esc($member->last_name ?? '') ?>" required>
+                            <input class="form-control" type="text" name="last_name" id="last_name" value="<?= esc(old('last_name',$member->last_name ?? '')) ?>" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label" for="first_name">Prénom <span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" name="first_name" id="first_name" value="<?= esc($member->first_name ?? '') ?>" required>
+                            <input class="form-control" type="text" name="first_name" id="first_name" value="<?= esc(old('first_name',$member->first_name ?? '')) ?>" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label" for="date_of_birth">Date de naissance <span class="text-danger">*</span></label>
-                            <input class="form-control" type="date" name="date_of_birth" id="date_of_birth" value="<?= esc($member?->date_of_birth?->toDateString() ?? '') ?>" required>
+                            <input class="form-control" type="date" name="date_of_birth" id="date_of_birth" value="<?= esc(old('date_of_birth',$member?->date_of_birth?->toDateString() ?? '')) ?>"
+                                   required>
                         </div>
                         <div class="col-md-6">
                             <label class="mb-3">Rôle(s) <span class="text-danger">*</span></label>
@@ -43,7 +64,6 @@
                                            <label class="form-check-label" for="role-<?=$role['id']?>"><?= $role['name'] ?></label>
                                        </div>
                                     </div>
-
                                 <?php endforeach; ?>
                             </div>
                         </div>
@@ -67,11 +87,11 @@
                                         <div class="row">
                                             <div class="col-6">
                                                 <label class="form-label" for="phone_number">Numéro de telephone</label>
-                                                <input class="form-control" type="text" id="phone_number" name="contacts[<?=$nbContacts?>][phone_number]" value="<?= esc($contact['phone_number']) ?>">
+                                                <input class="form-control" type="text" id="phone_number<?=$nbContacts?>" name="contacts[<?=$nbContacts?>][phone_number]" value="<?= esc(old('phone_number'.$nbContacts,$contact['phone_number']));?>">
                                             </div>
                                             <div class="col-6">
                                                 <label class="form-label" for="mail">Adresse e-mail</label>
-                                                <input class="form-control" type="text" id="mail" name="contacts[<?=$nbContacts?>][mail]" value="<?= esc($contact['mail']) ?>">
+                                                <input class="form-control" type="text" id="mail<?=$nbContacts?>" name="contacts[<?=$nbContacts?>][mail]" value="<?= esc(old('mail'.$nbContacts,$contact['mail']));?>">
                                             </div>
                                         </div>
                                     </div>
@@ -79,14 +99,15 @@
                                         <div class="row">
                                             <div class="col">
                                                 <label class="form-label" for="details">Détails du contact <span class="fw-lighter fst-italic">(optionnel, max. 255 caractères)</span></label>
-                                                <textarea class="form-control" name="contacts[<?=$nbContacts?>][details]}" id="details" rows="2" ><?= esc($contact['details']) ?></textarea>
+                                                <textarea class="form-control" name="contacts[<?=$nbContacts?>][details]}" id="details<?=$nbContacts?>" rows="2" ><?= esc(old('details'.$nbContacts,$contact['details']));?></textarea>
                                             </div>
                                             <div class="col-auto d-flex align-items-center">
                                                 <span class="fs-4" id="delete-contact-"><i class="fas fa-trash-alt text-danger delete-contact-button"></i></span>
                                             </div>
                                         </div>
                                     </div>
-                                    <input type="hidden" id="contact-id-input" name="contacts[<?=$nbContacts?>][id]" value="<?= $contact['id'] ?>">
+                                    <input type="hidden" id="contact-id-input<?=$nbContacts?>" name="contacts[<?=$nbContacts?>][id]" value="<?= esc(old('contact-id-input'.$nbContacts,$contact['id']));
+                                    ?>">
                                 </div>
                                 <!-- START : ZONE HTML POUR STOCKER LES ID DES CONTACTS SUPPRIMES -->
                                 <div id="zone-removed-contacts">
@@ -101,10 +122,11 @@
                         <div class="col-md-6 d-inline-flex align-items-center mb-3">
                             <label class="form-label m-2">Statut de la licence</label>
                             <div class="form-check form-switch mx-2">
-                                <input class="form-check-input form-switch" type="checkbox" role="switch" name="license_status" id="license_status" <?= isset($member->license_status) &&
-                                $member->license_status == 1 ? 'checked' : '' ?>>
+                                <input class="form-check-input form-switch" type="checkbox" role="switch" name="license_status" id="license_status" <?= old('license_status') == 'on' ? 'checked' : (old('last_name') && old('license_status') != 'on' ? '' :(isset($member->license_status) && $member->license_status == 1 ? 'checked' : '')); ?>>
                                 <label class="form-check-label mx-2" for="license_status" id="license_status_label">
-                                    <?= isset($member->license_status) && $member->license_status == 1 ? 'Validée' : 'Non-validée' ?>
+                                    <?= old('license_status') == 'on' ? 'Validée' : (old('last_name') && old('license_status') != 1 ? 'Non-validée': (isset($member->license_status) &&
+                                    $member->license_status == 1 ?
+                                     'Validée': 'Non-validée'))  ?>
                                 </label>
                             </div>
                         </div>
@@ -112,7 +134,8 @@
                             <label class="form-label text-nowrap mx-2" for="license_code">Code licence</label>
                             <select class="form-select" name="license_code" id="license_code" required>
                                 <?php foreach($license_codes as $license_code): ?>
-                                    <option value=<?=esc($license_code['id'])?> <?= isset($member) && $license_code['id'] == $member->id_license_code ? 'selected' : '' ?>><?=esc($license_code['code'])
+                                    <option value=<?=esc($license_code['id'])?> <?= old('license_code') === $license_code['id'] ? 'selected' : (isset($member) && $license_code['id'] ==
+                                    $member->id_license_code ?'selected' : '' )?>><?=esc($license_code['code'])
                                         ?> -
                                         <?=
                                         esc($license_code['explanation']) ?></option>
@@ -124,14 +147,14 @@
                         <div class="col-md-6 d-inline-flex align-items-center mb-3">
                             <label class="form-label text-nowrap mx-2" for="overqualified">Surclassement</label>
                             <select class="form-select" name="overqualified" id="overqualified">
-                                <option value="0" <?= isset($member->overqualified) && $member->overqualified == 0 ? 'selected' : '' ?>>Aucun</option>
-                                <option value="1" <?= isset($member->overqualified) && $member->overqualified == 1 ? 'selected' : '' ?>>Simple</option>
-                                <option value="2" <?= isset($member->overqualified) && $member->overqualified == 2 ? 'selected' : '' ?>>Double</option>
+                                <option value="0" <?= old('overqualified') === 0 ? 'selected' : (isset($member->overqualified) && $member->overqualified == 0 ? 'selected' : '' );?>>Aucun</option>
+                                <option value="1" <?=  old('overqualified') === 1 ? 'selected' : (isset($member->overqualified) && $member->overqualified == 1 ? 'selected' : '' );?>>Simple</option>
+                                <option value="2" <?=  old('overqualified') === 2 ? 'selected' : (isset($member->overqualified) && $member->overqualified == 2 ? 'selected' : '' );?>>Double</option>
                             </select>
                         </div>
                         <div class="col-md-6 d-inline-flex align-items-center mb-3">
                             <label class="form-label text-nowrap mx-2" for="license_number">Numéro de licence</label>
-                            <input class="form-control" type="text" name="license_number" id="license_number" value="<?= esc($member->license_number ?? '') ?>">
+                            <input class="form-control" type="text" name="license_number" id="license_number" value="<?= esc(old('license_number',$member->license_number ?? '')) ?>">
                         </div>
                     </div>
                     <!-- END : ZONE CONCERNANT LA LICENCE -->
@@ -239,20 +262,21 @@
                 <div class="row m-3">
                     <div class="col-md-6 hstack">
                         <div class="col mb-2">
-                            <label class="form-label" for="balance">Dette (en €)</label>
-                            <input class="form-control" type="number" name="balance" id="balance" min="0" step="0.5" value="<?= $member->balance ?? 0 ?>">
+                            <label class="form-label" for="balance">Dette (en €) <span class="text-danger">*</span></label>
+                            <input class="form-control" type="number" name="balance" id="balance" min="0" step="0.5" value="<?= esc(old('balance',$member->balance ?? 0)); ?>" required>
                         </div>
                         <div class="col-lg-6 ms-auto">
                             <label class="form-label ms-2">Disponibilité</label>
                             <div class="form-check form-switch m-2">
-                                <input class="form-check-input form-switch" type="checkbox" role="switch" name="available" id="available" <?= isset($member->available) && $member->available == 1 ? 'checked' : '' ?>>
-                                <label class="form-check-label mx-2" for="available" id="available_label"><?= isset($member->available) && $member->available == 1 ? 'Disponible' : 'Indisponible' ?></label>
+                                <input class="form-check-input form-switch" type="checkbox" role="switch" name="available" id="available" <?= old('available') == 'on' ? 'checked' :(old('last_name')
+                                        && old('available') != 'on' ? '' : (isset($member->available) && $member->available == '1' ? 'checked' : '' ));?>>
+                                <label class="form-check-label mx-2" for="available" id="available_label"><?= old('available') == 'on' ? 'Disponible' : (old('last_name') && old('available') != 'on'? 'Indisponible':(isset($member->available) && $member->available == 1 ? 'Disponible' : 'Indisponible'));?></label>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label" for="availability_details">Détails de l'indisponibilité</label>
-                        <textarea class="form-control" name="availability_details" id="availability_details" rows="3"><?= $member->details ?? '' ?></textarea>
+                        <textarea class="form-control" name="availability_details" id="availability_details" rows="3"><?= esc(old('availability_details',$member->details ?? ''));?></textarea>
                     </div>
                 </div>
                 <!-- START : STATS DU JOUEUR -->
@@ -313,8 +337,7 @@
                                                             <div class="card-body">
                                                                 <div class="row">
                                                                     <div class="col text-center">
-                                                                        <span class="fw-semibold"><?= $technicalFoul['home_club_name'].' '.$technicalFoul['home_team_name']?></span> contre <span
-                                                                                class="fw-semibold"><?=$technicalFoul['away_club_name'].' '.$technicalFoul['away_team_name']?></span>
+                                                                        <span class="fw-semibold"><?= $technicalFoul['home_club_name'].' '.$technicalFoul['home_team_name']?></span> contre <span class="fw-semibold"><?=$technicalFoul['away_club_name'].' '.$technicalFoul['away_team_name']?></span>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
