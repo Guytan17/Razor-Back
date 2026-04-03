@@ -79,7 +79,7 @@ trait Select2Searchable
                         $textParts[] = $result[$field];
                     }
                 }
-                $text = implode(' ', $textParts);
+                $text = implode(',', $textParts);
             } else {
                 $text = $result[$displayField] ?? '';
             }

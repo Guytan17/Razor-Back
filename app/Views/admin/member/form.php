@@ -429,10 +429,10 @@ $(document).ready(function () {
     })
 
     //initialisation select-coach
-    initAjaxSelect2(`#select-coach`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher un équipe'});
+    initAjaxSelect2(`#select-coach`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher une équipe'});
 
     //initialisation select-player
-    initAjaxSelect2(`#select-player`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher un équipe'});
+    initAjaxSelect2(`#select-player`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher une équipe'});
 
     //Gestion du clic sur le switch pour le statut de la licence
     $('#license_status').on('change', function(){

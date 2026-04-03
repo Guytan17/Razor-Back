@@ -96,6 +96,15 @@
                                         <span class="card-title fw-bold h5">Équipes du club</span>
                                     </div>
                                     <div class="card-body">
+                                        <div class="row mb-3">
+                                            <div class="col p-3">
+                                                <div class="input-group">
+                                                    <select class="form-select select-team" id="select-team">
+                                                    </select>
+                                                    <span class="input-group-text btn btn-sm btn-primary d-flex align-items-center" id="add-team"><i class="fas fa-plus"></i> Ajouter</span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     <?php if(!empty($club['teams'])){
                                         $cpt_teams = 0;
                                         foreach($club['teams'] as $team):
@@ -190,8 +199,6 @@ $(document).ready(function () {
 
     let hasLogo = logoId ? true : false;
 
-    console.log(logoId, hasLogo);
-
     //Apparition et disparition du bouton de suppression de l'image
     $('.logo-hover').on('mouseenter', function() {
         if(hasLogo) {
@@ -203,7 +210,6 @@ $(document).ready(function () {
 
     $('#logo').on('change',function () {
         hasLogo = true;
-        console.log(logoId);
     })
 
     // Initialiser l'aperçu du logo
@@ -218,6 +224,9 @@ $(document).ready(function () {
         $(this).closest('.position-absolute').fadeOut(50);
         hasLogo = false;
     });
+
+    //initialisation select-team
+    initAjaxSelect2(`#select-team`, {url:'/admin/team/search', searchFields: 'name', separator :' - ',additionalFields : 'season_name,category_name,club_name', placeholder:'Rechercher une équipe'});
 })
 
 </script>

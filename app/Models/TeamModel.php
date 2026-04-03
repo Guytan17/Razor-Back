@@ -67,11 +67,10 @@ class TeamModel extends Model
         return [
             'searchable_fields' => [
                 'team.id',
-                'name',
-                'slug',
-                'season_name',
-                'category_name',
-                'deleted_at',
+                'team.name',
+                'team.slug',
+                'season.name',
+                'category.name',
             ],
             'joins' =>[
                 [
@@ -99,7 +98,8 @@ class TeamModel extends Model
     }
 
     protected $select2SearchFields = ['name'];
-    protected $select2DisplayField = 'name,category_name,season_name';
+    protected $select2DisplayField = 'id,name';
+    protected $select2AdditionalFields = ['category_name','season_name','club_name'];
 
     public function reactiveTeam($id) : bool{
         return $this->builder()
@@ -115,10 +115,11 @@ class TeamModel extends Model
         return $this->findAll();
     }
 
-    public function searchWithCategoryAndSeason($search='',$page=1,$limit=20,$conditions=[]) {
-        $this->select('team.*,category.name as category_name,season.name as season_name');
+    public function searchTeamWithInfos($search='',$page=1,$limit=20,$conditions=[]) {
+        $this->select('team.*,category.name as category_name,season.name as season_name,club.name as club_name');
         $this->join('category', 'category.id = team.id_category');
         $this->join('season', 'season.id = team.id_season');
+        $this->join('club', 'club.id = team.id_club','left');
 
         return $this->searchForSelect2(
             search:$search,
@@ -126,6 +127,7 @@ class TeamModel extends Model
             limit:$limit,
             searchFields: $this->select2SearchFields,
             displayField: $this->select2DisplayField,
+            additionalFields: $this->select2AdditionalFields ?? [],
             conditions:$conditions,
             orderBy: 'team.id'
         );
