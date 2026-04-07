@@ -78,21 +78,25 @@ class GymModel extends Model
     }
 
     //paramétrage du Select2Searchable
-    protected $select2SearchFields = ['name'];
-    protected $select2DisplayField = 'name';
-    protected $select2AdditionalFields = ['fbi_code', 'club_name'];
+    protected $select2SearchFields = ['fbi_code','gym.name','club.name','address.address_1','city.label'];
+    protected $select2DisplayField = 'fbi_code,name';
+    protected $select2AdditionalFields = ['club_name','club_address','city'];
 
     //On surcharge le model avec la fonction permettant de rajouter le nom du club dans le select
-    public function searchWithClubName($search='',$page=1,$limit=20){
+    public function searchClubWithInfos($search='',$page=1,$limit=20){
         //jointure pour avoir le nom du club
-        $this->select('gym.*,club.name as club_name');
-        $this->join('gym_club', 'gym_club.id_gym = gym.id');
-        $this->join('club', 'gym_club.id_club = club.id');
+        $this->select('gym.id,gym.fbi_code, gym.name,club.name as club_name,address.address_1 as club_address,city.label as city');
+        $this->join('gym_club', 'gym_club.id_gym = gym.id','left');
+        $this->join('club', 'gym_club.id_club = club.id','left');
+        $this->join('address', 'gym.id_address = address.id');
+        $this->join('city', 'address.id_city = city.id');
 
         return $this->searchForSelect2(
             search:$search,
             page:$page,
             limit:$limit,
+            searchFields: $this->select2SearchFields,
+            displayField: $this->select2DisplayField,
             additionalFields: $this->select2AdditionalFields,
         );
     }

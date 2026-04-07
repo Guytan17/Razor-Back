@@ -96,15 +96,7 @@
                                         <span class="card-title fw-bold h5">Équipes du club</span>
                                     </div>
                                     <div class="card-body">
-                                        <div class="row mb-3">
-                                            <div class="col p-3">
-                                                <div class="input-group">
-                                                    <select class="form-select select-team" id="select-team">
-                                                    </select>
-                                                    <span class="input-group-text btn btn-sm btn-primary d-flex align-items-center" id="add-team"><i class="fas fa-plus"></i> Ajouter</span>
-                                                </div>
-                                            </div>
-                                        </div>
+
                                     <?php if(!empty($club['teams'])){
                                         $cpt_teams = 0;
                                         foreach($club['teams'] as $team):
@@ -144,6 +136,15 @@
                                         <span class="card-title fw-bold h5">Gymnases du club</span>
                                     </div>
                                     <div class="card-body">
+                                        <div class="row mb-3">
+                                            <div class="col p-3">
+                                                <div class="input-group">
+                                                    <select class="form-select select-gym" id="select-gym">
+                                                    </select>
+                                                    <span class="input-group-text btn btn-sm btn-primary d-flex align-items-center" id="add-gym"><i class="fas fa-plus"></i> Ajouter</span>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <?php if(!empty($club['gyms'])){
                                             $cpt_gyms = 0;
                                             foreach($club['gyms'] as $gym):
@@ -225,8 +226,36 @@ $(document).ready(function () {
         hasLogo = false;
     });
 
-    //initialisation select-team
-    initAjaxSelect2(`#select-team`, {url:'/admin/team/search', searchFields: 'name', separator :' - ',additionalFields : 'season_name,category_name,club_name', placeholder:'Rechercher une équipe'});
+    //initialisation select-gym
+    initAjaxSelect2(`#select-gym`, {url:'/admin/gym/search', searchFields:['fbi_code','gym.name','club.name','address.address_1','city.label'],separator:' - ',additionalFields : 'club_address,city ,' +
+            'club_name',
+        placeholder:'Rechercher un gymnase'});
+
+    //Action du clic à l'ajout d'un gymnase
+    $('#add-gym').on('click',function(){
+        let row=`
+        <div class="row mb-3">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col text-center">
+                                <span class="fw-bold"></span><span class="fw-semibold fst-italic"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-center">
+                                 <span class=""></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+
+
+    })
 })
 
 </script>
