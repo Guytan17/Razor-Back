@@ -93,7 +93,18 @@
                             <div class="col-md-6 mb-3">
                                 <div class="card">
                                     <div class="card-header text-center">
-                                        <span class="card-title fw-bold h5">Équipes du club</span>
+                                        <div class="row">
+                                            <div class="col text-center">
+                                                <span class="card-title fw-bold h5">Équipes du club</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <a class="btn btn-primary btn-sm" href="<?= base_url('admin/team/form/') ?>">
+                                                    <i class="fas fa-plus"></i> Créer une équipe
+                                                </a>
+                                            </div>
+                                        </div>
+
+
                                     </div>
                                     <div class="card-body">
 
@@ -145,41 +156,57 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <?php if(!empty($club['gyms'])){
-                                            $cpt_gyms = 0;
-                                            foreach($club['gyms'] as $gym):
-                                                $cpt_gyms++; ?>
-                                                <div class="row mb-3">
-                                                    <div class="col">
-                                                        <div class="card">
-                                                            <a class="card-team" href="<?=base_url('admin/gym/form/'.$gym['id'])?>">
+                                        <div id="zone-gym">
+                                            <?php if(!empty($club['gyms'])){
+                                                $cpt_gyms = 0;
+                                                foreach($club['gyms'] as $gym):
+                                                    $cpt_gyms++; ?>
+                                                    <div class="row mb-3">
+                                                        <div class="col">
+                                                            <div class="card">
                                                                 <div class="card-body">
                                                                     <div class="row">
-                                                                        <div class="col text-center">
-                                                                            <span class="fw-bold"><?= $gym['gym_name']?></span><span class="fw-semibold fst-italic"><?=(isset($gym['gym_fbi_code'])&&!empty($gym['gym_fbi_code'])
-                                                                                        ?' - '.$gym['gym_fbi_code']:'').
-                                                                                ($gym['main_gym']==1?' - Gymnase 
-                                                                            principal':'') ?></span>
+                                                                        <div class="col-auto">
+                                                                            <span class="fs-4"><i class="fas fa-trash-alt text-danger delete-gym-button"></i></span>
                                                                         </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col text-center">
-                                                                             <span class=""><?=$gym['gym_address'].', '.$gym['city']?></span>
+                                                                        <div class="col hstack">
+                                                                            <a class="card-gym" href="<?=base_url('admin/gym/form/'.$gym['id'])?>">
+                                                                                <div class="row">
+                                                                                    <div class="col text-center">
+                                                                                        <span class="fw-semibold"><?=(isset($gym['gym_fbi_code'])&&!empty($gym['gym_fbi_code'])?$gym['gym_fbi_code'].' - ':''). $gym['gym_name']?></span>
+                                                                                    </div>
+                                                                                    <div class="row">
+                                                                                        <div class="col text-center">
+                                                                                            <span class=""><?=$gym['gym_address'].', '.$gym['city']?></span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="col-auto">
+                                                                            <label class="form-check-label" for="switch-gym<?=
+                                                                            $cpt_gyms?>">Principal</label>
+                                                                            <div class="form-check form-switch">
+                                                                                <input class="form-check-input" type="checkbox" role="switch" name="gym[<?=$cpt_gyms?>][main_gym]" id="switch-gym<?=
+                                                                                $cpt_gyms?>">
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </a>
+                                                            </div>
                                                         </div>
                                                     </div>
+                                                    <input type="hidden" name="gym[<?= $cpt_gyms?>][gym_id]" value="<?=$gym['id']?>">
+                                                <?php endforeach;
+                                            }else {?>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <span class="fst-italic">Aucun gymnase n'est rattaché à ce club</span>
+                                                    </div>
                                                 </div>
-                                            <?php endforeach;
-                                        }else {?>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <span class="fst-italic">Aucun gymnase n'est rattaché à ce club</span>
-                                                </div>
-                                            </div>
-                                        <?php } ?>
+                                            <?php } ?>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -197,9 +224,10 @@
 <script>
 $(document).ready(function () {
     let logoId = $('#logoPreview').data('logo-id') ?? null;
-
     let hasLogo = logoId ? true : false;
 
+    let cptGym = $('#zone-gym .card-gym').length;
+    console.log(cptGym);
     //Apparition et disparition du bouton de suppression de l'image
     $('.logo-hover').on('mouseenter', function() {
         if(hasLogo) {
@@ -227,25 +255,44 @@ $(document).ready(function () {
     });
 
     //initialisation select-gym
-    initAjaxSelect2(`#select-gym`, {url:'/admin/gym/search', searchFields:['fbi_code','gym.name','club.name','address.address_1','city.label'],separator:' - ',additionalFields : 'club_address,city ,' +
+    initAjaxSelect2(`#select-gym`, {url:'/admin/gym/search', searchFields:['fbi_code','gym.name','club.name','address.address_1','city.label'],separator:' - ',additionalFields : 'gym_address,city ,' +
             'club_name',
         placeholder:'Rechercher un gymnase'});
 
     //Action du clic à l'ajout d'un gymnase
     $('#add-gym').on('click',function(){
+        cptGym++;
+        let gym = $('#select-gym').select2('data')[0];
+        gym.text=(gym.text).split(',').join(' - ');
+        console.log(gym);
         let row=`
         <div class="row mb-3">
             <div class="col">
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col text-center">
-                                <span class="fw-bold"></span><span class="fw-semibold fst-italic"></span>
+                            <div class="col-auto">
+                                <span class="fs-4"><i class="fas fa-trash-alt text-danger delete-gym-button"></i></span>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col text-center">
-                                 <span class=""></span>
+                            <div class="col hstack">
+                                <a class="card-gym" href="<?=base_url('admin/gym/form/')?>${gym.id}">
+                                     <div class="row">
+                                        <div class="col text-center">
+                                            <span class="fw-semibold">${gym.text}</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col text-center">
+                                             <span class="">${gym.gym_address} - ${gym.city}</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-auto">
+                                <label class="form-check-label" for="switch-gym${cptGym}">Principal</label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" name="gym[${cptGym}][main_gym]" id="switch-gym">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -254,6 +301,7 @@ $(document).ready(function () {
         </div>
         `;
 
+        $('#zone-gym').prepend(row);
 
     })
 })
@@ -264,12 +312,12 @@ $(document).ready(function () {
        max-height: 320px;
     }
 
-    .card-team{
+    .card-team, .card-gym{
         text-decoration: none;
         color: black;
     }
 
-    .card-team:hover{
+    .card-team:hover,.card-gym:hover, .delete-gym-button:hover{
         scale:1.05;
         cursor: pointer;
     }

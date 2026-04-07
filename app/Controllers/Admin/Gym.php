@@ -196,7 +196,7 @@ class Gym extends AdminController
         $limit = 25;
 
         //Utilisation de la méthode du Model (via le trait)
-        $result = $this->gymModel->searchClubWithInfos($search, $page, $limit);
+        $result = $this->gymModel->searchGymWithInfos($search, $page, $limit);
 
         //Réponse JSON
         return $this->response->setJSON($result);
