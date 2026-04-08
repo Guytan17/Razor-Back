@@ -12,6 +12,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('save/(:num)', 'Member::saveMember/$1'); // sauvegarde édition
         $routes->post('switch-active/(:num)', 'Member::switchActiveMember/$1'); //(dés)activation membres
         $routes->get('search', 'Member::searchMember');
+        $routes->post('import', 'Member::importMember');//Routes pour l'import du CSV
     });
 
     //Routes pour la gestion des équipes

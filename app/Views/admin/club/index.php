@@ -11,7 +11,9 @@
                     <div class="card-title h3">Listes des clubs</div>
                     <div class="ms-auto hstack">
                         <?= form_open_multipart('admin/club/import');?>
-                        <label class="btn btn-sm btn-primary p-1 mx-1" for="import-csv"><i class="fas fa-file-circle-plus"></i> Importer un fichier CSV</label>
+                        <label class="btn btn-sm btn-primary mx-1" for="import-csv">
+                            <i class="fas fa-file-circle-plus"></i> Importer un fichier CSV
+                        </label>
                         <input class="d-none" type="file" name="import_csv" id="import-csv" >
                         <button class=d-none type="submit" id="import-csv-submit-btn">
                             Valider l'import
@@ -133,12 +135,6 @@
         window.refreshTable = function () {
             table.ajax.reload(null, false); // false pour garder la pagination
         };
-
-        //Fonction qui simule le clic sur le bouton submit lors de la sélection d'un CSV
-        $('#import-csv').on('change', function(e) {
-            $('#import-csv-submit-btn').click();
-            $(this).val('');
-        })
 
         //Fonction pour appeler la fonction de désactivation/activation
         $(document).on('click','.btn-toggleActive-club', function(){

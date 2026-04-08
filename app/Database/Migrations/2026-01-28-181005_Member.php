@@ -34,6 +34,10 @@ class Member extends Migration
                 'type'=>'DATE',
                 'null'=>false,
             ],
+            'gender'=>[
+                'type'=>'BOOLEAN',
+                'null'=>false,
+            ],
             'license_number'=>[
                 'type'=>'VARCHAR',
                 'constraint'=>'10',

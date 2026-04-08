@@ -20,7 +20,7 @@ class MemberModel extends Model
     protected $returnType       = Member::class;
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['first_name', 'last_name', 'slug', 'date_of_birth', 'license_number', 'id_license_code','license_status','balance','overqualified','available','details'];
+    protected $allowedFields    = ['first_name', 'last_name', 'slug', 'date_of_birth', 'gender', 'license_number', 'id_license_code','license_status','balance','overqualified','available','details'];
     // Dates
     protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
@@ -34,6 +34,7 @@ class MemberModel extends Model
         'last_name'  => 'required|max_length[255]',
         'slug'       => 'max_length[255]',
         'date_of_birth' => 'required|valid_date',
+        'gender' => 'required|in_list[0,1]',
         'license_number' => 'permit_empty|max_length[10]',
         'id_license_code' => 'permit_empty|integer',
         'license_status'=> 'integer|in_list[0,1]',
@@ -58,6 +59,10 @@ class MemberModel extends Model
         'date_of_birth' => [
             'required' => 'La date de naissance est obligatoire',
             'valid_date' => 'La date de naissance est incorrect'
+        ],
+        'gender' => [
+            'required' => 'Le genre est obligatoire',
+            'in_list' => 'Le genre doit être 0(masculin) ou 1(féminin)'
         ],
         'license_number' => [
             'max_length' => 'Le numéro de licence ne doit pas excéder 10 caractères'
@@ -101,12 +106,12 @@ class MemberModel extends Model
                 [
                     'table' => 'role_member',
                     'condition' => 'member.id = role_member.id_member',
-                    'type' => 'inner'
+                    'type' => 'left'
                 ],
                 [
                     'table' => 'role',
                     'condition' => 'role_member.id_role = role.id',
-                    'type' => 'inner'
+                    'type' => 'left'
                 ],
                 [
                     'table' => 'license_code',

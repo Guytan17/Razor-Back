@@ -13,6 +13,7 @@ use App\Models\RoleMemberModel;
 use App\Models\CoachModel;
 use App\Models\TechnicalFoulModel;
 use CodeIgniter\HTTP\ResponseInterface;
+use App\Libraries\CsvImporter;
 
 class Member extends AdminController
 {
@@ -284,5 +285,65 @@ class Member extends AdminController
 
         //Réponse JSON
         return $this->response->setJSON($result);
+    }
+
+    public function importMember(){
+        try {
+            $parser = new CsvImporter();
+            $CSVFile = $this->request->getFile('import_csv');
+
+            $members = $parser->parseCSV($CSVFile);
+
+            $cptMembers = 0;
+
+            //Récupération des codes licences et de leur id associé
+            $license_codes = array_column($this->lcm->findAll(),'code','id');
+
+            //On récupère les codes licence des membres déjà existants
+            $existingMembers = array_column($this->mm->findAll(),'license_number','id');
+
+            foreach ($members as $member) {
+                $id_license_code = array_search($member['Licence'],$license_codes);
+                $overqualified = $member['Surc.'];
+                switch(true){
+                    case $overqualified=="": $overqualified = 0;break;
+                    case str_contains($overqualified,'DS'): $overqualified = 2;break;
+                    case str_contains($overqualified,'NS'):
+                    case str_contains($overqualified,'S'): $overqualified = 1;break;
+                    default: $overqualified = 0;break;
+                }
+
+                $dataMember = [
+                    'first_name' => $member['Prénom'],
+                    'last_name' => $member['Nom'],
+                    'date_of_birth' => csvDateToSql($member['Né(e) le']),
+                    'gender' => $member['Sexe'] ==='M' ? 0 : 1,
+                    'license_number' => $member['Numéro'],
+                    'id_license_code' => $id_license_code,
+                    'license_status'=> 1,
+                    'balance' => 0,
+                    'overqualified' => $overqualified,
+                    'available' => 1
+                ];
+
+                if(!in_array($dataMember['license_number'], $existingMembers)) {
+                    $cptMembers++;
+                    if (!$this->mm->insert($dataMember)){
+                        $this->error(implode('<br>',$this->mm->errors()));
+                        return $this->redirect('/admin/member');
+                    }
+                }
+
+            }
+
+            //Message de validation
+            $this->success($cptMembers.' membres importés avec succès');
+
+            return $this->redirect('/admin/member');
+
+        } catch(\Exception $e) {
+            $this->error($e->getMessage());
+            return redirect()->back()->withInput();
+        }
     }
 }

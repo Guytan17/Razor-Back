@@ -17,3 +17,18 @@ if(!function_exists('normalizeCity')){
         return $city;
     }
 }
+
+if(!function_exists('csvDateToSql')){
+
+    function csvDateToSql($date,$format='d/m/Y'){
+        if(empty($date)){
+            return "01/01/1900";
+        }
+        $validDate = \DateTime::createFromFormat($format, $date);
+
+        if(!$validDate){
+            return false;
+        }
+        return $validDate->format('Y-m-d');
+    }
+}
