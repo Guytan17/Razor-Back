@@ -314,9 +314,8 @@ $(document).ready(function () {
     })
 
     //gestion du switch-gym principal afin qu'il y en ait qu'un d'actif
-    $('#zone-gym').on('change','.switch-gym', function(e){
-        if($(this).is(':checked'))
-            $('#zone-gym .switch-gym').not(this).prop('checked',false);
+    $('#zone-gym').on('change','.switch-gym:checked', function(e){
+            $(this).closest('#zone-gym').find('.switch-gym').not(this).prop('checked',false);
     })
 })
 
