@@ -187,7 +187,8 @@
                                                                             <label class="form-check-label" for="switch-gym<?=
                                                                             $cpt_gyms?>">Principal</label>
                                                                             <div class="form-check form-switch">
-                                                                                <input class="form-check-input" type="checkbox" role="switch" name="gym[<?=$cpt_gyms?>][main_gym]" id="switch-gym<?=
+                                                                                <input class="form-check-input switch-gym" type="checkbox" role="switch" name="gym[<?=$cpt_gyms?>][main_gym]"
+                                                                                       id="switch-gym-<?=
                                                                                 $cpt_gyms?>" <?= $gym['main_gym']==1?'checked':'' ?>>
                                                                             </div>
                                                                         </div>
@@ -291,7 +292,7 @@ $(document).ready(function () {
                             <div class="col-auto">
                                 <label class="form-check-label" for="switch-gym${cptGym}">Principal</label>
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" name="gym[${cptGym}][main_gym]" id="switch-gym">
+                                    <input class="form-check-input switch-gym" type="checkbox" role="switch" name="gym[${cptGym}][main_gym]" id="switch-gym-${cptGym}">
                                 </div>
                             </div>
                         </div>
@@ -310,6 +311,12 @@ $(document).ready(function () {
     $('.delete-gym-button').on('click', function(e){
         cptGym--;
         $(this).closest('.row-gym').remove();
+    })
+
+    //gestion du switch-gym principal afin qu'il y en ait qu'un d'actif
+    $('#zone-gym').on('change','.switch-gym', function(e){
+        if($(this).is(':checked'))
+            $('#zone-gym .switch-gym').not(this).prop('checked',false);
     })
 })
 
