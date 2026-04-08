@@ -161,7 +161,7 @@
                                                 $cpt_gyms = 0;
                                                 foreach($club['gyms'] as $gym):
                                                     $cpt_gyms++; ?>
-                                                    <div class="row mb-3">
+                                                    <div class="row mb-3 row-gym">
                                                         <div class="col">
                                                             <div class="card">
                                                                 <div class="card-body">
@@ -188,15 +188,15 @@
                                                                             $cpt_gyms?>">Principal</label>
                                                                             <div class="form-check form-switch">
                                                                                 <input class="form-check-input" type="checkbox" role="switch" name="gym[<?=$cpt_gyms?>][main_gym]" id="switch-gym<?=
-                                                                                $cpt_gyms?>">
+                                                                                $cpt_gyms?>" <?= $gym['main_gym']==1?'checked':'' ?>>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <input type="hidden" name="gym[<?= $cpt_gyms?>][id_gym]" value="<?=$gym['id']?>">
                                                     </div>
-                                                    <input type="hidden" name="gym[<?= $cpt_gyms?>][gym_id]" value="<?=$gym['id']?>">
                                                 <?php endforeach;
                                             }else {?>
                                                 <div class="row">
@@ -266,7 +266,7 @@ $(document).ready(function () {
         gym.text=(gym.text).split(',').join(' - ');
         console.log(gym);
         let row=`
-        <div class="row mb-3">
+        <div class="row mb-3 row-gym">
             <div class="col">
                 <div class="card">
                     <div class="card-body">
@@ -298,11 +298,18 @@ $(document).ready(function () {
                     </div>
                 </div>
             </div>
+            <input type="hidden" name="gym[${cptGym}][id_gym]" value="${gym.id}">
         </div>
         `;
 
         $('#zone-gym').prepend(row);
+        $('#select-gym').empty();
+    })
 
+    //Suppression d'un Gymnase
+    $('.delete-gym-button').on('click', function(e){
+        cptGym--;
+        $(this).closest('.row-gym').remove();
     })
 })
 

@@ -61,6 +61,9 @@ class Club extends AdminController
                 'color_1' => $this->request->getPost('color_1'),
                 'color_2' => $this->request->getPost('color_2'),
             ];
+
+            $gyms = $this->request->getPost('gym');
+
             //Récupération du logo
             $logo = $this->request->getFile('logo');
             $deletedLogo = $this->request->getPost('delete-logo');
@@ -73,13 +76,52 @@ class Club extends AdminController
                 return redirect()->back()->withInput()->with('error',implode('<br>',$this->cm->errors()));
             }
 
-            //Récupération de l'ID et gestion des messages de validation
-            if($newClub){
+            //Récupération de l'ID
+            if($newClub) {
                 $id = $this->cm->getInsertID();
-                $this->success('Club créé avec succès');
-            } else {
-                $this->success('Club modifié avec succès');
             }
+
+            //GESTION DES GYMNASES
+            //Création des variables
+            //Gym existants pour le club
+            $existingGyms = $this->gymClubModel->where('id_club',$id)->findAll();
+            $existingGymsIndexed = array_column($existingGyms,'main_gym','id_gym');
+
+            //Gyms du formulaire
+            $gymsIds = array_column($gyms,'id_gym');
+
+            //Création de la transaction
+            $this->gymClubModel->db->transStart();
+
+            //On supprime les gymnases ayant été retirés
+            foreach ($existingGyms as $existingGym){
+                if(!in_array($existingGym['id_gym'],$gymsIds)){
+                    $this->gymClubModel->where([
+                        'id_gym' => $existingGym['id_gym'],
+                        'id_club' => $id
+                    ])->delete();
+                }
+            }
+
+            //On boucle sur les gymnases envoyés dans le formulaire
+            foreach($gyms as $gym){
+                $dataGym = [
+                    'id_club' => $id,
+                    'id_gym' =>  intval($gym['id_gym']),
+                    'main_gym'=> isset($gym['main_gym'])?1:0,
+                ];
+                //Enregistrement du gymnase s'il n'existe pas déjà
+                if(!isset($existingGymsIndexed[$dataGym['id_gym']])){
+                    $this->gymClubModel->insert($dataGym);
+                //sinon, s'il existe, on compare le champ main_gym et le met à jour si besoin
+                } elseif($existingGymsIndexed[$dataGym['id_gym']] != $dataGym['main_gym']){
+                    $this->gymClubModel->where('id_gym',$dataGym['id_gym'])->where('id_club',$dataGym['id_club'])->update(null,$dataGym);
+                }
+            }
+
+            //Fermeture de la transaction
+            $this->gymClubModel->db->transComplete();
+
 
             // Gestion du logo
             //si logo supprimé et pas remplacé
@@ -98,6 +140,13 @@ class Club extends AdminController
                 if(is_array($uploadResultLogo) && isset($uploadResultLogo['status']) && $uploadResultLogo['status'] == 'error'){
                     $this->error("Erreur lors de l'upload du logo :".$uploadResultLogo['message']);
                 }
+            }
+
+            //Gestion messages de validation
+            if($newClub){
+                $this->success('Club créé avec succès');
+            } else {
+                $this->success('Club modifié avec succès');
             }
 
             return $this->redirect('/admin/club');
