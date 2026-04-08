@@ -36,6 +36,13 @@
                     </a>
                 </div>
                 <div class="card-body overflow-auto">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <div class="btn btn-sm btn-secondary">
+                                <i class="fas fa-magnifying-glass"></i> Rechercher parmi toutes les équipes
+                            </div>
+                        </div>
+                    </div>
                     <table class="table table-sm table-striped" id="teamsTable">
                         <thead>
                         <tr>

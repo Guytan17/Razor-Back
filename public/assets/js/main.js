@@ -80,6 +80,7 @@ function initAjaxSelect2(selector, options) {
         delay: 300,                  // Délai en ms avant de lancer la recherche (évite trop de requêtes)
         url: '',                     // URL pour la recherche AJAX (OBLIGATOIRE)
         searchFields: '',            // Champs à rechercher (optionnel, pour info)
+        separator: ' ',
         additionalFields: '',        // Champs supplémentaires à afficher
         cache: true,                 // Met en cache les résultats pour éviter les requêtes répétées
         showDescription: false,      // Affiche ou non la description dans les résultats
@@ -164,7 +165,7 @@ function initAjaxSelect2(selector, options) {
             // Construction du HTML pour un résultat
             var html = "<div class='select2-result-item'>" +
                 "<div class='select2-result-item__title'>" +
-                (item.text || 'Sans nom') +
+                (item.text ? item.text.split(',').join(config.separator) : 'Sans nom') +
                 "</div>";
 
             //Ajout du champ additionnel si configuré
@@ -213,7 +214,7 @@ function initAjaxSelect2(selector, options) {
          */
         templateSelection: function(item) {
             // On affiche seulement le nom/titre
-            return item.text || 'Sélection sans nom';
+            return item.text ? item.text.split(',').join(config.separator) : 'Sélection sans nom';
         }
     });
 

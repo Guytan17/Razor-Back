@@ -143,14 +143,6 @@ class Gym extends AdminController
             //Fermeture de la transaction
             $db->transComplete();
 
-//            if (isset ($existingClubs)) {
-//                foreach ($existingClubs as $existingClub) {
-//                    if (!in_array($existingClub, $clubs)) {
-//                        $this->gymClubModel->delete($existingClub);
-//                    }
-//                }
-//            }
-
             //Gestion des messages de validation
             if ($newGym) {
                 $this->success('Gymnase créé avec succès');
@@ -165,14 +157,6 @@ class Gym extends AdminController
             return redirect()->back()->withInput();
         }
 
-    }
-
-    //fonction à faire sur chaque itération du tableau
-    private function InsertOrDeleteClub ($existingClubs,$data) {
-        foreach ($existingClubs as $club) {
-
-        }
-        return ;
     }
 
     public function deleteGym($id) {
@@ -212,7 +196,7 @@ class Gym extends AdminController
         $limit = 25;
 
         //Utilisation de la méthode du Model (via le trait)
-        $result = $this->gymModel->searchWithClubName($search, $page, $limit);
+        $result = $this->gymModel->searchGymWithInfos($search, $page, $limit);
 
         //Réponse JSON
         return $this->response->setJSON($result);

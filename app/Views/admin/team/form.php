@@ -299,9 +299,8 @@
         //initialisation select-club
         initAjaxSelect2(`#select-club`, {url:'/admin/club/search', searchFields: 'name',  additionalFields :'code', placeholder:'Rechercher un club'});
 
-
         //initialisation select-coach
-        initAjaxSelect2(`#select-coach`, {url:'/admin/member/search', searchFields: 'first_name,last_name',  additionalFields :'license_number', placeholder:'Rechercher un membre'});
+        initAjaxSelect2(`#select-coach`, {url:'/admin/member/search', searchFields: 'first_name,last_name',displayFields:'full_name', additionalFields :'license_number', placeholder:'Rechercher un ' +'membre'});
 
         //initialisation du select-player
         initAjaxSelect2(`#select-player`, {url:'/admin/member/search', searchFields: 'first_name,last_name',  additionalFields :'license_number', placeholder:'Rechercher un membre'});
