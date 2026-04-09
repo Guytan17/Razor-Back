@@ -106,12 +106,12 @@ class MemberModel extends Model
                 [
                     'table' => 'role_member',
                     'condition' => 'member.id = role_member.id_member',
-                    'type' => 'left'
+                    'type' => 'inner'
                 ],
                 [
                     'table' => 'role',
                     'condition' => 'role_member.id_role = role.id',
-                    'type' => 'left'
+                    'type' => 'inner'
                 ],
                 [
                     'table' => 'license_code',

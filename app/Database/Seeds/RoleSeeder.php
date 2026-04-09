@@ -20,6 +20,12 @@ class RoleSeeder extends Seeder
                 'name'=>'Coach'
             ],
             [
+                'name'=>'Arbitre officiel'
+            ],
+            [
+                'name'=>'Membre du bureau'
+            ],
+            [
                 'name'=>'Trésorier'
             ],
             [

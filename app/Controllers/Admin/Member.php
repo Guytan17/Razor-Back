@@ -299,11 +299,18 @@ class Member extends AdminController
             //Récupération des codes licences et de leur id associé
             $license_codes = array_column($this->lcm->findAll(),'code','id');
 
+            //Récupération des rôles et de leur id associé
+            $rolesClub = array_column($this->rm->findAll(),'name','id');
+
             //On récupère les codes licence des membres déjà existants
             $existingMembers = array_column($this->mm->findAll(),'license_number','id');
 
+            //On boucle sur chaque membre
             foreach ($members as $member) {
+                //gestion de la variable contenant l'id de code licence
                 $id_license_code = array_search($member['Licence'],$license_codes);
+
+                //gestion de la variable contenant le type de surclassement
                 $overqualified = $member['Surc.'];
                 switch(true){
                     case $overqualified=="": $overqualified = 0;break;
@@ -311,6 +318,33 @@ class Member extends AdminController
                     case str_contains($overqualified,'NS'):
                     case str_contains($overqualified,'S'): $overqualified = 1;break;
                     default: $overqualified = 0;break;
+                }
+
+                //Gestion des roles et de leur id
+                $memberRoles = $member['Fonctions'];
+                $id_roles=[];
+                if(!empty($memberRoles)){
+                    $memberRoles = explode(',',$memberRoles);
+
+                    foreach ($memberRoles as $memberRole) {
+                        $memberRole = trim($memberRole);
+                        switch(true){
+                            case $memberRole==="Officiel":
+                                $role = "Arbitre officiel";
+                                $id_roles[] = array_search($role,$rolesClub);
+                                break;
+                            case $memberRole==="Entraîneur":
+                                $role = "Coach";
+                                $id_roles[] = array_search($role,$rolesClub);
+                                break;
+                            case $memberRole==="Membre":
+                                $role = "Membre du bureau";
+                                $id_roles[] = array_search($role,$rolesClub);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                 }
 
                 $dataMember = [
@@ -326,12 +360,36 @@ class Member extends AdminController
                     'available' => 1
                 ];
 
+                //On vérifie que le membre n'existe pas déjà via le numéro de licence
                 if(!in_array($dataMember['license_number'], $existingMembers)) {
-                    $cptMembers++;
-                    if (!$this->mm->insert($dataMember)){
+
+                    //Enregistrement du membre en BDD
+                    if ($this->mm->insert($dataMember,true)){
+                        $cptMembers++;
+                        $id_member = $this->mm->getInsertId();
+                    } else {
                         $this->error(implode('<br>',$this->mm->errors()));
                         return $this->redirect('/admin/member');
                     }
+                    //Enregistrement du ou des rôles en BDD
+                    $memberRolePlayer=[
+                        'id_member' => $id_member,
+                        'id_role' => 2,
+                    ];
+                    $this->rmm->insert($memberRolePlayer);
+                   if(!empty($id_roles)) {
+                       foreach ($id_roles as $id_role) {
+                           $dataRoleMember = [
+                               'id_role' => $id_role,
+                               'id_member' => $id_member,
+                           ];
+
+                           if(!$this->rmm->insert($dataRoleMember)){
+                               $this->error(implode('<br>',$this->rmm->errors()));
+                               return $this->redirect('/admin/member');
+                           }
+                       }
+                   }
                 }
 
             }
