@@ -329,15 +329,15 @@ class Member extends AdminController
                     foreach ($memberRoles as $memberRole) {
                         $memberRole = trim($memberRole);
                         switch(true){
-                            case $memberRole==="Officiel":
+                            case $memberRole=="Officiel":
                                 $role = "Arbitre officiel";
                                 $id_roles[] = array_search($role,$rolesClub);
                                 break;
-                            case $memberRole==="Entraîneur":
+                            case $memberRole=="Entraîneur":
                                 $role = "Coach";
                                 $id_roles[] = array_search($role,$rolesClub);
                                 break;
-                            case $memberRole==="Membre":
+                            case $memberRole=="Membre":
                                 $role = "Membre du bureau";
                                 $id_roles[] = array_search($role,$rolesClub);
                                 break;
@@ -376,20 +376,21 @@ class Member extends AdminController
                         'id_member' => $id_member,
                         'id_role' => 2,
                     ];
-                    $this->rmm->insert($memberRolePlayer);
-                   if(!empty($id_roles)) {
-                       foreach ($id_roles as $id_role) {
-                           $dataRoleMember = [
-                               'id_role' => $id_role,
-                               'id_member' => $id_member,
-                           ];
 
-                           if(!$this->rmm->insert($dataRoleMember)){
-                               $this->error(implode('<br>',$this->rmm->errors()));
-                               return $this->redirect('/admin/member');
-                           }
-                       }
-                   }
+                    $this->rmm->insert($memberRolePlayer);
+                    if(!empty($id_roles)) {
+                        foreach ($id_roles as $id_role) {
+                            $dataRoleMember = [
+                                'id_role' => intval($id_role),
+                                'id_member' => intval($id_member),
+                            ];
+
+                            if(!$this->rmm->insert($dataRoleMember)){
+                                $this->error(implode('<br>',$this->rmm->errors()));
+                                return $this->redirect('/admin/member');
+                            }
+                        }
+                    }
                 }
 
             }

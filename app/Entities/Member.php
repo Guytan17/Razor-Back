@@ -32,7 +32,7 @@ class Member extends Entity
         'last_name'  => 'string',
         'slug'       => 'string',
         'date_of_birth' => 'datetime',
-        'gender'     => 'integer',
+        'gender'     => 'boolean',
         'license_number' => 'string',
         'id_license_code' => 'integer',
         'license_status' => 'integer',

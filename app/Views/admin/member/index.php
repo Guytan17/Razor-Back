@@ -34,7 +34,7 @@
                             <th>ID</th>
                             <th>Nom</th>
                             <th>Prénom</th>
-                            <th>Rôle</th>
+                            <th>Rôles</th>
                             <th>Numéro de licence</th>
                             <th>Code licence</th>
                         </tr>
