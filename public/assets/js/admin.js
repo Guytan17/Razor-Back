@@ -37,6 +37,12 @@ function getAjaxErrorMessage(response) {
     return response.message ?? 'Erreur inconnue';
 }
 
+//Fonction qui simule le clic sur le bouton submit lors de la sélection d'un CSV
+$(document).on('change', '#import-csv', function(e) {
+    $('#import-csv-submit-btn').click();
+    $(this).val('');
+})
+
 $(document).ready(function() {
     const $toggleSidebar = $('#toggle-sidebar');
 

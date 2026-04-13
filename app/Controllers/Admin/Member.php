@@ -13,6 +13,7 @@ use App\Models\RoleMemberModel;
 use App\Models\CoachModel;
 use App\Models\TechnicalFoulModel;
 use CodeIgniter\HTTP\ResponseInterface;
+use App\Libraries\CsvImporter;
 
 class Member extends AdminController
 {
@@ -284,5 +285,124 @@ class Member extends AdminController
 
         //Réponse JSON
         return $this->response->setJSON($result);
+    }
+
+    public function importMember(){
+        try {
+            $parser = new CsvImporter();
+            $CSVFile = $this->request->getFile('import_csv');
+
+            $members = $parser->parseCSV($CSVFile);
+
+            $cptMembers = 0;
+
+            //Récupération des codes licences et de leur id associé
+            $license_codes = array_column($this->lcm->findAll(),'code','id');
+
+            //Récupération des rôles et de leur id associé
+            $rolesClub = array_column($this->rm->findAll(),'name','id');
+
+            //On récupère les codes licence des membres déjà existants
+            $existingMembers = array_column($this->mm->findAll(),'license_number','id');
+
+            //On boucle sur chaque membre
+            foreach ($members as $member) {
+                //gestion de la variable contenant l'id de code licence
+                $id_license_code = array_search($member['Licence'],$license_codes);
+
+                //gestion de la variable contenant le type de surclassement
+                $overqualified = $member['Surc.'];
+                switch(true){
+                    case $overqualified=="": $overqualified = 0;break;
+                    case str_contains($overqualified,'DS'): $overqualified = 2;break;
+                    case str_contains($overqualified,'NS'):
+                    case str_contains($overqualified,'S'): $overqualified = 1;break;
+                    default: $overqualified = 0;break;
+                }
+
+                //Gestion des roles et de leur id
+                $memberRoles = $member['Fonctions'];
+                $id_roles=[];
+                if(!empty($memberRoles)){
+                    $memberRoles = explode(',',$memberRoles);
+
+                    foreach ($memberRoles as $memberRole) {
+                        $memberRole = trim($memberRole);
+                        switch(true){
+                            case $memberRole=="Officiel":
+                                $role = "Arbitre officiel";
+                                $id_roles[] = array_search($role,$rolesClub);
+                                break;
+                            case $memberRole=="Entraîneur":
+                                $role = "Coach";
+                                $id_roles[] = array_search($role,$rolesClub);
+                                break;
+                            case $memberRole=="Membre":
+                                $role = "Membre du bureau";
+                                $id_roles[] = array_search($role,$rolesClub);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+
+                $dataMember = [
+                    'first_name' => $member['Prénom'],
+                    'last_name' => $member['Nom'],
+                    'date_of_birth' => csvDateToSql($member['Né(e) le']),
+                    'gender' => $member['Sexe'] ==='M' ? 0 : 1,
+                    'license_number' => $member['Numéro'],
+                    'id_license_code' => $id_license_code,
+                    'license_status'=> 1,
+                    'balance' => 0,
+                    'overqualified' => $overqualified,
+                    'available' => 1
+                ];
+
+                //On vérifie que le membre n'existe pas déjà via le numéro de licence
+                if(!in_array($dataMember['license_number'], $existingMembers)) {
+
+                    //Enregistrement du membre en BDD
+                    if ($this->mm->insert($dataMember,true)){
+                        $cptMembers++;
+                        $id_member = $this->mm->getInsertId();
+                    } else {
+                        $this->error(implode('<br>',$this->mm->errors()));
+                        return $this->redirect('/admin/member');
+                    }
+                    //Enregistrement du ou des rôles en BDD
+                    $memberRolePlayer=[
+                        'id_member' => $id_member,
+                        'id_role' => 2,
+                    ];
+
+                    $this->rmm->insert($memberRolePlayer);
+                    if(!empty($id_roles)) {
+                        foreach ($id_roles as $id_role) {
+                            $dataRoleMember = [
+                                'id_role' => intval($id_role),
+                                'id_member' => intval($id_member),
+                            ];
+
+                            if(!$this->rmm->insert($dataRoleMember)){
+                                $this->error(implode('<br>',$this->rmm->errors()));
+                                return $this->redirect('/admin/member');
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            //Message de validation
+            $this->success($cptMembers.' membres importés avec succès');
+
+            return $this->redirect('/admin/member');
+
+        } catch(\Exception $e) {
+            $this->error($e->getMessage());
+            return redirect()->back()->withInput();
+        }
     }
 }

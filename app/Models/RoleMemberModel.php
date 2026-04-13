@@ -8,7 +8,7 @@ class RoleMemberModel extends Model
 {
     protected $table            = 'role_member';
     protected $primaryKey       = 'id_member';
-    protected $useAutoIncrement = true;
+    protected $useAutoIncrement = false;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
@@ -22,7 +22,7 @@ class RoleMemberModel extends Model
     protected $validationMessages   = [
         'id_member' => [
             'required' => 'L\'ID du membre est obligatoire',
-            'integer' => 'L\'ID du membre doit être un entier',
+            'integer' => 'L\'ID du membre doit être un entier'
         ],
         'id_role' => [
             'required' => 'L\'ID du rôle est obligatoire',
