@@ -8,10 +8,10 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class Role extends AdminController
 {
-    protected $rm;
+    protected $roleModel;
 
     public function __construct(){
-        $this->rm = new RoleModel();
+        $this->roleModel = new RoleModel();
     }
 
     public function index()
@@ -29,10 +29,10 @@ class Role extends AdminController
             $dataRole=[
                 'name'=>$this->request->getPost('name'),
             ];
-            if ($this->rm->insert($dataRole)){
+            if ($this->roleModel->insert($dataRole)){
                 $this->success('Rôle créé avec succès');
             } else {
-                return redirect()->back()->withInput()->with('error',implode('<br>',$this->rm->errors()));
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->roleModel->errors()));
             }
             return $this->redirect('admin/role');
         } catch(\Exception $e) {
@@ -48,7 +48,7 @@ class Role extends AdminController
                 'name'=>$this->request->getPost('name'),
             ];
 
-            if($this->rm->update($id,$dataRole)){
+            if($this->roleModel->update($id,$dataRole)){
                return $this->response->setJSON([
                    'success' => true,
                    'message' => 'Rôle modifié avec succès',
@@ -56,7 +56,7 @@ class Role extends AdminController
             } else {
                 return $this->response->setJSON([
                     'success' => false,
-                    'message' => $this->rm->errors(),
+                    'message' => $this->roleModel->errors(),
                 ]);
             }
         } catch(\Exception $e) {
@@ -69,7 +69,7 @@ class Role extends AdminController
 
     public function deleteRole($id) {
         try {
-            if($this->rm->delete($id)){
+            if($this->roleModel->delete($id)){
                 return $this->response->setJSON([
                     'success' => true,
                     'message' => 'Le rôle a bien été supprimé'
@@ -77,7 +77,7 @@ class Role extends AdminController
             } else {
                 return $this->response->setJSON([
                     'success' => false,
-                    'message' => $this->rm->errors(),
+                    'message' => $this->roleModel->errors(),
                 ]);
             }
         } catch (\Exception $e) {

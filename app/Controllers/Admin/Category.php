@@ -9,10 +9,10 @@ use CodeIgniter\HTTP\ResponseInterface;
 class Category extends AdminController
 {
 
-    protected $cm;
+    protected $categoryModel;
 
     public function __construct(){
-        $this->cm = new CategoryModel();
+        $this->categoryModel = new CategoryModel();
     }
     public function index()
     {
@@ -30,10 +30,10 @@ class Category extends AdminController
                 'name'=>$this->request->getPost('name'),
                 'gender'=>$this->request->getPost('gender'),
             ];
-            if ($this->cm->insert($dataCategory)){
+            if ($this->categoryModel->insert($dataCategory)){
                 $this->success('Catégorie créée avec succès');
             } else {
-                return redirect()->back()->withInput()->with('error',implode('<br>',$this->cm->errors()));
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->categoryModel->errors()));
             }
             return $this->redirect('admin/category');
         } catch(\Exception $e) {
@@ -48,7 +48,7 @@ class Category extends AdminController
                 'name'=>$this->request->getPost('name'),
                 'gender'=>$this->request->getPost('gender'),
             ];
-            if ($this->cm->update($id,$dataCategory)){
+            if ($this->categoryModel->update($id,$dataCategory)){
                 return $this->response->setJSON([
                     'success' => true,
                     'message' => 'Catégorie modifiée avec succès'
@@ -56,7 +56,7 @@ class Category extends AdminController
             } else {
                 return $this->response->setJSON([
                     'success' => false,
-                    'message' => $this->cm->errors(),
+                    'message' => $this->categoryModel->errors(),
                 ]);
             }
         } catch(\Exception $e) {
@@ -69,7 +69,7 @@ class Category extends AdminController
 
     public function deleteCategory ($id) {
         try {
-            if($this->cm->delete($id)){
+            if($this->categoryModel->delete($id)){
                 return $this->response->setJSON([
                     'success' => true,
                     'message' => 'La catégorie a bien été supprimée'
@@ -77,7 +77,7 @@ class Category extends AdminController
             } else {
                 return $this->response->setJSON([
                     'success' => false,
-                    'message' => $this->cm->errors(),
+                    'message' => $this->categoryModel->errors(),
                 ]);
             }
         } catch(\Exception $e) {
@@ -102,7 +102,7 @@ class Category extends AdminController
         $limit = 25;
 
         //Utilisation de la méthode du Model (via le trait)
-        $result = $this->cm->quickSearchForSelect2($search, $page, $limit, 'id', 'ASC');
+        $result = $this->categoryModel->quickSearchForSelect2($search, $page, $limit, 'id', 'ASC');
 
         //Réponse JSON
         return $this->response->setJSON($result);

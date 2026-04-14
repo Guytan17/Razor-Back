@@ -9,22 +9,22 @@ use App\Models\SeasonModel;
 
 class Division extends AdminController
 {
-    protected $dm;
-    protected $sm;
-    protected $cm;
+    protected $divisionModel;
+    protected $seasonModel;
+    protected $categoryModel;
     protected $divisionTeamModel;
 
     public function __construct(){
-        $this->dm = new DivisionModel();
-        $this->sm = new SeasonModel();
-        $this->cm = new CategoryModel();
+        $this->divisionModel = new DivisionModel();
+        $this->seasonModel = new SeasonModel();
+        $this->categoryModel = new CategoryModel();
         $this->divisionTeamModel = new DivisionTeamModel();
     }
 
     public function index()
     {
-        $seasons = $this->sm->getAllSeasons();
-        $categories = $this->cm->getAllCategories();
+        $seasons = $this->seasonModel->getAllSeasons();
+        $categories = $this->categoryModel->getAllCategories();
         $data =[
             'title' => 'Championnats',
             'seasons' => $seasons,
@@ -42,10 +42,10 @@ class Division extends AdminController
                 'id_season' => $this->request->getPost('id_season'),
                 'id_category' => $this->request->getPost('id_category'),
             ];
-            if ($this->dm->insert($dataDivision)) {
+            if ($this->divisionModel->insert($dataDivision)) {
                 $this->success('Championnat créé avec succès');
             } else {
-                return redirect()->back()->withInput()->with('error',implode('<br>',$this->dm->errors()));
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->divisionModel->errors()));
             }
             return $this->redirect('admin/division');
         } catch (\Exception $e) {
@@ -78,7 +78,7 @@ class Division extends AdminController
                 }
             }
 
-            if($this->dm->update($id,$dataDivision)){
+            if($this->divisionModel->update($id,$dataDivision)){
                 return $this->response->setJSON([
                     'success' => true,
                     'message' => 'Championnat modifié avec succès',
@@ -86,7 +86,7 @@ class Division extends AdminController
             } else {
                 return $this->response->setJSON([
                     'success' => false,
-                    'message' => $this->dm->errors(),
+                    'message' => $this->divisionModel->errors(),
                 ]);
             }
         } catch(\Exception $e) {
@@ -99,7 +99,7 @@ class Division extends AdminController
 
     public function switchActiveDivision($idDivision){
 
-        $division = $this->dm->withDeleted()->find($idDivision);
+        $division = $this->divisionModel->withDeleted()->find($idDivision);
         //Test pour savoir si le championnat existe
 
         if(!$division) {
@@ -110,14 +110,14 @@ class Division extends AdminController
         }
         // Si le championnat est actif, on le désactive
         if(empty($division['deleted_at'])) {
-            $this->dm->delete($idDivision);
+            $this->divisionModel->delete($idDivision);
             return $this->response->setJSON([
                 'success' => true,
                 'message' => 'Championnat désactivé',
             ]);
         } else {
             //S'il est inactif, on le réactive
-            if($this->dm->reactiveDivision($idDivision)){
+            if($this->divisionModel->reactiveDivision($idDivision)){
                 return $this->response->setJSON([
                     'success' => true,
                     'message' => 'Championnat activé',
@@ -144,7 +144,7 @@ class Division extends AdminController
         $limit = 25;
 
         //Utilisation de la méthode du Model (via le trait)
-        $result = $this->dm->searchWithSeasonNameAndCategoryName($search, $page, $limit);
+        $result = $this->divisionModel->searchWithSeasonNameAndCategoryName($search, $page, $limit);
 
         //Réponse JSON
         return $this->response->setJSON($result);

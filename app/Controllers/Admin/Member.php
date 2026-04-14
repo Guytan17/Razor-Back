@@ -18,24 +18,24 @@ use App\Libraries\CsvImporter;
 class Member extends AdminController
 {
 
-    protected $mm;
-    protected $rm;
-    protected $lcm;
-    protected $rmm;
-    protected $coachm;
-    protected $playerm;
-    protected $contactm;
+    protected $memberModel;
+    protected $roleModel;
+    protected $licenseCodeModel;
+    protected $roleMemberModel;
+    protected $coachModel;
+    protected $playerModel;
+    protected $contactModel;
     protected $gameModel;
     protected $technicalFoulModel;
 
     public function __construct(){
-        $this->mm = new MemberModel();
-        $this->rm = new RoleModel();
-        $this->lcm = new LicenseCodeModel();
-        $this->rmm = new RoleMemberModel();
-        $this->coachm = new CoachModel();
-        $this->playerm = new PlayerModel();
-        $this->contactm = new ContactModel();
+        $this->memberModel = new MemberModel();
+        $this->roleModel = new RoleModel();
+        $this->licenseCodeModel = new LicenseCodeModel();
+        $this->roleMemberModel = new RoleMemberModel();
+        $this->coachModel = new CoachModel();
+        $this->playerModel = new PlayerModel();
+        $this->contactModel = new ContactModel();
         $this->gameModel = new GameModel();
         $this->technicalFoulModel = new TechnicalFoulModel();
     }
@@ -50,17 +50,17 @@ class Member extends AdminController
 
     public function form ($id=null) {
         $this->addBreadcrumb('Liste des membres','/admin/member');
-        $roles = $this->rm->findAll();
-        $license_codes = $this->lcm->findAll();
+        $roles = $this->roleModel->findAll();
+        $license_codes = $this->licenseCodeModel->findAll();
         if($id != null) {
             $title = 'Modifier un membre';
             $this->addBreadcrumb('Modifier un membre');
             //Récupération des données pour l'édition
-            $member = $this->mm->withDeleted()->find($id);
-            $member->roles = $this->rmm->getRoleMember($id);
-            $member->coach_teams = $this->coachm->getCoachesByIdMember($id);
-            $member->player_teams = $this->playerm->getPlayersByIdMember($id);
-            $member->contacts = $this->contactm->getContactsById($member->id,'member');
+            $member = $this->memberModel->withDeleted()->find($id);
+            $member->roles = $this->roleMemberModel->getRoleMember($id);
+            $member->coach_teams = $this->coachModel->getCoachesByIdMember($id);
+            $member->player_teams = $this->playerModel->getPlayersByIdMember($id);
+            $member->contacts = $this->contactModel->getContactsById($member->id,'member');
             $member->mvpGames = $this->gameModel->getGamesByMvpMember($id);
             $member->technicalFouls = $this->technicalFoulModel->where('id_member',$id)->getTechnicalFoulsWithInfos();
         } else {
@@ -121,7 +121,7 @@ class Member extends AdminController
             $newMember = empty($dataMember['id']);
 
             //Création de l'objet member
-            $member = $newMember ? new \App\Entities\Member() : $this->mm->withDeleted()->find($id);
+            $member = $newMember ? new \App\Entities\Member() : $this->memberModel->withDeleted()->find($id);
 
             //Si je n'ai pas de membre et que je ne suis pas en mode création
             if(!$member && !$newMember) {
@@ -133,35 +133,35 @@ class Member extends AdminController
             $member->fill($dataMember);
 
             //Enregistrement en BDD
-            if(!$this->mm->save($member)){
-                return redirect()->back()->withInput()->with('error',implode('<br>',$this->mm->errors()));
+            if(!$this->memberModel->save($member)){
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->memberModel->errors()));
             }
 
             //On récupère l'ID si c'est une création pour les tables d'asso
             if($newMember) {
-                $member->id = $this->mm->getInsertID();
+                $member->id = $this->memberModel->getInsertID();
             }
             //Suppression des rôles existants en cas de modif
-//            $existingRole= $this->rmm->getRoleMember($dataRole['id_member']);
+//            $existingRole= $this->roleMemberModel->getRoleMember($dataRole['id_member']);
 //            if($existingRole) {
 //
 //            }
             //Gestion des rôles
             if(isset($roles)) {
-                $this->rmm->where('id_member', $id)->delete();
+                $this->roleMemberModel->where('id_member', $id)->delete();
                 foreach($roles as $role) {
                     $dataRole = [
                         'id_member' => intval($member->id),
                         'id_role' => intval($role)
                     ];
-                    $this->rmm->insert($dataRole);
+                    $this->roleMemberModel->insert($dataRole);
                 }
             }
 
             //Gestion suppression des contacts
             if(isset($removedContacts)) {
                 foreach($removedContacts as $removedContact) {
-                    $this->contactm->where('id',$removedContact)->delete();
+                    $this->contactModel->where('id',$removedContact)->delete();
                 }
             }
 
@@ -176,44 +176,44 @@ class Member extends AdminController
                         'mail' => $contact['mail'],
                         'details' => $contact['details']
                     ];
-                    if(!$this->contactm->save($dataContact)){
-                        return redirect()->back()->withInput()->with('error',implode('<br>',$this->contactm->errors()));
+                    if(!$this->contactModel->save($dataContact)){
+                        return redirect()->back()->withInput()->with('error',implode('<br>',$this->contactModel->errors()));
                     }
                 }
             }
 
             //Gestion des coachs
             //Récupération des coachs actuels
-            $currentCoachs = array_column($this->coachm->getCoachesByIdMember($id),'id_team');
+            $currentCoachs = array_column($this->coachModel->getCoachesByIdMember($id),'id_team');
 
             if(empty($coachs) || $currentCoachs!=$coachs) {
-                $this->coachm->where('id_member', $member->id)->delete();
+                $this->coachModel->where('id_member', $member->id)->delete();
                 foreach ($coachs as $coach) {
                     $dataCoach = [
                         'id_member' => $member->id,
                         'id_team' => intval($coach),
                     ];
 
-                    if(!$this->coachm->insert($dataCoach)){
-                        return redirect()->back()->withInput()->with('error',implode('<br>',$this->coachm->errors()));
+                    if(!$this->coachModel->insert($dataCoach)){
+                        return redirect()->back()->withInput()->with('error',implode('<br>',$this->coachModel->errors()));
                     }
                 }
             }
 
             //Gestion des joueurs
             //Récupération des joueurs actuels
-            $currentPlayers = array_column($this->playerm->getPlayersByIdMember($id),'id_team');
+            $currentPlayers = array_column($this->playerModel->getPlayersByIdMember($id),'id_team');
 
             if(empty($players) || $currentPlayers!=$players) {
-                $this->playerm->where('id_member', $member->id)->delete();
+                $this->playerModel->where('id_member', $member->id)->delete();
                 foreach ($players as $player) {
                     $dataPlayer = [
                         'id_member' => $member->id,
                         'id_team' => intval($player),
                     ];
 
-                    if(!$this->playerm->insert($dataPlayer)){
-                        return redirect()->back()->withInput()->with('error',implode('<br>',$this->playerm->errors()));
+                    if(!$this->playerModel->insert($dataPlayer)){
+                        return redirect()->back()->withInput()->with('error',implode('<br>',$this->playerModel->errors()));
                     }
                 }
             }
@@ -234,7 +234,7 @@ class Member extends AdminController
 
     public function switchActiveMember($idMember){
 
-        $member = $this->mm->withDeleted()->find($idMember);
+        $member = $this->memberModel->withDeleted()->find($idMember);
 
         //Test pour savoir si le club existe
         if(!$member) {
@@ -246,14 +246,14 @@ class Member extends AdminController
 
         // Si le membre est actif, on le désactive
         if(empty($member->deleted_at)) {
-            $this->mm->delete($idMember);
+            $this->memberModel->delete($idMember);
             return $this->response->setJSON([
                 'success' => true,
                 'message' => 'Membre désactivé',
             ]);
         } else {
             //S'il est inactif, on le réactive
-            if($this->mm->reactiveMember($idMember)){
+            if($this->memberModel->reactiveMember($idMember)){
                 return $this->response->setJSON([
                     'success' => true,
                     'message' => 'Membre activé',
@@ -281,7 +281,7 @@ class Member extends AdminController
         $limit = 25;
 
         //Utilisation de la méthode du Model (via le trait)
-        $result = $this->mm->quickSearchForSelect2($search, $page, $limit, 'last_name', 'ASC');
+        $result = $this->memberModel->quickSearchForSelect2($search, $page, $limit, 'last_name', 'ASC');
 
         //Réponse JSON
         return $this->response->setJSON($result);
@@ -297,13 +297,13 @@ class Member extends AdminController
             $cptMembers = 0;
 
             //Récupération des codes licences et de leur id associé
-            $license_codes = array_column($this->lcm->findAll(),'code','id');
+            $license_codes = array_column($this->licenseCodeModel->findAll(),'code','id');
 
             //Récupération des rôles et de leur id associé
-            $rolesClub = array_column($this->rm->findAll(),'name','id');
+            $rolesClub = array_column($this->roleModel->findAll(),'name','id');
 
             //On récupère les codes licence des membres déjà existants
-            $existingMembers = array_column($this->mm->findAll(),'license_number','id');
+            $existingMembers = array_column($this->memberModel->findAll(),'license_number','id');
 
             //On boucle sur chaque membre
             foreach ($members as $member) {
@@ -364,11 +364,11 @@ class Member extends AdminController
                 if(!in_array($dataMember['license_number'], $existingMembers)) {
 
                     //Enregistrement du membre en BDD
-                    if ($this->mm->insert($dataMember,true)){
+                    if ($this->memberModel->insert($dataMember,true)){
                         $cptMembers++;
-                        $id_member = $this->mm->getInsertId();
+                        $id_member = $this->memberModel->getInsertId();
                     } else {
-                        $this->error(implode('<br>',$this->mm->errors()));
+                        $this->error(implode('<br>',$this->memberModel->errors()));
                         return $this->redirect('/admin/member');
                     }
                     //Enregistrement du ou des rôles en BDD
@@ -377,7 +377,7 @@ class Member extends AdminController
                         'id_role' => 2,
                     ];
 
-                    $this->rmm->insert($memberRolePlayer);
+                    $this->roleMemberModel->insert($memberRolePlayer);
                     if(!empty($id_roles)) {
                         foreach ($id_roles as $id_role) {
                             $dataRoleMember = [
@@ -385,8 +385,8 @@ class Member extends AdminController
                                 'id_member' => intval($id_member),
                             ];
 
-                            if(!$this->rmm->insert($dataRoleMember)){
-                                $this->error(implode('<br>',$this->rmm->errors()));
+                            if(!$this->roleMemberModel->insert($dataRoleMember)){
+                                $this->error(implode('<br>',$this->roleMemberModel->errors()));
                                 return $this->redirect('/admin/member');
                             }
                         }

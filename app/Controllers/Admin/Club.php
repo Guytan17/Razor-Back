@@ -11,13 +11,13 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class Club extends AdminController
 {
-    protected $cm;
+    protected $clubModel;
     protected $mediaModel;
     protected $teamModel;
     protected $gymClubModel;
 
     public function __construct(){
-        $this->cm = new ClubModel();
+        $this->clubModel = new ClubModel();
         $this->mediaModel = new MediaModel();
         $this->teamModel = new TeamModel();
         $this->gymClubModel = new GymClubModel();
@@ -37,7 +37,7 @@ class Club extends AdminController
         if($id != null) {
             $title = 'Modifier un club';
             $this->addBreadcrumb('Modifier un club');
-            $club = $this->cm->getFullClub($id);
+            $club = $this->clubModel->getFullClub($id);
             $club['teams'] = $this->teamModel->getTeamsByClub($id);
             $club['gyms'] = $this->gymClubModel->getGymsByIdClub($id);
         } else {
@@ -72,13 +72,13 @@ class Club extends AdminController
             $newClub = empty($dataClub['id']);
 
             //Enregistrement en BDD
-            if(!$this->cm->save($dataClub)){
-                return redirect()->back()->withInput()->with('error',implode('<br>',$this->cm->errors()));
+            if(!$this->clubModel->save($dataClub)){
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->clubModel->errors()));
             }
 
             //Récupération de l'ID
             if($newClub) {
-                $id = $this->cm->getInsertID();
+                $id = $this->clubModel->getInsertID();
             }
 
             //GESTION DES GYMNASES
@@ -159,7 +159,7 @@ class Club extends AdminController
 
     public function switchActiveClub($idClub){
 
-        $club = $this->cm->withDeleted()->find($idClub);
+        $club = $this->clubModel->withDeleted()->find($idClub);
 
         //Test pour savoir si le club existe
         if(!$club) {
@@ -171,14 +171,14 @@ class Club extends AdminController
 
         // Si le club est actif, on le désactive
         if(empty($club['deleted_at'])) {
-            $this->cm->delete($idClub);
+            $this->clubModel->delete($idClub);
             return $this->response->setJSON([
                 'success' => true,
                 'message' => 'Club désactivé',
             ]);
         } else {
             //S'il est inactif, on le réactive
-            if($this->cm->reactiveClub($idClub)){
+            if($this->clubModel->reactiveClub($idClub)){
                 return $this->response->setJSON([
                     'success' => true,
                     'message' => 'Club activé',
@@ -205,7 +205,7 @@ class Club extends AdminController
         $limit = 25;
 
         //Utilisation de la méthode du Model (via le trait)
-        $result = $this->cm->quickSearchForSelect2($search, $page, $limit, 'name', 'ASC');
+        $result = $this->clubModel->quickSearchForSelect2($search, $page, $limit, 'name', 'ASC');
 
         //Réponse JSON
         return $this->response->setJSON($result);
@@ -253,7 +253,7 @@ class Club extends AdminController
                 fclose($handle);
 
                 //on récupère les codes fbi existants des clubs associés aux ID
-                $existingClubs = array_column($this->cm->findAll(),'code','id');
+                $existingClubs = array_column($this->clubModel->findAll(),'code','id');
 
                 //création pour chaque ligne des données à enregistrer en BDD
                 foreach ($clubs as $club) {
@@ -266,10 +266,10 @@ class Club extends AdminController
 
                     //enregistrement en BDD si le code FBI n'existe pas déjà
                     if (!in_array($dataClub['code'], $existingClubs)) {
-                        if($this->cm->insert($dataClub)){
+                        if($this->clubModel->insert($dataClub)){
                             $cptClubs++;
                         } else {
-                            $this->error(implode('<br>',$this->cm->errors()));
+                            $this->error(implode('<br>',$this->clubModel->errors()));
                             return $this->redirect('/admin/club');
                         }
                    }
