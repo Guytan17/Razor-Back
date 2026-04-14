@@ -78,13 +78,16 @@ class GameModel extends Model
     public function getDataTableConfig() {
         return [
             'searchable_fields' => [
-                'id',
-                'fbi_number',
-                'category',
-                'division',
-                'opponent',
-                'schedule',
-                'place',
+                'game.id',
+                'game.fbi_number',
+                'category.name',
+                'division.name',
+                'team_home.name',
+                'team_away.name',
+                'club_home.name',
+                'club_away.name',
+                'game.schedule',
+                'city.label',
                 'game.deleted_at'
             ],
             'joins' => [
@@ -139,6 +142,11 @@ class GameModel extends Model
             game.fbi_number,
             category.name as category,
             division.name as division,
+            CASE 
+                WHEN team_home.id_club= 1 THEN team_home.name
+                WHEN team_away.id_club= 1 THEN team_away.name
+                ELSE ''
+                END as team,
             CONCAT (
                 CASE
                     WHEN club_home.id=1 THEN club_away.name
