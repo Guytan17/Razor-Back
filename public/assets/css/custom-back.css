@@ -64,3 +64,7 @@ table.dataTable td {
 table.dataTable tbody td.dt-type-numeric,table.dataTable thead th.dt-type-numeric, table.dataTable thead th.dt-type-date, table.dataTable tbody td.dt-type-date {
     text-align: left;
 }
+
+table.dataTable thead tr th.dt-type-date div.dt-column-header,table.dataTable thead tr th.dt-type-numeric div.dt-column-header {
+    flex-direction : row;
+}
