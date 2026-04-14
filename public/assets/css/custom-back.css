@@ -54,7 +54,13 @@
     display: none;
 }
 
-/*permet de casser les mots trop longs dans les datatable pour éviter un bug d'affichage*/
+/*Paramétrage par défaut des datatable*/
 table.dataTable td {
+/*permet de casser les mots trop longs dans les datatable pour éviter un bug d'affichage*/
     word-break: break-word;
+}
+
+/*Paramétrage de l'alignement à gauche pour les colonnes numériques et de date*/
+table.dataTable tbody td.dt-type-numeric,table.dataTable thead th.dt-type-numeric, table.dataTable thead th.dt-type-date, table.dataTable tbody td.dt-type-date {
+    text-align: left;
 }
