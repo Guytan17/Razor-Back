@@ -8,10 +8,10 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class Season extends AdminController
 {
-    protected $sm;
+    protected $seasonModel;
 
     public function __construct(){
-        $this->sm = new SeasonModel();
+        $this->seasonModel = new SeasonModel();
     }
 
     public function index()
@@ -30,10 +30,10 @@ class Season extends AdminController
                 'start_date' => $this->request->getPost('start_date'),
                 'end_date' => $this->request->getPost('end_date'),
             ];
-            if($this->sm->insert($dataSeason)){
+            if($this->seasonModel->insert($dataSeason)){
                 $this->success('Saison créée avec succès');
             } else {
-                return redirect()->back()->withInput()->with('error',implode('<br>',$this->sm->errors()));
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->seasonModel->errors()));
 
             }
             return $this->redirect('admin/season');
@@ -53,16 +53,16 @@ class Season extends AdminController
             //si les dates de début/fin sont supprimées, on les force en null
             $dataSeason['start_date'] = empty($dataSeason['start_date']) ? null : $dataSeason['start_date'];
             $dataSeason['end_date'] = empty($dataSeason['end_date']) ? null : $dataSeason['end_date'];
-            if($this->sm->update($id,$dataSeason)){
+            if($this->seasonModel->update($id,$dataSeason)){
                 return $this->response->setJSON([
                     'success' => true,
                     'message' => 'Saison modifiée avec succès'
                 ]);
             } else {
-                log_message('debug', print_r($this->sm->errors(), true));
+                log_message('debug', print_r($this->seasonModel->errors(), true));
                 return $this->response->setJSON([
                     'success' => false,
-                    'message' => $this->sm->errors()
+                    'message' => $this->seasonModel->errors()
                 ]);
             }
         } catch (\Exception $e){
@@ -75,7 +75,7 @@ class Season extends AdminController
 
     public function deleteSeason($id) {
         try {
-            if($this->sm->delete($id)){
+            if($this->seasonModel->delete($id)){
                 return $this->response->setJSON([
                     'success' => true,
                     'message' => 'La saison a bien été supprimée'
@@ -83,7 +83,7 @@ class Season extends AdminController
             } else {
                 return $this->response->setJSON([
                     'success' => false,
-                    'message' => $this->sm->errors(),
+                    'message' => $this->seasonModel->errors(),
                 ]);
             }
         } catch (\Exception $e) {

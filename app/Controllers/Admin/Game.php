@@ -95,7 +95,6 @@ class Game extends AdminController
 
             //Récupération des services
             $services = $this->request->getPost('services');
-            $deletedServices = $this->request->getPost('deletedServices');
 
             //Récupération des fautes techniques
             $technicalFouls = $this->request->getPost('technical_fouls');
@@ -151,39 +150,27 @@ class Game extends AdminController
             $serviceKeys = [];
             if($services){
                 foreach($services as $service){
-                    $serviceKeys[] = $service['id_service'].'-'.$service['id_member'];
+                    $serviceKeys[] = $service['id_service'].'-'.$service['id_member'].'-'.$service['details'];
                 }
             }
 
             $existingServiceKeys = [];
-            if($existingServices){
-                foreach($existingServices as $existingService){
-                    $key = $existingService['id_service'].'-'.$existingService['id_member'];
-                    if(!in_array($key, $serviceKeys)){
-                        if(!$this->serviceGameModel->where('id_service', $existingService['id_service'])->where('id_game',$id)->where('id_member',$existingService['id_member'])->delete()){
-                            $this->error(implode('<br>',$this->serviceGameModel->errors()));
+            if($existingServices) {
+                foreach ($existingServices as $existingService) {
+                    $key = $existingService['id_service'] . '-' . $existingService['id_member'] . '-' . $existingService['details'];
+                    if (!in_array($key, $serviceKeys)) {
+                        if (!$this->serviceGameModel->where('id_service', $existingService['id_service'])->where('id_game', $id)->where('id_member', $existingService['id_member'])->delete()) {
+                            $this->error(implode('<br>', $this->serviceGameModel->errors()));
                         }
                     }
                     $existingServiceKeys[] = $key;
                 }
             }
 
-            //Suppression des services supprimés
-            if($deletedServices && !empty($deletedServices)){
-                foreach($deletedServices as $deletedService){
-                    $deletedKey = $deletedService['id_service'].'-'.$deletedService['id_member'];
-                    if(in_array($deletedKey, $existingServiceKeys)){
-                        if(!$this->serviceGameModel->where('id_service', $deletedService['id_service'])->where('id_game',$id)->where('id_member',$deletedService['id_member'])->delete()){
-                            $this->error(implode('<br>',$this->serviceGameModel->errors()));
-                        }
-                    }
-                }
-            }
-
             //Enregistrement des services en BDD
             if(!empty($services)){
                 foreach($services as $service){
-                    $key=$service['id_service'].'-'.$service['id_member'];
+                    $key=$service['id_service'].'-'.$service['id_member'].'-'.$service['details'];
 
                     if(!in_array($key, $existingServiceKeys)){
                         $dataService = [

@@ -16,7 +16,7 @@ class ArticleTopic extends Migration
             ],
             'topic_type' =>  [
                 'type' => 'VARCHAR',
-                'constraint' => 255,
+                'constraint' => 50,
                 'null' => false,
             ],
             'topic_id' =>[

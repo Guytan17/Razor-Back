@@ -16,24 +16,24 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class Team extends AdminController
 {
-    protected $tm;
-    protected $sm;
-    protected $cm;
-    protected $catm;
-    protected $coachm;
-    protected $playerm;
-    protected $divisionm;
+    protected $teamModel;
+    protected $seasonModel;
+    protected $clubModel;
+    protected $categoryModel;
+    protected $coachModel;
+    protected $playerModel;
+    protected $divisionModel;
     protected $divisionTeamModel;
     protected $gameModel;
 
     public function __construct(){
-        $this->tm = new TeamModel();
-        $this->cm = new ClubModel();
-        $this->catm = new CategoryModel();
-        $this->sm = new SeasonModel();
-        $this->coachm = new CoachModel();
-        $this->playerm = new PlayerModel();
-        $this->divisionm = new DivisionModel();
+        $this->teamModel = new TeamModel();
+        $this->clubModel = new ClubModel();
+        $this->categoryModel = new CategoryModel();
+        $this->seasonModel = new SeasonModel();
+        $this->coachModel = new CoachModel();
+        $this->playerModel = new PlayerModel();
+        $this->divisionModel = new DivisionModel();
         $this->divisionTeamModel = new DivisionTeamModel();
         $this->gameModel = new GameModel();
     }
@@ -47,17 +47,17 @@ class Team extends AdminController
 
     public function form($id=null) {
         $this->addBreadcrumb('Liste des équipes','admin/team');
-        $seasons = $this->sm->findAll();
-        $clubs = $this->cm->findAll();
-        $categories = $this->catm->findAll();
+        $seasons = $this->seasonModel->findAll();
+        $clubs = $this->clubModel->findAll();
+        $categories = $this->categoryModel->findAll();
 
         if($id != null) {
             $title = 'Modifier une équipe';
             $this->addBreadcrumb($title);
-            $team = $this->tm->withDeleted()->find($id);
-            $team->coachs = $this->coachm->getCoachesByIdTeam($id);
-            $team->players = $this->playerm->getPlayersByIdTeam($id);
-            $team->divisions = $this->divisionm->getDivisionsByTeam($id);
+            $team = $this->teamModel->withDeleted()->find($id);
+            $team->coachs = $this->coachModel->getCoachesByIdTeam($id);
+            $team->players = $this->playerModel->getPlayersByIdTeam($id);
+            $team->divisions = $this->divisionModel->getDivisionsByTeam($id);
             $team->games = $this->gameModel->getGamesByTeam($id);
             foreach ($team->games as $game) {
                 if($game->home_team == $id) {
@@ -110,7 +110,7 @@ class Team extends AdminController
             $newTeam = empty($dataTeam['id']);
 
             //Création de l'objet Team
-            $team = $newTeam ? new \App\Entities\Team() : $this->tm->withDeleted()->find($id);
+            $team = $newTeam ? new \App\Entities\Team() : $this->teamModel->withDeleted()->find($id);
 
             //Si je n'ai pas d'équipe et que je suis en mode création
             if(!$team && $newTeam) {
@@ -123,46 +123,46 @@ class Team extends AdminController
 
             //Enregistrement en BDD
             if($newTeam || $team->hasChanged()) {
-                if(!$this->tm->save($team)){
-                    return redirect()->back()->withInput()->with('error',implode('<br>',$this->tm->errors()));
+                if(!$this->teamModel->save($team)){
+                    return redirect()->back()->withInput()->with('error',implode('<br>',$this->teamModel->errors()));
                 }
             }
 
             //Récupération de l'ID
             if($newTeam) {
-                $team->id = $this->tm->getInsertID();
+                $team->id = $this->teamModel->getInsertID();
             }
 
             //Gestion des coachs
             //Récupération des coachs actuels
-            $currentCoachs = array_column($this->coachm->getCoachesByIdTeam($id),'id_member');
+            $currentCoachs = array_column($this->coachModel->getCoachesByIdTeam($id),'id_member');
 
             //Suppression des coachs actuels et enregistrement des nouveaux
             if(empty($coachs) || $currentCoachs!=$coachs) {
-                $this->coachm->where('id_team', $team->id)->delete();
+                $this->coachModel->where('id_team', $team->id)->delete();
                 foreach ($coachs as $coach) {
                     $dataCoach = [
                         'id_member' => intval($coach),
                         'id_team' => $team->id,
                     ];
 
-                    $this->coachm->insert($dataCoach);
+                    $this->coachModel->insert($dataCoach);
                 }
             }
 
             //Gestion des joueurs
             //Récupération des joueurs actuels
-            $currentPlayers = array_column($this->playerm->getPlayersByIdTeam($id),'id_member');
+            $currentPlayers = array_column($this->playerModel->getPlayersByIdTeam($id),'id_member');
 
             //Suppression des joueurs actuels et enregistrement des nouveaux
             if(empty($players) || $currentPlayers!=$players) {
-                $this->playerm->where('id_team', $team->id)->delete();
+                $this->playerModel->where('id_team', $team->id)->delete();
                 foreach ($players as $player) {
                     $dataPlayer = [
                         'id_member'=>intval($player),
                         'id_team' => $team->id,
                     ];
-                    $this->playerm->insert($dataPlayer);
+                    $this->playerModel->insert($dataPlayer);
                 }
             }
 
@@ -199,7 +199,7 @@ class Team extends AdminController
 
     public function switchActiveTeam($idTeam){
 
-        $team = $this->tm->withDeleted()->find($idTeam);
+        $team = $this->teamModel->withDeleted()->find($idTeam);
 
         //Test pour savoir si le club existe
         if(!$team) {
@@ -211,14 +211,14 @@ class Team extends AdminController
 
         // Si le membre est actif, on le désactive
         if(empty($team->deleted_at)) {
-            $this->tm->delete($idTeam);
+            $this->teamModel->delete($idTeam);
             return $this->response->setJSON([
                 'success' => true,
                 'message' => 'Équipe désactivée',
             ]);
         } else {
             //S'il est inactif, on le réactive
-            if($this->tm->reactiveTeam($idTeam)){
+            if($this->teamModel->reactiveTeam($idTeam)){
                 return $this->response->setJSON([
                     'success' => true,
                     'message' => 'Équipe activée',
@@ -254,7 +254,7 @@ class Team extends AdminController
         }
 
         //Utilisation de la méthode du Model (via le trait)
-        $result = $this->tm->searchTeamWithInfos(
+        $result = $this->teamModel->searchTeamWithInfos(
             search: $search,
             page: $page,
             limit: $limit,

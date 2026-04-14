@@ -8,10 +8,10 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class City extends AdminController
 {
-    protected $cm;
+    protected $cityModel;
 
     public function __construct(){
-        $this->cm = new CityModel();
+        $this->cityModel = new CityModel();
     }
     public function searchCity(){
         $request = $this->request;
@@ -27,7 +27,7 @@ class City extends AdminController
         $limit = 25;
 
         //Utilisation de la méthode du Model (via le trait)
-        $result = $this->cm->quickSearchForSelect2($search, $page, $limit, 'zip_code', 'ASC');
+        $result = $this->cityModel->quickSearchForSelect2($search, $page, $limit, 'zip_code', 'ASC');
 
         //Réponse JSON
         return $this->response->setJSON($result);

@@ -8,10 +8,10 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class Service extends AdminController
 {
-    protected $sm;
+    protected $serviceModel;
 
     public function __construct(){
-        $this->sm = new ServiceModel();
+        $this->serviceModel = new ServiceModel();
     }
     public function index()
     {
@@ -30,10 +30,10 @@ class Service extends AdminController
             $dataService=[
                 'label'=>$this->request->getPost('label'),
             ];
-            if ($this->sm->insert($dataService)){
+            if ($this->serviceModel->insert($dataService)){
                 $this->success('Service créé avec succès');
             } else {
-                return redirect()->back()->withInput()->with('error',implode('<br>',$this->sm->errors()));
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->serviceModel->errors()));
             }
             return $this->redirect('admin/service');
         } catch(\Exception $e) {
@@ -49,7 +49,7 @@ class Service extends AdminController
                 'label'=>$this->request->getPost('label'),
             ];
 
-            if($this->sm->update($id,$dataService)){
+            if($this->serviceModel->update($id,$dataService)){
                 return $this->response->setJSON([
                     'success' => true,
                     'message' => 'Service modifié avec succès',
@@ -57,7 +57,7 @@ class Service extends AdminController
             } else {
                 return $this->response->setJSON([
                     'success' => false,
-                    'message' => $this->sm->errors(),
+                    'message' => $this->serviceModel->errors(),
                 ]);
             }
         } catch(\Exception $e) {
@@ -70,7 +70,7 @@ class Service extends AdminController
 
     public function deleteService($id) {
         try {
-            if($this->sm->delete($id)){
+            if($this->serviceModel->delete($id)){
                 return $this->response->setJSON([
                     'success' => true,
                     'message' => 'Le service a bien été supprimé'
@@ -78,7 +78,7 @@ class Service extends AdminController
             } else {
                 return $this->response->setJSON([
                     'success' => false,
-                    'message' => $this->sm->errors(),
+                    'message' => $this->serviceModel->errors(),
                 ]);
             }
         } catch (\Exception $e) {

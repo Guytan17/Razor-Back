@@ -25,6 +25,7 @@
                             <th>Numéro FBI</th>
                             <th>Catégorie</th>
                             <th>Championnat</th>
+                            <th>Équipe de Tasdon</th>
                             <th>Adversaire</th>
                             <th>Horaire</th>
                             <th>Lieu</th>
@@ -95,9 +96,13 @@
                 {data : 'fbi_number'},
                 {data : 'category'},
                 {data : 'division'},
+                {data : 'team'},
                 {data: 'opponent'},
                 {data : 'schedule'},
-                {data : 'place'},
+                {
+                    data : 'place',
+                    className: 'minSize',
+                },
 
             ],
             language: {
@@ -166,4 +171,9 @@
         });
     }
 </script>
+<style>
+    .minSize {
+        min-width: 100px;
+    }
+</style>
 <?php $this->endSection(); ?>

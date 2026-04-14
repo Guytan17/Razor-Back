@@ -16,7 +16,7 @@ class Service extends Migration
             ],
             'label' => [
                 'type' => 'VARCHAR',
-                'constraint' => 255,
+                'constraint' => 50,
                 'null' => false,
             ]
         ]);

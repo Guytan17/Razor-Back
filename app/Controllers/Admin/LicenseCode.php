@@ -8,10 +8,10 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class LicenseCode extends AdminController
 {
-    protected $lcm;
+    protected $licenseCodeModel;
 
     public function __construct(){
-        $this->lcm = new LicenseCodeModel();
+        $this->licenseCodeModel = new LicenseCodeModel();
     }
 
     public function index()
@@ -29,10 +29,10 @@ class LicenseCode extends AdminController
                 'code' => $this->request->getPost('code'),
                 'explanation' => $this->request->getPost('explanation'),
             ];
-            if ($this->lcm->insert($dataLicenseCode)) {
+            if ($this->licenseCodeModel->insert($dataLicenseCode)) {
                 $this->success('Code licence créé avec succès');
             } else {
-                return redirect()->back()->withInput()->with('error',implode('<br>',$this->lcm->errors()));
+                return redirect()->back()->withInput()->with('error',implode('<br>',$this->licenseCodeModel->errors()));
             }
             return $this->redirect('admin/license-code');
         } catch (\Exception $e) {
@@ -49,7 +49,7 @@ class LicenseCode extends AdminController
                 'explanation' => $this->request->getPost('explanation'),
             ];
 
-            if($this->lcm->update($id,$dataLicenseCode)){
+            if($this->licenseCodeModel->update($id,$dataLicenseCode)){
                 return $this->response->setJSON([
                     'success' => true,
                     'message' => 'Code licence modifié avec succès',
@@ -57,7 +57,7 @@ class LicenseCode extends AdminController
             } else {
                 return $this->response->setJSON([
                     'success' => false,
-                    'message' => $this->lcm->errors(),
+                    'message' => $this->licenseCodeModel->errors(),
                 ]);
             }
         } catch(\Exception $e) {
@@ -70,7 +70,7 @@ class LicenseCode extends AdminController
 
     public function deleteLicenseCode($id) {
         try {
-            if($this->lcm->delete($id)){
+            if($this->licenseCodeModel->delete($id)){
                 return $this->response->setJSON([
                     'success' => true,
                     'message' => 'Le code license a bien été supprimé'
@@ -78,7 +78,7 @@ class LicenseCode extends AdminController
             } else {
                 return $this->response->setJSON([
                     'success' => false,
-                    'message' => $this->lcm->errors(),
+                    'message' => $this->licenseCodeModel->errors(),
                 ]);
             }
         } catch (\Exception $e) {

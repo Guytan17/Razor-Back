@@ -95,11 +95,10 @@ class MemberModel extends Model
         return [
             'searchable_fields' => [
                 'member.id',
-                'last_name',
-                'first_name',
-                'license_number',
-                'id_license_code',
-                'member.deleted_at',
+                'member.last_name',
+                'member.first_name',
+                'member.license_number',
+                'license_code.code',
                 'role.name'
             ],
             'joins' => [

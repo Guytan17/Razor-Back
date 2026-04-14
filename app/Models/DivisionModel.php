@@ -65,9 +65,9 @@ class DivisionModel extends Model
                     'division.name',
                     'division.id_season',
                     'division.id_category',
-                    'season_name',
-                    'category_name',
-                    'teams_name',
+                    'season.name',
+                    'category.name',
+                    'team.name'
                 ],
             'joins' =>
             [

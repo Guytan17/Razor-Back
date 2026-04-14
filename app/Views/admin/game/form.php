@@ -144,20 +144,23 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <?php if(isset($game) && $game->home_club == 1 ) : ?>
-                                        <div class="card-body" id="zone-mvp">
-                                            <div class="row mb-3">
-                                                <div class="col">
-                                                    <label for="select-mvp">MVP</label>
-                                                    <div class="input-group mb-3">
-                                                        <select class="form-select" name="mvp" id="select-mvp">
+                                    <div id="zone-mvp-home">
+                                        <?php if(isset($game) && $game->home_club == 1 ) : ?>
+                                            <div class="card-body">
+                                                <div class="row mb-3">
+                                                    <div class="col">
+                                                        <label for="select-mvp">MVP</label>
+                                                        <div class="input-group mb-3">
+                                                            <select class="form-select" name="mvp" id="select-mvp">
 
-                                                        </select>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    <?php endif; ?>
+                                        <?php endif; ?>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -212,20 +215,23 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <?php if(isset($game) && $game->away_club == 1 ) : ?>
-                                        <div class="card-body" id="zone-mvp">
-                                            <div class="row mb-3">
-                                                <div class="col">
-                                                    <label for="select-mvp">MVP</label>
-                                                    <div class="input-group mb-3">
-                                                        <select class="form-select" name="mvp" id="select-mvp">
+                                    <div id="zone-mvp-away">
+                                        <?php if(isset($game) && $game->away_club == 1 ) : ?>
+                                            <div class="card-body">
+                                                <div class="row mb-3">
+                                                    <div class="col">
+                                                        <label for="select-mvp">MVP</label>
+                                                        <div class="input-group mb-3">
+                                                            <select class="form-select" name="mvp" id="select-mvp">
 
-                                                        </select>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    <?php endif; ?>
+                                        <?php endif; ?>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -398,8 +404,6 @@
 
         let deletedTechnicalFouls = 0;
 
-        let deletedServices  = 0;
-
         //Initialisation Select Gym
         initAjaxSelect2('#select-gym', {url:'/admin/gym/search',searchFields:'name',additionalFields:['fbi_code','club_name'],placeholder:'Rechercher un gymnase'});
 
@@ -427,28 +431,53 @@
             let selectedClub = $(this).select2('data');
             let selectedClubId = selectedClub[0].id;
 
-
             //création et apparition d'un select pour choisir l'équipe du club sélectionné
             let row = `
                 <div class="row mb-3">
                     <div class="col">
-                        <label class="form-label" for="">Équipe de ${selectedClub[0]['text']} </label>
+                        <label class="form-label" for="select-home-team">Équipe de ${selectedClub[0]['text']} </label>
                         <select class="form-control" name="home_team" id="select-home-team" required></select>
                     </div>
                 </div>
             `;
             $('#zone-home-team').empty().append(row);
+            $('#zone-mvp-home').empty();
+            $('#zone-home-team-score').empty()
 
             //Initialisation du nouveau select2
-            initAjaxSelect2(`#select-home-team`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher un équipe',extraParams: {id_club:selectedClubId}})
+            initAjaxSelect2(`#select-home-team`, {url:'/admin/team/search', searchFields: 'name', separator: ' - ', placeholder:'Rechercher un équipe',extraParams: {id_club:selectedClubId}});
         })
 
-       //Une fois l'équipe choisie, apparition de l'input pour le score
+       //Une fois l'équipe choisie, apparition de l'input pour le score et pour le choix du MVP
         $(document).on('change','#select-home-team', function(){
             let selectedClub = $('#select-home-club').select2('data');
             if (selectedClub[0]['id'] == 1){
                 let selectedTeam = $(this).select2('data');
                 TasdonTeam = selectedTeam[0]['id'];
+
+                //création du select MVP
+                let rowMvp = `
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <label for="select-mvp">MVP</label>
+                                <div class="input-group mb-3">
+                                    <select class="form-select" name="mvp" id="select-mvp">
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                //suppression d'un éventuel ancien select et apparition d'un nouveau
+                $('#zone-mvp-home').empty().append(rowMvp);
+
+                //initialisation du select
+                initAjaxSelect2(`#select-mvp`, {url:'/admin/player/search', searchFields: 'first_name, last_name', placeholder:'Choisir le joueur', extraParams:{id_team:TasdonTeam}});
+            } else {
+                //si la nouvelle home_team n'est pas de Tasdon, on vide juste la zone de select-mvp
+                $('#zone-mvp-home').empty();
             }
             //création et apparition d'un input pour le score
             let row = `
@@ -470,7 +499,7 @@
         initAjaxSelect2('#select-away-club', {url:'/admin/club/search',searchFields:'name',additionalFields:['code'],placeholder:'Rechercher un club'});
 
         //Initialisation du select2 de l'équipe à l'extérieur
-        initAjaxSelect2(`#select-away-team`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher une équipe',extraParams: {id_club:awayClubId}})
+        initAjaxSelect2(`#select-away-team`, {url:'/admin/team/search', searchFields: 'name', separator: ' - ', placeholder:'Rechercher une équipe',extraParams: {id_club:awayClubId}});
         //chargement de l'option déjà existante
         if(awayTeamId) {
             let option = new Option(awayTeamName,awayTeamId,true,true);
@@ -486,15 +515,17 @@
             let row = `
                 <div class="row mb-3">
                     <div class="col">
-                        <label class="form-label" for="">Équipe de ${selectedClub[0]['text']} </label>
+                        <label class="form-label" for="select-away-team">Équipe de ${selectedClub[0]['text']} </label>
                         <select class="form-control" name="away_team" id="select-away-team" required></select>
                     </div>
                 </div>
             `;
             $('#zone-away-team').empty().append(row);
+            $('#zone-mvp-away').empty();
+            $('#zone-away-team-score').empty()
 
             //Initialisation du nouveau select2
-            initAjaxSelect2(`#select-away-team`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher un équipe',extraParams: {id_club:selectedClubId}});
+            initAjaxSelect2(`#select-away-team`, {url:'/admin/team/search', searchFields: 'name', separator: ' - ',  placeholder:'Rechercher un équipe',extraParams: {id_club:selectedClubId}});
         })
 
         //Une fois l'équipe choisie, apparition de l'input pour le score
@@ -503,6 +534,30 @@
             if (selectedClub[0]['id'] == 1){
                 let selectedTeam = $(this).select2('data');
                 TasdonTeam = selectedTeam[0]['id'];
+
+                //création du select MVP
+                let rowMvp = `
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <label for="select-mvp">MVP</label>
+                                <div class="input-group mb-3">
+                                    <select class="form-select" name="mvp" id="select-mvp">
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                //suppression d'un éventuel ancien select et apparition d'un nouveau
+                $('#zone-mvp-away').empty().append(rowMvp);
+
+                //initialisation du select
+                initAjaxSelect2(`#select-mvp`, {url:'/admin/player/search', searchFields: 'first_name, last_name', placeholder:'Choisir le joueur', extraParams:{id_team:TasdonTeam}});
+            } else {
+                //si la nouvelle away_team n'est pas de Tasdon, on vide juste la zone de select-mvp
+                $('#zone-mvp-away').empty();
             }
 
             //création et apparition d'un input pour le score
@@ -519,13 +574,18 @@
             $('#zone-away-team-score').empty().append(row);
         })
 
-        //GESTION DU CHOIX DU MVP
+        //GESTION DU CHOIX DU MVP (en mode édition, sans changer les équipes)
         let mvpId = <?= json_encode($game->mvp ?? '') ?>;
         let mvpName = <?= json_encode($game->mvp_name ?? '') ?>;
 
         let optionMvp = new Option(mvpName,mvpId,true,true);
         $('#select-mvp').append(optionMvp);
         initAjaxSelect2(`#select-mvp`, {url:'/admin/player/search', searchFields: 'first_name, last_name', placeholder:'Choisir le joueur', extraParams:{id_team:TasdonTeam}});
+
+        //Suppression du select MVP en cas de déselection du club ou de l'équipe
+        $('#zone-home-team').on('select2:unselect', '#select-home-club', function(){
+            $('#zone-mvp-home').empty();
+        })
 
         //GESTION DES FAUTES TECHNIQUES
         //Reprise des fautes techniques déjà existantes
@@ -708,12 +768,6 @@
             let idService = $(this).data('id-service');
             let idMember = $(this).data('id-member');
             $(this).closest('.card-service').remove();
-            let deleteInputs = `
-                <input type="hidden" name="deletedServices[${deletedServices}][id_service]" value="${idService}">
-                <input type="hidden" name="deletedServices[${deletedServices}][id_member]" value="${idMember}">
-            `;
-            $('#zone-services').append(deleteInputs);
-            deletedServices++;
         })
     })
 

@@ -50,11 +50,10 @@ class TechnicalFoulModel extends Model
     public function getDataTableConfig(){
         return [
             'searchable_fields' => [
-                'technical_foul.*',
                 'member.first_name',
                 'member.last_name',
-                'type.code as type',
-                'classification.code as classification',
+                'type.code',
+                'classification.code',
                 'game.fbi_number'
             ],
             'joins' => [
