@@ -15,7 +15,7 @@ class City extends Migration
                 'auto_increment' => true,
             ],
             'zip_code' => [
-                'type' => 'INT',
+                'type' => 'VARCHAR',
                 'constraint' => 5,
                 'null' => false,
             ],
