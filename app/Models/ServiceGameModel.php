@@ -8,7 +8,7 @@ class ServiceGameModel extends Model
 {
     protected $table            = 'service_game';
     protected $primaryKey       = 'id_game';
-    protected $useAutoIncrement = true;
+    protected $useAutoIncrement = false;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;

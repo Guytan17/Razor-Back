@@ -191,7 +191,7 @@ class GameModel extends Model
             club_away.name as away_club_name,
             CONCAT(member.first_name," ",member.last_name) as mvp_name,');
         $this->join('category', 'game.id_category = category.id');
-        $this->join('division', 'game.id_division = division.id');
+        $this->join('division', 'game.id_division = division.id', 'left');
         $this->join('gym', 'game.id_gym = gym.id');
         $this->join('team as team_home', 'game.home_team = team_home.id');
         $this->join('team as team_away', 'game.away_team = team_away.id');
