@@ -147,7 +147,7 @@
                                                     $cpt_clubs ++ ?>
                                                     <div class="row mb-3 row-club">
                                                         <div class="col">
-                                                            <div class="card card-club">
+                                                            <div class="card">
                                                                 <div class="card-body p-1 d-flex align-items-center">
                                                                     <div class="row w-100">
                                                                         <div class="col-auto g-start-1">
@@ -155,15 +155,15 @@
                                                                             delete-club-button"></i></span>
                                                                         </div>
                                                                         <div class="col d-flex align-items-center g-start-2">
-                                                                            <span class="fw-semibold">
-                                                                                <?= $club['name']?> -
-                                                                                <span class="fst-italic"><?=$club['code']?></span>
-                                                                            </span>
+                                                                            <a class="card-club" href="<?= base_url('admin/glub/form/').$club['id_club'] ?>">
+                                                                                <span class="fw-semibold"><?= $club['name']?> - <span class="fst-italic"><?=$club['code']?></span>
+                                                                                </span>
+                                                                            </a>
                                                                         </div>
                                                                         <div class="col-auto d-flex align-items-center" >
-                                                                            <div class="form-check">
+                                                                            <div class="form-check form-switch">
                                                                                 <label class="form-label m-0" for="main-gym-<?= $cpt_clubs ?>">Principal</label>
-                                                                                <input class="form-check-input main-club-check" type="checkbox" name="clubs[<?= $cpt_clubs ?>][main_gym]"
+                                                                                <input class="form-check-input main-club-check" type="checkbox" role="switch" name="clubs[<?= $cpt_clubs ?>][main_gym]"
                                                                                        id="main-gym-<?= $cpt_clubs ?>" <?= $club['main_gym'] == 1 ? 'checked' : '' ?>>
                                                                             </div>
                                                                         </div>
@@ -261,23 +261,25 @@
             //Si un membre est sélectionné, on
             nbClubs ++;
             let club = selectedClub[0];
-            console.log('club:'+club);
             let row = `
             <div class="row mb-3 row-club">
                 <div class="col">
-                    <div class="card card-club">
+                    <div class="card">
                         <div class="card-body p-1 d-flex align-items-center">
                             <div class="row w-100">
                                <div class="col-auto">
                                    <span class="fs-4" id="delete-club-${nbClubs}"><i class="fas fa-trash-alt text-danger delete-club-button"></i></span>
                                </div>
                                 <div class="col d-flex align-items-center">
-                                    <span class="fw-semibold" >${club.text} - <span class="fst-italic">${club.code}</span></span>
+                                    <a class="card-club" href="${base_url+'admin/club/form/'+club.id}">
+                                        <span class="fw-semibold" >${club.text} - <span class="fst-italic">${club.code}</span></span>
+                                    </a>
+
                                 </div>
                                 <div class="col-auto d-flex align-items-center">
-                                    <div class="form-check">
+                                    <div class="form-check form-switch">
                                         <label class="form-label m-0" for="main-gym-${nbClubs}">Principal</label>
-                                        <input class="form-check-input main-club-check" type="checkbox" name="clubs[${nbClubs}][main_gym]" id="main-gym-${nbClubs}">
+                                        <input class="form-check-input main-club-check" type="checkbox" role="switch" name="clubs[${nbClubs}][main_gym]" id="main-gym-${nbClubs}">
                                     </div>
                                 </div>
                             </div>
@@ -311,17 +313,17 @@
       font-style: italic;
   }
 
-  .delete-club-button:hover,.delete-game-button:hover {
+  .delete-club-button:hover {
       scale:1.2;
       cursor: pointer;
   }
 
-  .card-game{
+  .card-game, .card-club{
       text-decoration: none;
       color: black;
   }
 
-  .card-game:hover{
+  .card-game:hover, .card-club:hover{
       scale:1.05;
       cursor: pointer;
   }
