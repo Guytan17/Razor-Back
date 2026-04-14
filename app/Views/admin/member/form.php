@@ -30,7 +30,7 @@
             <div class="card">
                 <div class="card-header text-center">
                     <?php if(isset($member->id)) : ?>
-                    <span class="card-title h3">Modification de <?= $member->first_name . " " . $member->last_name ?></span>
+                    <span class="card-title h3">Modification de <?= $member->getFullName() ?></span>
                     <?php else : ?>
                     <span class="card-title h3">Création d'un membre</span>
                     <?php endif; ?>
@@ -429,10 +429,10 @@ $(document).ready(function () {
     })
 
     //initialisation select-coach
-    initAjaxSelect2(`#select-coach`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher une équipe'});
+    initAjaxSelect2(`#select-coach`, {url:'/admin/team/search', searchFields: 'name', separator:' - ',extraParams:{id_club:1}, placeholder:'Rechercher une équipe'});
 
     //initialisation select-player
-    initAjaxSelect2(`#select-player`, {url:'/admin/team/search', searchFields: 'name', placeholder:'Rechercher une équipe'});
+    initAjaxSelect2(`#select-player`, {url:'/admin/team/search', searchFields: 'name', separator:' - ', extraParams:{id_club:1},placeholder:'Rechercher une équipe'});
 
     //Gestion du clic sur le switch pour le statut de la licence
     $('#license_status').on('change', function(){
