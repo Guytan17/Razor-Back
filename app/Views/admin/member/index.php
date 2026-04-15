@@ -6,7 +6,7 @@
     <!-- START : ZONE INDEX DES MEMBRES -->
     <div class="row">
         <div class="col">
-            <div class="card overflow-auto">
+            <div class="card">
                 <div class="card-header hstack text-center">
                     <div class="card-title h3">Listes des membres du club</div>
                     <div class="ms-auto hstack">
@@ -14,7 +14,7 @@
                         <label class="btn btn-sm btn-primary mx-1" for="import-csv">
                             <i class="fas fa-file-circle-plus"></i> Importer un fichier CSV
                         </label>
-                        <input class="d-none" type="file" name="import_csv" id="import-csv" >
+                        <input class="d-none" type="file" name="import_csv" id="import-csv">
                         <button class=d-none type="submit" id="import-csv-submit-btn">
                             Valider l'import
                         </button>
