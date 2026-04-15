@@ -1,7 +1,6 @@
 <?php
 if(!function_exists('normalizeCity')){
 
-
     /**
      * @param $city - nom de la ville à normaliser
      * @return array|string|string[]|null

@@ -38,9 +38,11 @@ function getAjaxErrorMessage(response) {
 }
 
 //Fonction qui simule le clic sur le bouton submit lors de la sélection d'un CSV
-$(document).on('change', '#import-csv', function(e) {
+$(document).on('change', '#import-csv', function() {
     $('#import-csv-submit-btn').click();
-    $(this).val('');
+    //on reset l'input file pour permettre de réuploader en cas de rechargement de la page suite à une erreur
+    //on met la valeur à null dans une fonction, sinon la valeur est directement mise à jour et le setTimeout ne sert à rien
+    setTimeout(()=>{this.value=null},100);
 })
 
 $(document).ready(function() {
