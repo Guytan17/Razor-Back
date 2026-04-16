@@ -30,6 +30,16 @@ class Sponsor extends Migration
                 'constraint'=>1,
                 'null'=>true,
             ],
+            'dotation_type'=>[
+                'type'=>'VARCHAR',
+                'constraint'=>255,
+                'null'=>false,
+            ],
+            'dotation_amount'=>[
+                'type'=>'INT',
+                'constraint'=>11,
+                'null'=>false,
+            ],
             'specifications'=>[
                 'type'=>'TEXT',
                 'null'=>true,
