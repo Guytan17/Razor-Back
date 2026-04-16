@@ -23,7 +23,7 @@ class TechnicalFoulModel extends Model
         'id_member' => 'required|integer',
         'id_type' => 'required|integer',
         'id_classification' => 'required|integer',
-        'amount' => 'permit_empty|integer'
+        'amount' => 'permit_empty|decimal'
     ];
     protected $validationMessages   = [
         'id_game' => [
@@ -43,7 +43,7 @@ class TechnicalFoulModel extends Model
             'integer' => 'L\'ID de la classification doit être un entier'
         ],
         'amount' => [
-            'integer' => 'Le montant doit être un entier',
+            'decimal' => 'Le montant doit être un nombre',
         ]
     ];
 

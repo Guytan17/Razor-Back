@@ -8,7 +8,7 @@ class CoachModel extends Model
 {
     protected $table            = 'coach';
     protected $primaryKey       = 'id_member';
-    protected $useAutoIncrement = true;
+    protected $useAutoIncrement = false;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;

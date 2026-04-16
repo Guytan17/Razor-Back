@@ -19,14 +19,14 @@ class SeasonModel extends Model
 
     // Validation
     protected $validationRules      = [
-        'name' => 'required|max_length[255]',
+        'name' => 'required|max_length[50]',
         'start_date' => 'valid_date|date_before[end_date]',
         'end_date' => 'valid_date|date_after[start_date]',
     ];
     protected $validationMessages   = [
         'name' => [
             'required' => 'Le nom de la saison est obligatoire',
-            'max_length' => 'Le nom de la saison ne peut pas excéder 255 caractères'
+            'max_length' => 'Le nom de la saison ne peut pas excéder 50 caractères'
         ],
         'start_date' => [
             'valid_date' => 'La date de début saison doit être valide',

@@ -137,7 +137,8 @@
                                                             <label class="form-label me-3" for="home-score-input">Score de <?= $game->home_club_name ?></label>
                                                         </div>
                                                         <div class="col-6">
-                                                            <input class="form-control fw-bold fs-4 score-input" type="number" name="home_score" id="home-score-input" value="<?= old('home-score-input',esc($game->score_home ?? '' ))?>">
+                                                            <input class="form-control fw-bold fs-4 score-input" type="number" name="home_score" id="home-score-input" min="0" max="999" value="<?=
+                                                            old('home-score-input',esc($game->score_home ?? '' ))?>">
                                                         </div>
                                                     </div>
                                                 <?php endif; ?>
@@ -208,7 +209,7 @@
                                                             <label class="form-label me-3" for="away-score-input">Score de <?= $game->away_club_name?></label>
                                                         </div>
                                                         <div class="col-6">
-                                                            <input class="form-control fw-bold fs-4 score-input" type="number" name="away_score" id="away-score-input" value="<?= old('away-score-input',esc($game->score_away ?? ''))?>">
+                                                            <input class="form-control fw-bold fs-4 score-input" type="number" name="away_score" id="away-score-input" min="0" max="999" value="<?= old('away-score-input',esc($game->score_away ?? ''))?>">
                                                         </div>
                                                     </div>
                                                 <?php endif; ?>
@@ -486,7 +487,7 @@
                         <label class="form-label me-3" for="home-score-input">Score de ${selectedClub[0]['text']}</label>
                     </div>
                     <div class="col-6">
-                        <input class="form-control fw-bold fs-4 score-input" type="number" name="home_score" id="home-score-input">
+                        <input class="form-control fw-bold fs-4 score-input" type="number" name="home_score" id="home-score-input" min="0" max="999">
                     </div>
                 </div>
             `;
@@ -567,7 +568,7 @@
                         <label class="form-label me-3" for="away-score-input">Score de ${selectedClub[0]['text']}</label>
                     </div>
                     <div class="col-6">
-                        <input class="form-control fw-bold fs-4 score-input" type="number" name="away_score" id="away-score-input">
+                        <input class="form-control fw-bold fs-4 score-input" type="number" name="away_score" id="away-score-input" min="0" max="999">
                     </div>
                 </div>
             `;

@@ -17,6 +17,7 @@ class Role extends Migration
             'name'=>[
                 'type'=>'VARCHAR',
                 'constraint'=>'50',
+                'null'=>false,
             ],
             'slug'=>[
                 'type'=>'VARCHAR',

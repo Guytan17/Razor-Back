@@ -8,7 +8,7 @@ class DivisionTeamModel extends Model
 {
     protected $table            = 'division_team';
     protected $primaryKey       = 'id_division';
-    protected $useAutoIncrement = true;
+    protected $useAutoIncrement = false;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;

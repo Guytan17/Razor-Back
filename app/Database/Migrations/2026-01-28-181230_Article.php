@@ -17,7 +17,7 @@ class Article extends Migration
             'title' => [
                 'type' => 'VARCHAR',
                 'constraint' => 255,
-                'null' => true,
+                'null' => false,
             ],
             'content' => [
                 'type' => 'TEXT',
@@ -25,11 +25,11 @@ class Article extends Migration
             ],
             'created_at' => [
                 'type' => 'DATETIME',
-                'null' => true,
+                'null' => false,
             ],
             'updated_at' => [
                 'type' => 'DATETIME',
-                'null' => false,
+                'null' => true,
             ]
         ]);
         $this->forge->addKey('id',true);

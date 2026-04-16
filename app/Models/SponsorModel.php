@@ -19,13 +19,15 @@ class SponsorModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['name', 'slug', 'rank', 'specifications'];
+    protected $allowedFields    = ['name', 'slug', 'rank','dotation_type','dotation_amount','specifications'];
 
     // Validation
     protected $validationRules      = [
         'name' => 'required|max_length[255]',
         'slug' => 'max_length[255]',
         'rank' => 'integer',
+        'dotation_type' => 'required|max_length[255]',
+        'dotation_amount' => 'required|integer',
         'specifications' => 'permit_empty',
     ];
     protected $validationMessages   = [
@@ -39,6 +41,14 @@ class SponsorModel extends Model
         'rank' => [
             'integer' => 'Le rang doit être un chiffre'
         ],
+        'dotation_type' => [
+            'required' => 'Le type de dotation est obligatoire',
+            'max_length' => 'Le type de dotation ne peut pas excéder 255 caractères'
+        ],
+        'dotation_amount' => [
+            'required' => 'Le montant de la dotation est obligatoire',
+            'integer' => 'Le montant de la dotation doit être un entier'
+        ]
     ];
 
     protected $beforeInsert   = ['generateUniqueSlugName'];

@@ -23,6 +23,7 @@ class Club extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => '255',
                 'null' => false,
+                'unique' => true,
             ],
             'slug'=> [
                 'type' => 'VARCHAR',
@@ -32,12 +33,12 @@ class Club extends Migration
             ],
             'color_1'=>[
                 'type' => 'VARCHAR',
-                'constraint' => '255',
+                'constraint' => '50',
                 'null' => true,
             ],
             'color_2'=>[
                 'type' => 'VARCHAR',
-                'constraint' => '255',
+                'constraint' => '50',
                 'null' => true,
             ],
             'created_at'=>[

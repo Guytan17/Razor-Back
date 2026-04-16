@@ -35,7 +35,8 @@ class Contact extends Migration
                 'null'=>true,
             ],
             'details'=>[
-                'type'=>'TEXT',
+                'type'=>'VARCHAR',
+                'constraint'=>'255',
                 'null'=>true,
             ]
         ]);

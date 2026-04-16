@@ -23,17 +23,17 @@ class CategoryModel extends Model
 
     // Validation
     protected $validationRules      = [
-        'name' => 'required|max_length[255]',
-        'slug' => 'max_length[255]',
+        'name' => 'required|max_length[50]',
+        'slug' => 'max_length[50]',
         'gender' => 'required|in_list[mixed,man,woman]',
     ];
     protected $validationMessages   = [
         'name' => [
             'required' => 'Le nom de la catégorie est obligatoire',
-            'max_length' => 'Le nom de la catégorie ne peut pas excéder 255 caractères'
+            'max_length' => 'Le nom de la catégorie ne peut pas excéder 50 caractères'
         ],
         'slug' => [
-            'max_length' => 'Le nom de la catégorie ne peut pas excéder 255 caractères'
+            'max_length' => 'Le nom de la catégorie ne peut pas excéder 50 caractères'
         ],
         'gender' => [
             'required' => 'Le genre est obligatoire',

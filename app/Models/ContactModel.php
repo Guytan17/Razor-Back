@@ -16,7 +16,7 @@ class ContactModel extends Model
 
     // Validation
     protected $validationRules      = [
-        'entity_type'     => 'required|max_length[255]',
+        'entity_type'     => 'required|max_length[50]|in_list[member,club,gym,sponsor]',
         'entity_id'     => 'required|integer',
         'mail'     => 'permit_empty|valid_email|max_length[255]',
         'phone_number'     => 'permit_empty|max_length[10]',
@@ -25,7 +25,8 @@ class ContactModel extends Model
     protected $validationMessages   = [
         'entity_type'     => [
             'required' => 'Le type d\'entité est obligatoire',
-            'max_length' => 'Le type d\'entité ne peut pas excéder 255 caractères'
+            'max_length' => 'Le type d\'entité ne peut pas excéder 50 caractères',
+            'in_list '=> 'Le type d\'entité doit être parmi member,club,gym ou sponsor'
         ],
         'entity_id'     => [
             'required' => 'L\'ID de l\'entité est obligatoire',

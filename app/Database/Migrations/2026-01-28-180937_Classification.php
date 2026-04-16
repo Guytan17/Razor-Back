@@ -20,9 +20,9 @@ class Classification extends Migration
                 'null' => false,
             ],
             'explanation' => [
-                'type' => 'varchar',
+                'type' => 'VARCHAR',
                 'constraint' => 255,
-                'null' => true,
+                'null' => false,
             ]
         ]);
         $this->forge->addKey('id',true);

@@ -16,18 +16,18 @@ class Category extends Migration
             ],
             'name' => [
                 'type' => 'VARCHAR',
-                'constraint' => 255,
+                'constraint' => 50,
                 'null' => false,
             ],
             'slug' => [
                 'type' => 'VARCHAR',
-                'constraint' => 255,
+                'constraint' => 50,
                 'null' => false,
                 'unique' => true,
             ],
             'gender' =>[
                 'type' => 'VARCHAR',
-                'constraint' => 255,
+                'constraint' => 5,
                 'null' => false,
             ]
         ]);

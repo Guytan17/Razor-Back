@@ -11,7 +11,7 @@ class PlayerModel extends Model
 
     protected $table            = 'player';
     protected $primaryKey       = 'id_member';
-    protected $useAutoIncrement = true;
+    protected $useAutoIncrement = false;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
