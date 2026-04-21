@@ -354,6 +354,6 @@ class Gym extends AdminController
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
-        return $this->response->download($filePath, null);
+        return $this->response->download($filePath);
     }
 }

@@ -38,7 +38,7 @@ class MemberModel extends Model
         'license_number' => 'permit_empty|max_length[10]',
         'id_license_code' => 'permit_empty|integer',
         'license_status'=> 'integer|in_list[0,1]',
-        'balance' => 'permit_empty|decimal',
+        'balance' => 'permit_empty|integer',
         'overqualified' => 'required|in_list[0,1,2]',
         'available' => 'required|in_list[0,1]',
         'details' => 'permit_empty',
@@ -75,7 +75,7 @@ class MemberModel extends Model
             'in_list' => 'Le statut de la licence doit être 0(inactif) ou 1(actif)'
         ],
         'balance' => [
-            'decimal' => 'Le montant doit être un nombre entier ou à virgule (2 chiffres maximum après la virgule)'
+            'integer' => 'Le montant doit être un nombre entier ou à virgule (2 chiffres maximum après la virgule)'
         ],
         'overqualified' => [
             'required' => 'Le niveau du surclassement est obligatoire',

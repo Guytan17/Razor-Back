@@ -36,7 +36,7 @@ class Member extends Entity
         'license_number' => 'string',
         'id_license_code' => 'integer',
         'license_status' => 'integer',
-        'balance' => 'decimal',
+        'balance' => 'integer',
         'overqualified' => 'integer',
         'available' => 'boolean',
         'details' => 'string',
