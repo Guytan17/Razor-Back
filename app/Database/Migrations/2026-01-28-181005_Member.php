@@ -54,14 +54,14 @@ class Member extends Migration
                 'null'=>true,
             ],
             'balance'=>[
-                'type'=>'INT',
-                'constraint'=>11,
+                'type'=>'DECIMAL',
+                'constraint'=>9,2,
                 'null'=>true,
             ],
             'overqualified' => [
                 'type' => 'INT',
                 'contraint'=> 1,
-                'null' => false,
+                'null' => true,
             ],
             'available' => [
                 'type' => 'BOOLEAN',

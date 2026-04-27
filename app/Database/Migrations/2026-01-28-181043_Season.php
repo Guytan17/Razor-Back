@@ -16,7 +16,7 @@ class Season extends Migration
             ],
             'name' => [
                 'type' => 'VARCHAR',
-                'constraint' => 255,
+                'constraint' => 50,
                 'null'=>false,
             ],
             'start_date' =>[

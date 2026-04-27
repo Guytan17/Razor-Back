@@ -12,7 +12,7 @@ class Game extends Entity
         'id_gym' =>null ,
         'schedule' =>null ,
         'id_division' =>null,
-        'id_category' =>0,
+        'id_category' =>null,
         'mvp' =>null,
         'home_team' =>null,
         'away_team' => null,

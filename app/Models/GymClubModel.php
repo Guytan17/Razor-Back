@@ -8,7 +8,7 @@ class GymClubModel extends Model
 {
     protected $table            = 'gym_club';
     protected $primaryKey       = 'id_club';
-    protected $useAutoIncrement = true;
+    protected $useAutoIncrement = false;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
@@ -51,5 +51,4 @@ class GymClubModel extends Model
 
         return $this->findAll();
     }
-
 }

@@ -20,6 +20,7 @@ class LeagueTeam extends Migration
                 'null' => false,
             ],
         ]);
+        $this->forge->addPrimaryKey(['id_team','id_division']);
         $this->forge->addForeignKey('id_team','team','id','CASCADE','RESTRICT');
         $this->forge->addForeignKey('id_division','division','id','CASCADE','RESTRICT');
         $this->forge->createTable('division_team',true);

@@ -35,8 +35,8 @@ class TechnicalFoul extends Migration
                 'null' => false,
             ],
             'amount' => [
-                'type' => 'INT',
-                'constraint' => 11,
+                'type' => 'DECIMAL',
+                'constraint' => 9,2,
                 'null' => true,
             ]
         ]);

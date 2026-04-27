@@ -111,7 +111,7 @@
                                     <label class="form-label" for="gps_location">
                                         Coordonnées GPS
                                         <?php if(isset($gym) && empty($gym['gps_location'])) { ?>
-                                            (⚠️ Point Google Map non-vérifié)
+                                            (⚠️ Point Google Maps non-vérifié)
                                         <?php } ?>
                                     </label>
                                     <input class="form-control" type="text" name="gps_location" id="gps_location" value="<?=old('gps_location',esc($gym['gps_location'] ?? ''));?>">

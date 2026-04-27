@@ -75,7 +75,7 @@ class MemberModel extends Model
             'in_list' => 'Le statut de la licence doit être 0(inactif) ou 1(actif)'
         ],
         'balance' => [
-            'integer' => 'Le montant doit être un nombre entier'
+            'integer' => 'Le montant doit être un nombre entier ou à virgule (2 chiffres maximum après la virgule)'
         ],
         'overqualified' => [
             'required' => 'Le niveau du surclassement est obligatoire',

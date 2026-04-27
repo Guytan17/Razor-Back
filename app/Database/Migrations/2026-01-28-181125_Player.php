@@ -20,6 +20,7 @@ class Player extends Migration
                 'null' => false,
             ],
         ]);
+        $this->forge->addPrimaryKey(['id_member','id_team']);
         $this->forge->addForeignKey('id_member', 'member', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->addForeignKey('id_team', 'team', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->createTable('player',true);

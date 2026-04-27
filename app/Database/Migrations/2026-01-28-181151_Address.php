@@ -26,7 +26,7 @@ class Address extends Migration
             ],
             'gps_location' => [
                 'type' => 'VARCHAR',
-                'constraint' => '255',
+                'constraint' => '50',
                 'null' => true,
             ],
             'id_city' => [

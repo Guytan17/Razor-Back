@@ -19,13 +19,18 @@ class LicenseCodeModel extends Model
 
     // Validation
     protected $validationRules      = [
-        'code' => 'required|max_length[2]',
+        'id' => 'permit_empty|is_natural_no_zero', //sert à rendre le code unique pour insertion sans bloquer la modification
+        'code' => 'required|max_length[2]|is_unique[license_code.code,id,{id}]',
         'explanation' => 'required|max_length[255]'
     ];
     protected $validationMessages   = [
+        'id' => [
+            'is_natural_no_zero' => 'Le champ id doit être un chiffre positif',
+        ],
         'code' => [
-            'required' => 'le code licence est obligatoire',
-            'max_length' => 'le code licence doit faire 2 caractères maximum'
+            'required' => 'Le code licence est obligatoire',
+            'max_length' => 'Le code licence doit faire 2 caractères maximum',
+            'is_unique' => 'Ce code existe déjà'
         ],
         'explanation' => [
             'required' => 'Une courte définition du code est obligatoire',

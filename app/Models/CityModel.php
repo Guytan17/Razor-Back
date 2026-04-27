@@ -19,7 +19,7 @@ class CityModel extends Model
 
     // Validation
     protected $validationRules = [
-        'zip_code' => 'required|min_length[5]|max_length[5]',
+        'zip_code' => 'required|max_length[5]',
         'label'     => 'required|max_length[255]',
         'department_name'     => 'required|max_length[255]',
         'department_number'     => 'required|min_length[2]|max_length[3]',
@@ -28,7 +28,6 @@ class CityModel extends Model
     protected $validationMessages   = [
         'zip_code' => [
             'required' => 'Le code postal est obligatoire',
-            'min_length' => 'Le code postal doit faire 5 caractères',
             'max_length' => 'Le code postal doit faire 5 caractères'
         ],
         'label'     => [

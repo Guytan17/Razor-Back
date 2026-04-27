@@ -31,7 +31,7 @@ class GymModel extends Model
 
     protected $validationMessages = [
         'fbi_code' => [
-            'max_length' => 'Le code FBI ne peut pas excéder 255 caractères',
+            'max_length' => 'Le code FBI ne peut pas excéder 10 caractères',
             'is_unique' => 'Le code FBI existe déjà',
         ],
         'name' => [

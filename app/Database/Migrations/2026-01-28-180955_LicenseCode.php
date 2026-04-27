@@ -16,8 +16,9 @@ class LicenseCode extends Migration
             ],
             'code'=>[
                 'type'=>'VARCHAR',
-                'constraint'=>'9',
+                'constraint'=>2,
                 'null'=>false,
+                'unique'=>true,
             ],
             'explanation'=>[
                 'type'=>'VARCHAR',

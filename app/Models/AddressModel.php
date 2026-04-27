@@ -25,7 +25,7 @@ class AddressModel extends Model
         'address_1' => 'required|max_length[255]',
         'address_2' => 'permit_empty|max_length[255]',
         'id_city' => 'required|integer',
-        'gps_location' => 'permit_empty|max_length[255]',
+        'gps_location' => 'permit_empty|max_length[50]',
     ];
     protected $validationMessages   = [
         'address_1' => [
@@ -40,7 +40,7 @@ class AddressModel extends Model
             'integer' => 'L\'ID de la ville doit être un entier'
         ],
         'gps_location' => [
-            'max_length' => 'Les coordonnées GPS ne peut pas excéder 255 caractères.'
+            'max_length' => 'Les coordonnées GPS ne peut pas excéder 50 caractères.'
         ]
     ];
 

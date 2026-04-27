@@ -45,6 +45,7 @@ class LicenseCode extends AdminController
         try{
             // Récupération des données
             $dataLicenseCode = [
+                'id' => $id,
                 'code' => $this->request->getPost('code'),
                 'explanation' => $this->request->getPost('explanation'),
             ];

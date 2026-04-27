@@ -25,22 +25,22 @@ class Media extends Migration
             ],
             'entity_type' => [
                 'type' => 'VARCHAR',
-                'constraint' => 255,  /* adapté vos besoins */
+                'constraint' => 50,
                 'null' => false,
             ],
             'title' => [
                 'type' => 'VARCHAR',
                 'constraint' => '255',
-                'null' => true,
+                'null' => false,
             ],
             'alt' => [
                 'type' => 'VARCHAR',
                 'constraint' => '255',
-                'null' => true,
+                'null' => false,
             ],
             'created_at' => [
-                'type'       => 'DATETIME',
-                'null'       => true,
+                'type' => 'DATETIME',
+                'null' => false,
             ],
             'updated_at' => [
                 'type' => 'DATETIME',
