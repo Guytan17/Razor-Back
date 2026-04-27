@@ -255,7 +255,6 @@ class GameModel extends Model
         $this->join('team as away_team', 'game.away_team = away_team.id');
         $this->join('club as home_club', 'home_team.id_club = home_club.id');
         $this->join('club as away_club', 'away_team.id_club = away_club.id');
-
         $this->where('game.home_team', $idTeam);
         $this->orWhere('game.away_team', $idTeam);
 
