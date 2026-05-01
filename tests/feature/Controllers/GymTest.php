@@ -97,18 +97,96 @@ final class GymTest extends CIUnitTestCase
      */
     public function testGymIndexPageLoadsForUser()
     {
-        //simule une session en tant qu'admin
+        //simule une session en tant qu'user
         auth()->login($this->user);
         //tente d'afficher la page index
         $result = $this->get('admin/gym');
 
         $result->assertStatus(302);
+        $result->assertRedirectTo('http://localhost:8080');
     }
 
 
     /**
      * Test 3 : Vérifier que la recherche d'un gymnase fonctionne pour un utilisateur connecté
      */
+    public function testCanSearchGym(){
+        auth()->login($this->admin);
+
+        $result = $this->post('datatable/searchdatatable',[
+            'draw' => '1',
+            'start' => '0',
+            'length' => '10',
+            'model' => 'GymModel',
+            'search' => [
+                'value' => 'bouche',
+                'regex' => 'false'
+            ],
+            'order' => [
+                [
+                    'column' => '1',
+                    'dir' => 'asc',
+                    'name' => ''
+                ]
+            ],
+            'columns' => [
+                [
+                    'data' => '',
+                    'name' => '',
+                    'searchable' => 'false',
+                    'orderable' => 'false',
+                    'search' => [
+                        'value' => '',
+                        'regex' => 'false'
+                    ]
+                ],
+                [
+                    'data' => 'id',
+                    'name' => '',
+                    'searchable' => 'true',
+                    'orderable' => 'true',
+                    'search' => [
+                        'value' => '',
+                        'regex' => 'false'
+                    ]
+                ],
+                [
+                    'data' => 'fbi_code',
+                    'name' => '',
+                    'searchable' => 'true',
+                    'orderable' => 'true',
+                    'search' => [
+                        'value' => '',
+                        'regex' => 'false'
+                    ]
+                ],
+                [
+                    'data' => 'name',
+                    'name' => '',
+                    'searchable' => 'true',
+                    'orderable' => 'true',
+                    'search' => [
+                        'value' => 'bouche',
+                        'regex' => 'false'
+                    ]
+                ],
+                [
+                    'data' => 'gym_city',
+                    'name' => '',
+                    'searchable' => 'true',
+                    'orderable' => 'true',
+                    'search' => [
+                        'value' => '',
+                        'regex' => 'false'
+                    ]
+                ],
+            ],
+        ]);
+
+        $result->assertStatus(200);
+        $result->assertSee('JEAN');
+        $result->assertDontSee('PINAUD');
+    }
 
 
 }

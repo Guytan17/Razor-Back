@@ -133,6 +133,9 @@ trait DataTableTrait
 
         // Applique le tri
         if ($orderColumnName && $orderDirection) {
+            if (!str_contains($orderColumnName, '.')) {
+                $orderColumnName = $this->table . '.' . $orderColumnName;
+            }
             $builder->orderBy($orderColumnName, $orderDirection);
         }
 

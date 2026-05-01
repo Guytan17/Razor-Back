@@ -50,30 +50,32 @@ class GymModel extends Model
     protected $beforeUpdate = ['generateUniqueSlugName'];
     public function getDataTableConfig(): array
     {
+        $prefix = $this->db->DBPrefix;// → 'test_' en testing, '' en prod
+
         return [
             'searchable_fields' => [
-                'gym.id',
-                'gym.name',
-                'gym.fbi_code',
-                'city.label'
+                $prefix.'gym.id',
+                $prefix.'gym.name',
+                $prefix.'gym.fbi_code',
+                $prefix.'city.label'
             ],
             'joins' => [
                 [
                     'table' => 'address',
-                    'condition' => 'gym.id_address = address.id',
+                    'condition' => $prefix.'gym.id_address ='.$prefix.'address.id',
                     'type' => 'left'
                 ],
                 [
                     'table' => 'city',
-                    'condition' => 'address.id_city = city.id',
+                    'condition' => $prefix.'address.id_city = '.$prefix.'city.id',
                     'type' => 'inner'
                 ]
             ],
             'select' =>
-                'gym.id,
-                gym.name,
-                gym.fbi_code,
-                city.label as gym_city'
+                $prefix.'gym.id,'.
+                $prefix.'gym.name,'.
+                $prefix.'gym.fbi_code,'.
+                $prefix.'city.label as gym_city'
         ];
     }
 
