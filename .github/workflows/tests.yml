@@ -39,6 +39,14 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
 
-      #étape 4 : lancer les tests
+      #étape 4 : lancer les tests en définissant les caractéristiques d'environnnement
       - name: run tests
-        run: vendor/bin/phpunit
+        env:
+          CI_ENVIRONMENT: testing
+          database.tests.hostname: 127.0.0.1
+          database.tests.database: razorback_test
+          database.tests.username: root
+          database.tests.password: root
+          database.tests.DBDriver: MySQLi
+          database.tests.port: 3306
+        run: vendor/bin/phpunit --bootstrap vendor/codeigniter4/framework/system/Test/bootstrap.php --test-suffix Test.php tests/
