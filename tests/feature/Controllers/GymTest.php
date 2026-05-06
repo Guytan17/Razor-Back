@@ -188,5 +188,69 @@ final class GymTest extends CIUnitTestCase
         $result->assertDontSee('PINAUD');
     }
 
+    /**
+     * Test 4 : Vérifier que l'accès à la page de création d'un gymnase fonctionne en tant qu'admin
+     */
+    public function testAdminCanReachCreationForm(){
+        //simule une session en tant qu'admin
+        auth()->login($this->admin);
+        //tente d'afficher la page formulaire
+        $result = $this->get('admin/gym/form');
 
+        $result->assertStatus(200);
+        $result->assertSee('Création');
+    }
+
+    /**
+     * Test 5 : Vérifier que l'admin peut créer un gymnase
+     */
+    public function testAdminCanCreateGym(){
+        //simule une session en tant qu'admin
+        auth()->login($this->admin);
+
+        //définition du gymnase à créer
+        $newGym = [
+            'name' => 'Staples Center',
+            'fbi_code' => '08240824',
+            'address_1' => 'Rue de Kobe',
+            'city' => 1
+        ];
+
+        //test de la route pour création
+        $result = $this->post('admin/gym/save', $newGym);
+
+        $result->assertStatus(302);
+
+        $gymModel = model('GymModel');
+
+        $gym = $gymModel->where('fbi_code','08240824')->first();
+
+        $this->assertNotNull($gym);
+    }
+
+
+    /**
+     * Test 6 : Vérifier que l'admin peut modifier un gymnase
+     */
+    public function testAdminCanEditGym(){
+        //simule une session en tant qu'admin
+        auth()->login($this->admin);
+
+        //définition du model
+        $gymModel = model('GymModel');
+
+        //définition du gymnase à modifier
+        $GymToEdit = $gymModel->getGymById(1);
+        $GymToEdit['name'] = 'Jean Bouche un coin';
+        $GymToEdit['city'] = $GymToEdit['id_city'];
+
+        //test de la route pour modification
+        $result = $this->post('admin/gym/save/'.$GymToEdit['id'], $GymToEdit);
+
+        $result->assertStatus(302);
+
+        $gym = $gymModel->where('fbi_code','21730002')->first();
+
+        $this->assertTrue($gym['name'] === 'Jean Bouche un coin');
+    }
 }

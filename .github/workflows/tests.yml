@@ -1,0 +1,44 @@
+name: Tests PHP
+
+on:
+  push:
+    branches: [ main,develop ]
+  pull_request:
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    #service MySQL pour les tests de base de données
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: razorback_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      #étape 1 : télécharger le code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      #étape 2 : Installer PHP
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, xml, pdo_mysql, intl, iconv
+
+      #étape 3 : installer les dépendances Composer
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      #étape 4 : lancer les tests
+      - name: run tests
+        run: vendor/bin/phpunit
