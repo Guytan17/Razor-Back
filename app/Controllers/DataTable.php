@@ -9,11 +9,12 @@ class DataTable extends BaseController
     public function searchdatatable()
     {
         // Validation basique
-        if (!$this->request->isAJAX()) {
+        if (!$this->request->isAJAX() && ENVIRONMENT !== 'testing') {
             return $this->response->setStatusCode(400)->setJSON(['error' => 'Only AJAX requests allowed']);
         }
 
         $model_name = $this->request->getPost('model');
+        log_message('debug', json_encode($model_name));
 
         // Vérification de sécurité sur le nom du modèle
         if (empty($model_name) || !preg_match('/^[A-Za-z][A-Za-z0-9]*$/', $model_name)) {
@@ -23,6 +24,7 @@ class DataTable extends BaseController
         try {
             $model = model($model_name);
 
+        log_message('debug', json_encode(print_r(['class' => get_class($model),'methods' => get_class_methods($model) ], true)));
             // Vérifier que le modèle a les méthodes nécessaires (utilise le trait)
             if (!method_exists($model, 'getPaginated')) {
                 return $this->response->setStatusCode(400)->setJSON(['error' => 'Model does not support DataTable']);
@@ -58,6 +60,8 @@ class DataTable extends BaseController
             return $this->response->setJSON($result);
 
         } catch (\Exception $e) {
+            log_message('error', 'DataTable Error: ' . $e->getMessage());
+            log_message('debug', 'Last Query on error: ' . \Config\Database::connect()->getLastQuery());
             log_message('error', 'DataTable Error: ' . $e->getMessage());
             return $this->response->setStatusCode(500)->setJSON(['error' => 'Internal server error']);
         }

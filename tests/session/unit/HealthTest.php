@@ -1,5 +1,7 @@
 <?php
 
+namespace session\unit;
+
 use CodeIgniter\Test\CIUnitTestCase;
 use Config\App;
 use Tests\Support\Libraries\ConfigReader;

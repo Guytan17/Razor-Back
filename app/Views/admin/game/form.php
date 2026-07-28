@@ -292,7 +292,8 @@
                                                                         <label class="form-label" for="amount_tf_<?= $nbTechnicalFouls ?>">Montant</label>
                                                                         <div class="input-group">
                                                                             <input class="form-control" type="number" name="technical_fouls[<?= $nbTechnicalFouls ?>][amount]" id="amount_tf_<?=
-                                                                            $nbTechnicalFouls ?>" value="<?= old('technical_fouls.'.$nbTechnicalFouls.'.amount',esc($technical_foul['amount'] ?? ''));
+                                                                            $nbTechnicalFouls ?>" min="0" value="<?= old('technical_fouls.'.$nbTechnicalFouls.'.amount',esc($technical_foul['amount']
+                                                                                    ?? ''));
                                                                             ?>">
                                                                             <span class="input-group-text text-decoration">€</span>
                                                                         </div>
@@ -650,7 +651,7 @@
                                     <div class="col-4">
                                         <label class="form-label" for="amount_tf_${nbTechnicalFouls}">Montant</label>
                                         <div class="input-group">
-                                            <input class="form-control" type="number" name="technical_fouls[${nbTechnicalFouls}][amount]" id="amount_tf_${nbTechnicalFouls}">
+                                            <input class="form-control" type="number" name="technical_fouls[${nbTechnicalFouls}][amount]" id="amount_tf_${nbTechnicalFouls}" min="0">
                                             <span class="input-group-text text-decoration">€</span>
                                         </div>
 

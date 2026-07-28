@@ -41,6 +41,11 @@
         "sort-packages": true
     },
     "scripts": {
-        "test": "phpunit"
+        "test": "php vendor/bin/phpunit",
+        "test:unit": "phpunit tests/unit/",
+        "test:database": "phpunit tests/database/",
+        "test:feature": "phpunit tests/feature/",
+        "test:coverage": "set XDEBUG_MODE=coverage&& php vendor/bin/phpunit --coverage-html build/coverage",
+        "test:filter": "php vendor/bin/phpunit --filter"
     }
 }
