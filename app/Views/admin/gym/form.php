@@ -90,13 +90,13 @@
                                                 frameborder="0" style="border:0"
                                                 referrerpolicy="no-referrer-when-downgrade"
                                                 <?php if (isset($gym) && !empty($gym['gps_location'])) { ?>
-                                                src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCsBJYByuOScPSGFRTFh9Xeu07lQXzGoPY
+                                                src="https://www.google.com/maps/embed/v1/place?key=<?= env('MapsAPIKey')?>
                                                     &q=<?= esc($gym['gps_location']) ?>"
                                                 <?php } elseif (isset($gym) && empty($gym['gps_location'])) { ?>
-                                                    src="https://www.google.com/maps/embed/v1/search?key=AIzaSyCsBJYByuOScPSGFRTFh9Xeu07lQXzGoPY
+                                                    src="https://www.google.com/maps/embed/v1/search?key=<?= env('MapsAPIKey') ?>
                                                         &q=<?=(esc($gym['name']) ?? '').'+'.(esc($gym['address_1']) ?? '').'+'.(esc($gym['zip_code']) ?? '').'+'.(esc($gym['label']) ?? '')?>"
                                                 <?php } else { ?>
-                                                    src="https://www.google.com/maps/embed/v1/search?key=AIzaSyCsBJYByuOScPSGFRTFh9Xeu07lQXzGoPY
+                                                    src="https://www.google.com/maps/embed/v1/search?key=<?= env('MapsAPIKey') ?>
                                                     &q=+
                                                     &center=46.14556311478873,-1.140210252809791
                                                     &zoom=10"
