@@ -43,6 +43,7 @@ class Club extends AdminController
             $club = $this->clubModel->getFullClub($id);
             $club['teams'] = $this->teamModel->getTeamsByClub($id);
             $club['gyms'] = $this->gymClubModel->getGymsByIdClub($id);
+            $club['contacts'] = $this->contactModel->getContactsById($id,'club');
         } else {
             $title = 'Ajouter un club';
             $this->addBreadcrumb('Ajouter un club');

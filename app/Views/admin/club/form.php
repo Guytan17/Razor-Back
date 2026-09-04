@@ -96,9 +96,9 @@
                         </div>
                     </div>
                     <div id="zone-contact">
-                        <?php if(isset($club->contacts)){
+                        <?php if(isset($club['contacts'])){
                             $nbContacts = 0;
-                            foreach ($club->contacts as $contact) {
+                            foreach ($club['contacts'] as $contact) {
                                 $nbContacts++;?>
                                 <div class="row mb-3 row-contact">
                                     <div class="col-md-6 mb-3">
