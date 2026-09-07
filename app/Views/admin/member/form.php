@@ -107,13 +107,14 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <input type="hidden" id="contact-id-input<?=$nbContacts?>" name="contacts[<?=$nbContacts?>][id]" value="<?= old('contact.'.$nbContacts.'.id',esc($contact['id']));
+                                    <input type="hidden" id="contact-id-input<?=$nbContacts?>" name="contact-id-input[]" value="<?= old('contact.'.$nbContacts.'.id',esc($contact['id']));
                                     ?>">
                                 </div>
                                 <!-- START : ZONE HTML POUR STOCKER LES ID DES CONTACTS SUPPRIMES -->
                                 <div id="zone-removed-contacts">
 
                                 </div>
+                                <!-- END : ZONE HTML POUR STOCKER LES ID DES CONTACTS SUPPRIMES -->
                             <?php }
                         } ?>
                     </div>
@@ -417,10 +418,9 @@ $(document).ready(function () {
 
     //Gestion de la suppression d'un contact
     $('#zone-contact').on('click', '.delete-contact-button' ,function(){
-        nbContacts --;
         let rowContact = $(this).closest('.row-contact');
-        let idRemovedContact = rowContact.find('#contact-id-input').val();
-        console.log(idRemovedContact);
+        let idRemovedContact = rowContact.find('#contact-id-input'+nbContacts).val();
+        nbContacts --;
         rowContact.remove();
         let inputRemovedContacts = `
         <input type="hidden" name="removed-contacts[]" value="${idRemovedContact}">

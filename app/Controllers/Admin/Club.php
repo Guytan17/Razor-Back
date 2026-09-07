@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\ClubModel;
+use App\Models\ContactModel;
 use App\Models\GymClubModel;
 use App\Models\MediaModel;
 use App\Models\TeamModel;
@@ -15,12 +16,14 @@ class Club extends AdminController
     protected $mediaModel;
     protected $teamModel;
     protected $gymClubModel;
+    protected $contactModel;
 
     public function __construct(){
         $this->clubModel = new ClubModel();
         $this->mediaModel = new MediaModel();
         $this->teamModel = new TeamModel();
         $this->gymClubModel = new GymClubModel();
+        $this->contactModel = new ContactModel();
     }
 
     public function index()
@@ -40,6 +43,7 @@ class Club extends AdminController
             $club = $this->clubModel->getFullClub($id);
             $club['teams'] = $this->teamModel->getTeamsByClub($id);
             $club['gyms'] = $this->gymClubModel->getGymsByIdClub($id);
+            $club['contacts'] = $this->contactModel->getContactsById($id,'club');
         } else {
             $title = 'Ajouter un club';
             $this->addBreadcrumb('Ajouter un club');
@@ -62,6 +66,10 @@ class Club extends AdminController
                 'color_2' => $this->request->getPost('color_2'),
             ];
 
+            // Récupération des données de contact
+            $contacts = $this->request->getPost('contacts');
+            $removedContacts = $this->request->getPost('removed-contacts') ?? [];
+
             $gyms = $this->request->getPost('gym');
 
             //Récupération du logo
@@ -81,6 +89,31 @@ class Club extends AdminController
                 $id = $this->clubModel->getInsertID();
             }
 
+            //Gestion suppression des contacts
+            if(isset($removedContacts)) {
+                foreach($removedContacts as $removedContact) {
+                    $this->contactModel->where('id',$removedContact)->delete();
+                }
+            }
+
+            //Gestion ajout et mise à jour des contacts
+            if(isset($contacts)) {
+                foreach($contacts as $contact) {
+                    $dataContact = [
+                        'id' => $contact['id'] ?? null,
+                        'entity_type' => 'club',
+                        'entity_id' => $id,
+                        'phone_number' => $contact['phone_number'],
+                        'mail' => $contact['mail'],
+                        'details' => $contact['details']
+                    ];
+                    if(!$this->contactModel->save($dataContact)){
+                        return redirect()->back()->withInput()->with('error',implode('<br>',$this->contactModel->errors()));
+                    }
+                }
+            }
+
+
             //GESTION DES GYMNASES
             //Création des variables
             //Gym existants pour le club
@@ -88,7 +121,7 @@ class Club extends AdminController
             $existingGymsIndexed = array_column($existingGyms,'main_gym','id_gym');
 
             //Gyms du formulaire
-            $gymsIds = array_column($gyms,'id_gym');
+            $gymsIds = isset($gyms)?array_column($gyms,'id_gym'):'';
 
             //Création de la transaction
             $this->gymClubModel->db->transStart();
