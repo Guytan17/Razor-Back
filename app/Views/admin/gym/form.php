@@ -119,6 +119,47 @@
                             </div>
                         </div>
                         <!-- END: ZONE GOOGLE MAP -->
+                        <!-- START : ZONE POUR AJOUTER UN CONTACT -->
+                        <div class="row mb-3">
+                            <div class="col">
+                            <span class="btn btn-sm btn-secondary" id="add-contact">
+                                <i class="fas fa-plus"></i> Ajouter un contact
+                            </span>
+                            </div>
+                        </div>
+                        <div id="zone-contact">
+                            <?php if(isset($gym['contacts'])){
+                                $nbContacts = 0;
+                                foreach ($gym['contacts'] as $contact) {
+                                    $nbContacts++; ?>
+
+                                    <!-- START : LIGNE CONTACTS AVEC LES INPUTS -->
+                                    <?= $this->setData([
+                                            'contact'=>$contact,
+                                            'nbContacts'=>$nbContacts
+                                    ])->include('admin/contact/contact-inputs',null,false)
+                                    ?>
+                                    <!-- END : LIGNE CONTACTS AVEC LES INPUTS -->
+
+                                <?php } ?>
+                            <?php } ?>
+
+                            <!-- START : ZONE POUR LES NOUVEAUX CONTACTS-->
+                            <template id="contact-template">
+                                <?= $this->setData([
+                                        'nbContacts'=>'__NB_CONTACTS__',
+                                ])->include('admin/contact/contact-inputs')
+                                ?>
+                            </template>
+                            <!-- END : ZONE POUR LES NOUVEAUX CONTACTS-->
+
+                            <!-- START : INPUT HTML POUR STOCKER LES ID DES CONTACTS SUPPRIMES -->
+                            <div id="zone-removed-contacts">
+
+                            </div>
+                            <!-- END : INPUT HTML POUR STOCKER LES ID DES CONTACTS SUPPRIMES -->
+                        </div>
+                        <!-- END : ZONE POUR AJOUTER UN CONTACT -->
                     </div>
                     <!-- END : INFOS DU GYMNASE -->
                     <!-- ZONE : ÉLÉMENTS RATTACHÉS AU GYMNASE -->
@@ -242,9 +283,31 @@
     $(document).ready(function () {
         baseUrl = "<?= base_url(); ?>";
         let nbClubs = $('#zone-club .card-club').length ;
+        let nbContacts = $('#zone-contact .row-contact').length ;
 
         //Initialisation du select des villes
         initAjaxSelect2(`#select-city`, {url:'/admin/city/search',searchFields:'label,zip_code',additionalFields:['department_number','department_name'],placeholder:'Rechercher une ville'});
+
+        //Gestion de l'ajout d'un contact
+        $('#add-contact').on('click',function(){
+            nbContacts ++;
+            let row = $('#contact-template').html();
+            row = row.replaceAll('__NB_CONTACTS__', nbContacts);
+            $('#zone-contact').append(row);
+        })
+
+        //Gestion de la suppression d'un contact
+        $('#zone-contact').on('click', '.delete-contact-button' ,function(){
+            let rowContact = $(this).closest('.row-contact');
+            let idRemovedContact = rowContact.find('.contact-id-input').val();
+            nbContacts --;
+            rowContact.remove();
+            let inputRemovedContacts = `
+        <input type="hidden" name="removed-contacts[]" value="${idRemovedContact}">
+        `;
+            $('#zone-removed-contacts').append(inputRemovedContacts);
+        })
+
 
         //Initialisation du select des clubs
         initAjaxSelect2('#select-club', {url:'/admin/club/search',searchFields:'name',additionalFields:['code'],placeholder:'Rechercher un club'});
