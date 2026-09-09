@@ -111,12 +111,16 @@
 
                             <?php } ?>
                         <?php } ?>
+
+                        <!-- START : ZONE POUR LES NOUVEAUX CONTACTS-->
                         <template id="contact-template">
                             <?= $this->setData([
                                     'nbContacts'=>'__NB_CONTACTS__',
                             ])->include('admin/contact/contact-inputs')
                             ?>
                         </template>
+                        <!-- END : ZONE POUR LES NOUVEAUX CONTACTS-->
+
                         <!-- START : INPUT HTML POUR STOCKER LES ID DES CONTACTS SUPPRIMES -->
                         <div id="zone-removed-contacts">
 
@@ -262,9 +266,8 @@ $(document).ready(function () {
     let logoId = $('#logoPreview').data('logo-id') ?? null;
     let hasLogo = logoId ? true : false;
     let nbContacts = $('#zone-contact .row-contact').length ;
-
     let cptGym = $('#zone-gym .card-gym').length;
-    console.log(nbContacts);
+
     //Apparition et disparition du bouton de suppression de l'image
     $('.logo-hover').on('mouseenter', function() {
         if(hasLogo) {
@@ -304,7 +307,6 @@ $(document).ready(function () {
         let rowContact = $(this).closest('.row-contact');
         let idRemovedContact = rowContact.find('.contact-id-input').val();
         nbContacts --;
-        console.log(nbContacts, idRemovedContact);
         rowContact.remove();
         let inputRemovedContacts = `
         <input type="hidden" name="removed-contacts[]" value="${idRemovedContact}">
@@ -322,7 +324,6 @@ $(document).ready(function () {
         cptGym++;
         let gym = $('#select-gym').select2('data')[0];
         gym.text=(gym.text).split(',').join(' - ');
-        console.log(gym);
         let row=`
         <div class="row mb-3 row-gym">
             <div class="col">

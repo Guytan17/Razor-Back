@@ -112,6 +112,7 @@ class Member extends AdminController
             // Récupération des données de contact
             $contacts = $this->request->getPost('contacts');
             $removedContacts = $this->request->getPost('removed-contacts') ?? [];
+            dd($contacts, $removedContacts);
 
             //Gérer Équipes (coach et joueurs)
             $coachs = $this->request->getPost('coachs') ?? [];

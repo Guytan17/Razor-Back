@@ -67,7 +67,6 @@ class Club extends AdminController
             ];
 
             // Récupération des données de contact
-            $existingContacts = array_column($this->contactModel->getContactsById($id,'club'),'id');
             $contacts = $this->request->getPost('contacts');
             $removedContacts = $this->request->getPost('removed-contacts') ?? [];
 
@@ -101,18 +100,16 @@ class Club extends AdminController
             //Gestion ajout et mise à jour des contacts
             if(isset($contacts)) {
                 foreach($contacts as $contact) {
-                    if(!in_array($contact['id'],$existingContacts)) {
-                        $dataContact = [
-                            'id' => $contact['id'] ?? null,
-                            'entity_type' => 'club',
-                            'entity_id' => $id,
-                            'phone_number' => $contact['phone_number'],
-                            'mail' => $contact['mail'],
-                            'details' => $contact['details']
-                        ];
-                        if(!$this->contactModel->save($dataContact)){
-                            return redirect()->back()->withInput()->with('error',implode('<br>',$this->contactModel->errors()));
-                        }
+                    $dataContact = [
+                        'id' => $contact['id'] ?? null,
+                        'entity_type' => 'club',
+                        'entity_id' => $id,
+                        'phone_number' => $contact['phone_number'],
+                        'mail' => $contact['mail'],
+                        'details' => $contact['details']
+                    ];
+                    if(!$this->contactModel->save($dataContact)){
+                        return redirect()->back()->withInput()->with('error',implode('<br>',$this->contactModel->errors()));
                     }
                 }
             }

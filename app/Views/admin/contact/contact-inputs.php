@@ -7,7 +7,7 @@ $contact = $contact ?? [];
             <div class="col-6">
                 <label class="form-label" for="phone_number<?=$nbContacts?>">Numéro de telephone</label>
                 <input class="form-control" type="text" id="phone_number<?=$nbContacts?>" name="contacts[<?=$nbContacts?>][phone_number]" value="<?= old('contact.'
-                    .$nbContacts.'.phone_number',esc($contact['phone_number']??''));?>">
+                    .$nbContacts.'.phone_number',esc($contact['phone_number']??''));?>" minlength="10" maxlength="10">
             </div>
             <div class="col-6">
                 <label class="form-label" for="mail<?=$nbContacts?>">Adresse e-mail</label>
