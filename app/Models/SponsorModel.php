@@ -69,7 +69,7 @@ class SponsorModel extends Model
                     'type' => 'left'
                 ],
             ],
-            'select' => 'sponsor.id as sponsor_id, name, rank, specifications,media.file_path as logo_url,media.id as logo_id'
+            'select' => 'sponsor.id as id, name, rank, specifications,media.file_path as logo_url,media.id as logo_id'
         ];
     }
 }

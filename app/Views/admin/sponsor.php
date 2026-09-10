@@ -140,12 +140,53 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col">
                             <label class="form-label" for="modalSpecificationsInput">Caractéristiques et instructions</label>
                             <textarea class="form-control" name="specifications" id="modalSpecificationsInput" rows="3"></textarea>
                         </div>
                     </div>
+                    <!-- START : ZONE POUR AJOUTER UN CONTACT -->
+                    <div class="row mb-3">
+                        <div class="col">
+                            <span class="btn btn-sm btn-secondary" id="add-contact">
+                                <i class="fas fa-plus"></i> Ajouter un contact
+                            </span>
+                        </div>
+                    </div>
+                    <div id="zone-contact">
+                        <?php if(isset($sponsor['contacts'])){
+                            $nbContacts = 0;
+                            foreach ($sponsor['contacts'] as $contact) {
+                                $nbContacts++; ?>
+
+                                <!-- START : LIGNE CONTACTS AVEC LES INPUTS -->
+                                <?= $this->setData([
+                                        'contact'=>$contact,
+                                        'nbContacts'=>$nbContacts
+                                ])->include('admin/contact/contact-inputs-modal',null,false)
+                                ?>
+                                <!-- END : LIGNE CONTACTS AVEC LES INPUTS -->
+
+                            <?php } ?>
+                        <?php } ?>
+
+                        <!-- START : ZONE POUR LES NOUVEAUX CONTACTS-->
+                        <template id="contact-template">
+                            <?= $this->setData([
+                                    'nbContacts'=>'__NB_CONTACTS__',
+                            ])->include('admin/contact/contact-inputs-modal')
+                            ?>
+                        </template>
+                        <!-- END : ZONE POUR LES NOUVEAUX CONTACTS-->
+
+                        <!-- START : INPUT HTML POUR STOCKER LES ID DES CONTACTS SUPPRIMES -->
+                        <div id="zone-removed-contacts">
+
+                        </div>
+                        <!-- END : INPUT HTML POUR STOCKER LES ID DES CONTACTS SUPPRIMES -->
+                    </div>
+                    <!-- END : ZONE POUR AJOUTER UN CONTACT -->
                     <!-- END : DONNEES TEXTUELLES -->
                 </div>
                 <div class="modal-footer">
@@ -204,7 +245,7 @@
                             ;
                     }
                 },
-                {data: 'sponsor_id'},
+                {data: 'id'},
                 {
                     className: 'dt-center',
                     data: null,
@@ -253,7 +294,6 @@
         });
     });
 
-
     //Définition de la modal
     const myModal = new bootstrap.Modal('#modalSponsor');
 
@@ -274,6 +314,28 @@
 
         myModal.show();
     });
+
+    let nbContacts = $('#zone-contact .row-contact').length ;
+
+    //Gestion de l'ajout d'un contact
+    $('#add-contact').on('click',function(){
+        nbContacts ++;
+        let row = $('#contact-template').html();
+        row = row.replaceAll('__NB_CONTACTS__', nbContacts);
+        $('#zone-contact').append(row);
+    })
+
+    //Gestion de la suppression d'un contact
+    $('#zone-contact').on('click', '.delete-contact-button' ,function(){
+        let rowContact = $(this).closest('.row-contact');
+        let idRemovedContact = rowContact.find('.contact-id-input').val();
+        nbContacts --;
+        rowContact.remove();
+        let inputRemovedContacts = `
+        <input type="hidden" name="removed-contacts[]" value="${idRemovedContact}">
+        `;
+        $('#zone-removed-contacts').append(inputRemovedContacts);
+    })
 
     //action au clic sur le bouton de suppression d'un sponsor
     $(document).on('click', '.btn-delete-sponsor', function () {
