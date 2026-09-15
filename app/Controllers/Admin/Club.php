@@ -89,6 +89,7 @@ class Club extends AdminController
                 $id = $this->clubModel->getInsertID();
             }
 
+            //GESTION DES CONTACTS
             //Gestion suppression des contacts
             if(isset($removedContacts)) {
                 foreach($removedContacts as $removedContact) {
@@ -112,7 +113,6 @@ class Club extends AdminController
                     }
                 }
             }
-
 
             //GESTION DES GYMNASES
             //Création des variables

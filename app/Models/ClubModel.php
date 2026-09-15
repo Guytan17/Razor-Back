@@ -85,6 +85,7 @@ class ClubModel extends Model
                 code,
                 CONCAT(color_1," - ",color_2) AS colors,
                 club.deleted_at as deleted_at,
+                media.id as media_id,
                 media.file_path as image_url
                 '
             ]

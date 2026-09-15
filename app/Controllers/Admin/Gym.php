@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\CityModel;
+use App\Models\ContactModel;
 use App\Models\GameModel;
 use CodeIgniter\Model;
 use App\Models\AddressModel;
@@ -18,12 +19,14 @@ class Gym extends AdminController
     protected $gymClubModel;
     protected $gameModel;
     protected $cityModel;
+    protected $contactModel;
     public function __construct(){
         $this->addressModel = new AddressModel();
         $this->gymModel = new GymModel();
         $this->gymClubModel = new GymClubModel();
         $this->gameModel = new GameModel();
         $this->cityModel = new CityModel();
+        $this->contactModel = new ContactModel();
     }
     public function index()
     {
@@ -44,6 +47,7 @@ class Gym extends AdminController
             $gym = $this->gymModel->getGymById($id);
             $gym['clubs']= $this->gymClubModel->getClubsByIdGym($id);
             $gym['games']= $this->gameModel->getGamesByGym($id);
+            $gym['contacts']= $this->contactModel->getContactsById($id,'gym');
         } else {
             $title = 'Ajout d\'un gymnase';
             $this->addBreadcrumb('Ajouter un gymnase');
@@ -76,6 +80,10 @@ class Gym extends AdminController
                 'gps_location' => $this->request->getPost('gps_location') ?? '',
             ];
 
+            // Récupération des données de contact
+            $contacts = $this->request->getPost('contacts');
+            $removedContacts = $this->request->getPost('removed-contacts') ?? [];
+
             //Données concernant le club
             $clubs = $this->request->getPost('clubs') ?? [];
             //Variable pour savoir si c'est un nouveau gymnase
@@ -93,6 +101,31 @@ class Gym extends AdminController
                 return redirect()->back()->withInput()->with('error',implode('<br>',$this->gymModel->errors()));
             } elseif ($newGym){
                 $dataGym['id'] = $this->gymModel->getInsertID();
+            }
+
+            //GESTION DES CONTACTS
+            //Gestion suppression des contacts
+            if(isset($removedContacts)) {
+                foreach($removedContacts as $removedContact) {
+                    $this->contactModel->where('id',$removedContact)->delete();
+                }
+            }
+
+            //Gestion ajout et mise à jour des contacts
+            if(isset($contacts)) {
+                foreach($contacts as $contact) {
+                    $dataContact = [
+                        'id' => $contact['id'] ?? null,
+                        'entity_type' => 'gym',
+                        'entity_id' => $id,
+                        'phone_number' => $contact['phone_number'],
+                        'mail' => $contact['mail'],
+                        'details' => $contact['details']
+                    ];
+                    if(!$this->contactModel->save($dataContact)){
+                        return redirect()->back()->withInput()->with('error',implode('<br>',$this->contactModel->errors()));
+                    }
+                }
             }
 
             //GESTION DES CLUBS
