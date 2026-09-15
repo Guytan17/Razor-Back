@@ -52,6 +52,87 @@
 
 <script>
 
+    var baseUrl = "<?=base_url();?>";
+
+    $(document).ready(function() {
+        // Initialiser l'aperçu du logo
+        initImagePreview('#logo', '#logoPreview', '<?= esc(base_url('/assets/img/default.png'), 'js') ?>', 2);
+
+        table = $('#sponsorsTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: baseUrl + 'datatable/searchdatatable',
+                type: 'POST',
+                data: {
+                    model: 'SponsorModel'
+                }
+            },
+            columns: [
+                {
+                    data: null,
+                    defaultContent: '',
+                    orderable: false,
+                    width: '100px',
+                    render: function (data, type, row) {
+                        return `
+                            <div class="btn-group" role="group">
+                                <button
+                                    class="btn btn-sm btn-warning btn-edit-sponsor"
+                                    title="Modifier"
+                                    data-id='${row.sponsor_id}'
+                                    data-name='${escapeHtml(row.name)}'
+                                    data-rank='${escapeHtml(row.rank)}'
+                                    data-specifications='${escapeHtml(row.specifications)}'
+                                    data-logo-url='${escapeHtml(row.logo_url)}'
+                                    data-logo-id='${escapeHtml(row.logo_id)}'>
+                                        <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger btn-delete-sponsor"
+                                    title="Supprimer"
+                                    data-id="${row.sponsor_id}">
+                                        <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        `
+                            ;
+                    }
+                },
+                {data: 'id'},
+                {
+                    className: 'dt-center',
+                    data: null,
+                    orderable: false,
+                    render: function (data, type, row) {
+                        if (row.logo_url) {
+                            return `<img style="height:40px;" src='${baseUrl}/${row.logo_url}'>
+                                    `;
+                        } else {
+                            return `<img style="height:40px;" src='${baseUrl}/assets/img/default.png'>
+                                    `;
+                        }
+                    }
+                },
+                {data: 'name'},
+                {
+                    className: 'dt-left',
+                    data: 'rank'
+                },
+            ],
+            language: {
+                url: baseUrl + 'assets/js/datatable/datatable-2.3.5-fr-FR.json',
+            },
+            order: [[1, 'desc']], // Tri par ID décroissant par défaut
+            pageLength: 25,
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Tous"]]
+        });
+
+        // Fonction pour actualiser la table
+        window.refreshTable = function () {
+            table.ajax.reload(null, false); // false pour garder la pagination
+        };
+    });
+
 </script>
 
 <style>
