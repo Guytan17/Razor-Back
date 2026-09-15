@@ -23,7 +23,7 @@ class Sponsor extends AdminController
         $data = [
             'title' => $title,
         ];
-        return $this->render('admin/sponsor', $data);
+        return $this->render('admin/sponsor/index', $data);
     }
 
     public function insertSponsor(){

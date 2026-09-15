@@ -24,7 +24,29 @@
     <!-- END : ZONE POUR LES ALERTES BOOTSTRAP -->
 
     <div class="row">
-
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title h5">Liste des sponsors</span>
+                </div>
+                <div class="card-body overflow-auto">
+                    <table class="table table-striped" id="sponsorsTable">
+                        <thead>
+                        <tr>
+                            <th>Actions</th>
+                            <th>ID</th>
+                            <th>Logo</th>
+                            <th>Nom du sponsor</th>
+                            <th>Niveau d'importance</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- chargé en Ajax -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
