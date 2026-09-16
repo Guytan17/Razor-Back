@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Models\ContactModel;
 use App\Models\MediaModel;
 use App\Models\SponsorModel;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -11,10 +12,12 @@ class Sponsor extends AdminController
 {
     protected $sponsorModel;
     protected $mediaModel;
+    protected $contactModel;
 
     public function __construct() {
         $this->sponsorModel = new SponsorModel();
         $this->mediaModel = new MediaModel();
+        $this->contactModel = new ContactModel();
     }
     public function index()
     {
@@ -24,6 +27,24 @@ class Sponsor extends AdminController
             'title' => $title,
         ];
         return $this->render('admin/sponsor/index', $data);
+    }
+
+    public function form($id=null) {
+        $this->addBreadcrumb('Liste des sponsors', 'admin/sponsor');
+        if($id != null) {
+            $title = 'Modifier un sponsor';
+            $this->addBreadcrumb('Modifier un sponsor');
+            $sponsor = $this->sponsorModel->find($id);
+            $sponsor['contacts'] = $this->contactModel->getContactsById($id,'club');
+        } else {
+            $title = 'Ajouter un club';
+            $this->addBreadcrumb('Ajouter un club');
+        }
+        $data = [
+            'title' => $title,
+            'sponsor' => $club ?? null,
+        ];
+        return $this->render('admin/sponsor/form', $data);
     }
 
     public function insertSponsor(){

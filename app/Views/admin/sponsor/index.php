@@ -77,20 +77,11 @@
                     render: function (data, type, row) {
                         return `
                             <div class="btn-group" role="group">
-                                <button
-                                    class="btn btn-sm btn-warning btn-edit-sponsor"
-                                    title="Modifier"
-                                    data-id='${row.sponsor_id}'
-                                    data-name='${escapeHtml(row.name)}'
-                                    data-rank='${escapeHtml(row.rank)}'
-                                    data-specifications='${escapeHtml(row.specifications)}'
-                                    data-logo-url='${escapeHtml(row.logo_url)}'
-                                    data-logo-id='${escapeHtml(row.logo_id)}'>
-                                        <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger btn-delete-sponsor"
-                                    title="Supprimer"
-                                    data-id="${row.sponsor_id}">
+                                <a class="btn btn-sm btn-warning btn-edit-sponsor" title="Modifier"
+                                  href="${baseUrl}/admin/sponsor/form/${row.id}">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button class="btn btn-sm btn-danger btn-delete-sponsor" title="Supprimer">
                                         <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>
@@ -132,10 +123,10 @@
             table.ajax.reload(null, false); // false pour garder la pagination
         };
     });
-
 </script>
 
 <style>
 
 </style>
+
 <?php $this->endsection() ; ?>
