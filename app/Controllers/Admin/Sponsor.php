@@ -34,7 +34,7 @@ class Sponsor extends AdminController
         if($id != null) {
             $title = 'Modifier un sponsor';
             $this->addBreadcrumb('Modifier un sponsor');
-            $sponsor = $this->sponsorModel->find($id);
+            $sponsor = $this->sponsorModel->getFullSponsor($id);
             $sponsor['contacts'] = $this->contactModel->getContactsById($id,'club');
         } else {
             $title = 'Ajouter un club';
@@ -42,7 +42,7 @@ class Sponsor extends AdminController
         }
         $data = [
             'title' => $title,
-            'sponsor' => $club ?? null,
+            'sponsor' => $sponsor ?? null,
         ];
         return $this->render('admin/sponsor/form', $data);
     }

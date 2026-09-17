@@ -105,7 +105,6 @@ class ClubModel extends Model
     public function getFullClub($idClub): array{
         $this->select('club.*, media.id AS media_id');
         $this->join('media', 'media.entity_id ='. $idClub .' AND media.entity_type="club"','left');
-        $this->where('club.id', $idClub);
         return $this->first();
     }
 }
