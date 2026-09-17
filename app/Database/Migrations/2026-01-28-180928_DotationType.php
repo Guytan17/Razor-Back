@@ -21,11 +21,11 @@ class TypeDotation extends Migration
             ]
         ]);
         $this->forge->addKey('id',true);
-        $this->forge->createTable('type_dotation',true);
+        $this->forge->createTable('dotation_type',true);
     }
 
     public function down()
     {
-        $this->forge->dropTable('type_dotation',true);
+        $this->forge->dropTable('dotation_type',true);
     }
 }

@@ -4,7 +4,7 @@ namespace App\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
 
-class RankSponsorSeeder extends Seeder
+class SponsorRankSeeder extends Seeder
 {
     public function run()
     {
@@ -27,6 +27,6 @@ class RankSponsorSeeder extends Seeder
             ],
 
         ];
-        $this->db->table('rank_sponsor')->insertBatch($data);
+        $this->db->table('sponsor_rank')->insertBatch($data);
     }
 }

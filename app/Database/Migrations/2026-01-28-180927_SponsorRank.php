@@ -26,11 +26,11 @@ class RankSponsor extends Migration
             ]
         ]);
         $this->forge->addKey('id',true);
-        $this->forge->createTable('rank_sponsor',true);
+        $this->forge->createTable('sponsor_rank',true);
     }
 
     public function down()
     {
-        $this->forge->dropTable('rank_sponsor',true);
+        $this->forge->dropTable('sponsor_rank',true);
     }
 }

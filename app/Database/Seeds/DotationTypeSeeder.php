@@ -4,7 +4,7 @@ namespace App\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
 
-class TypeDotationSeeder extends Seeder
+class DotationTypeSeeder extends Seeder
 {
     public function run()
     {
@@ -24,6 +24,6 @@ class TypeDotationSeeder extends Seeder
 
 
         ];
-        $this->db->table('type_dotation')->insertBatch($data);
+        $this->db->table('dotation_type')->insertBatch($data);
     }
 }
