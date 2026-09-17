@@ -121,6 +121,19 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->get('search-classification', 'TechnicalFoulParams::searchClassification');
     });
 
+    //Routes pour la gestion des paramètres des sponsors
+    $routes->group('sponsors-params', ['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'SponsorsParams::index');
+        $routes->post('insert-type', 'SponsorsParams::insertType'); //Sauvegarde création des types de dotation
+        $routes->post('update-type/(:num)', 'SponsorsParams::updateType/$1');//Sauvegarde édition des types de dotation
+        $routes->post('delete-type/(:num)', 'SponsorsParams::deleteType/$1'); // Suppression des types de dotation
+        $routes->post('insert-rank', 'SponsorsParams::insertRank'); //Sauvegarde création des rangs d'importance
+        $routes->post('update-rank/(:num)', 'SponsorsParams::updateRank/$1');//Sauvegarde édition des rangs d'importance
+        $routes->post('delete-rank/(:num)', 'SponsorsParams::deleteRank/$1'); // Suppression des rangs d'importance
+        $routes->get('search-type', 'SponsorsParams::searchType');
+        $routes->get('search-rank', 'SponsorsParams::searchRank');
+    });
+
     //Routes pour la gestion des roles
     $routes->group('role',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Role::index');
