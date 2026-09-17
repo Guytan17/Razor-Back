@@ -16,28 +16,34 @@ class Sponsor extends Migration
             ],
             'name'=> [
                 'type'=>'VARCHAR',
-                'constraint'=>255,
+                'constraint'=>50,
                 'null'=>false,
             ],
             'slug'=> [
                 'type'=>'VARCHAR',
-                'constraint'=>255,
+                'constraint'=>50,
+                'null'=>false,
+                'unique'=>true,
+            ],
+            'slogan'=> [
+                'type'=>'VARCHAR',
+                'constraint'=>150,
                 'null'=>false,
                 'unique'=>true,
             ],
             'rank'=>[
                 'type'=>'INT',
-                'constraint'=>1,
+                'constraint'=>9,
                 'null'=>true,
             ],
             'dotation_type'=>[
-                'type'=>'VARCHAR',
-                'constraint'=>255,
+                'type'=>'INT',
+                'constraint'=>9,
                 'null'=>false,
             ],
             'dotation_amount'=>[
                 'type'=>'INT',
-                'constraint'=>11,
+                'constraint'=>9,
                 'null'=>false,
             ],
             'specifications'=>[
@@ -46,6 +52,8 @@ class Sponsor extends Migration
             ]
         ]);
         $this->forge->addKey('id',true);
+        $this->forge->addForeignKey('rank','rank_sponsor','id','CASCADE','RESTRICT');
+        $this->forge->addForeignKey('dotation_type','type_dotation','id','CASCADE','RESTRICT');
         $this->forge->createTable('sponsor',true);
     }
 

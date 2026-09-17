@@ -85,7 +85,7 @@ class Member extends Migration
             ],
         ]);
         $this->forge->addKey('id',true);
-        $this->forge->addForeignKey('id_license_code','license_code','id','CASCADE','CASCADE');
+        $this->forge->addForeignKey('id_license_code','license_code','id','CASCADE','RESTRICT');
         $this->forge->createTable('member',true);
     }
 
