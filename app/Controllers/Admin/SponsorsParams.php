@@ -69,4 +69,56 @@ class SponsorsParams extends AdminController
             return redirect()->back()->withInput();
         }
     }
+
+    public function updateRank($id) {
+        try{
+            // Récupération des données
+            $dataRank = [
+                'rank' => $this->request->getPost('rank'),
+                'label' => $this->request->getPost('label'),
+            ];
+
+            if($this->sponsorRankModel->update($id,$dataRank)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Rang de sponsor modifié avec succès',
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $this->sponsorRankModel->errors(),
+                ]);
+            }
+        } catch(\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+    public function updateType($id) {
+        try{
+            // Récupération des données
+            $dataType = [
+                'type' => $this->request->getPost('type'),
+            ];
+
+            if($this->dotationTypeModel->update($id,$dataType)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Type de dotation modifié avec succès',
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $this->dotationTypeModel->errors(),
+                ]);
+            }
+        } catch(\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
 }

@@ -216,7 +216,7 @@
         })
 
         // Fonction pour actualiser la table des rangs
-        window.refreshTableType = function () {
+        window.refreshTableRank = function () {
             tableRank.ajax.reload(null, false); // false pour garder la pagination
         }
         //GESTION INDEX DES TYPES DE DOTATION
@@ -301,7 +301,82 @@
         myModalType.show();
     });
 
+    // FONCTIONS SAVE POUR RANK ET TYPE
+    function saveRank () {
+        let rank = $('#modalRankInput').val();
+        let id = $('#modalRankInput').data('id');
+        let label = $('#modalRankLabelInput').val();
+        $.ajax({
+            url: baseUrl + 'admin/sponsors-params/update-rank/'+id,
+            type:'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            data: {
+                rank: rank,
+                label: label,
+                [csrfName]: csrfHash
+            },
+            dataType: 'json',
+            success: function(response) {
+                if(response.success){
+                    myModalRank.hide();
+                    Swal.fire({
+                        title : 'Succès !',
+                        text: response.message,
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    //Actualiser la table
+                    refreshTableRank();
+                } else {
+                    Swal.fire({
+                        title: 'Erreur !',
+                        html: getAjaxErrorMessage(response),
+                        icon: 'error'
+                    });
+                }
+            }
+        })
+    }
 
+    function saveType () {
+        let type = $('#modalTypeInput').val();
+        let id = $('#modalTypeInput').data('id');
+        $.ajax({
+            url: baseUrl + 'admin/sponsors-params/update-type/'+id,
+            type:'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            data: {
+                type: type,
+                [csrfName]: csrfHash
+            },
+            dataType: 'json',
+            success: function(response) {
+                if(response.success){
+                    myModalType.hide();
+                    Swal.fire({
+                        title : 'Succès !',
+                        text: response.message,
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    //Actualiser la table
+                    refreshTableType();
+                } else {
+                    Swal.fire({
+                        title: 'Erreur !',
+                        html: getAjaxErrorMessage(response),
+                        icon: 'error'
+                    });
+                }
+            }
+        })
+    }
 </script>
 
 <?php $this->endSection() ?>
