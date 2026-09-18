@@ -72,4 +72,10 @@ class SponsorModel extends Model
             'select' => 'sponsor.id as id, name, rank, specifications,media.file_path as logo_url,media.id as logo_id'
         ];
     }
+
+    public function getFullSponsor($idSponsor): array{
+        $this->select('sponsor.*, media.id AS media_id');
+        $this->join('media', 'media.entity_id = '.$idSponsor.' and media.entity_type = \'sponsor\'','left');
+        return $this->first();
+    }
 }

@@ -60,8 +60,8 @@
         "url" : "/admin/license-code",
         "icon" : "fas fa-square-binary"
       },
-      "classification": {
-        "title" : "Paramètres fautes techniques",
+      "technical foul parameters": {
+        "title" : "Paramètres liés aux fautes techniques",
         "url" : "/admin/technical-foul-params",
         "icon" : "fas fa-scale-balanced"
       },
@@ -79,6 +79,11 @@
         "title" : "Services",
         "url" : "/admin/service",
         "icon" : "fas fa-car-side"
+      },
+      "sponsors parameters" : {
+        "title" : "Paramètres liés aux sponsors",
+        "url" : "/admin/sponsors-params",
+        "icon" : "fas fa-circle-dollar-to-slot"
       },
       "users" : {
         "title" : "Utilisateurs",

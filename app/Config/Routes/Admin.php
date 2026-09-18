@@ -85,6 +85,8 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
     //Routes pour les sponsors
     $routes->group('sponsor',['filter' => 'group:admin'], function($routes) {
         $routes->get('/', 'Sponsor::index');
+        $routes->get('form', 'Sponsor::form');//accès au formulaire de création
+        $routes->get('form/(:num)', 'Sponsor::form/$1');// accès au formulaire d'édition
         $routes->post('insert', 'Sponsor::insertSponsor'); //sauvegarde création
         $routes->post('update/(:num)', 'Sponsor::updateSponsor/$1'); //sauvegarde édition
         $routes->post('delete/(:num)', 'Sponsor::deleteSponsor/$1'); // suppression sponsor
@@ -117,6 +119,19 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('delete-classification/(:num)', 'TechnicalFoulParams::deleteClassification/$1'); // Suppression des Classifications
         $routes->get('search-type', 'TechnicalFoulParams::searchType');
         $routes->get('search-classification', 'TechnicalFoulParams::searchClassification');
+    });
+
+    //Routes pour la gestion des paramètres des sponsors
+    $routes->group('sponsors-params', ['filter' => 'group:admin'], function($routes) {
+        $routes->get('/', 'SponsorsParams::index');
+        $routes->post('insert-type', 'SponsorsParams::insertType'); //Sauvegarde création des types de dotation
+        $routes->post('update-type/(:num)', 'SponsorsParams::updateType/$1');//Sauvegarde édition des types de dotation
+        $routes->post('delete-type/(:num)', 'SponsorsParams::deleteType/$1'); // Suppression des types de dotation
+        $routes->post('insert-rank', 'SponsorsParams::insertRank'); //Sauvegarde création des rangs d'importance
+        $routes->post('update-rank/(:num)', 'SponsorsParams::updateRank/$1');//Sauvegarde édition des rangs d'importance
+        $routes->post('delete-rank/(:num)', 'SponsorsParams::deleteRank/$1'); // Suppression des rangs d'importance
+        $routes->get('search-type', 'SponsorsParams::searchType');
+        $routes->get('search-rank', 'SponsorsParams::searchRank');
     });
 
     //Routes pour la gestion des roles
