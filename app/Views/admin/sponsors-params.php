@@ -16,7 +16,7 @@
                     <div class="row mb-2">
                         <div class="col">
                             <label class="form-label" for="rank">Rang<span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" name="code_type" id="rank" value="<?= old('rank')?>" required>
+                            <input class="form-control" type="text" name="rank" id="rank" value="<?= old('rank')?>" required>
                         </div>
                     </div>
                     <div class="row">
