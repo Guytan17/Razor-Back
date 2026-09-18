@@ -3,16 +3,16 @@
 <?php $this->section('content') ;?>
 
 <div class="container-fluid">
-    <div class="row">
+    <div class="row d-flex">
     <!-- START : ZONE RANK-SPONSOR -->
-        <div class="col-md-6">
+        <div class="col-md-6 mb-3">
             <!-- START : ZONE CREATION RANK -->
             <div class="card mb-3">
                 <?= form_open('/admin/sponsors-params/insert-rank') ?>
                 <div class="card-header">
                     <span class="card-title h5"> Création d'un rang d'importance des sponsors</span>
                 </div>
-                <div class="card-body">
+                <div class="card-body card-body-rank">
                     <div class="row mb-2">
                         <div class="col">
                             <label class="form-label" for="rank">Rang<span class="text-danger">*</span></label>
@@ -88,15 +88,15 @@
     <!-- END : ZONE RANK-SPONSOR -->
 
     <!-- START : ZONE DOTATION-TYPE -->
-        <div class="col-md-6">
+        <div class="col-md-6 mb-3">
             <!-- START : ZONE CREATION TYPE -->
             <div class="card mb-3">
                 <?= form_open('/admin/sponsors-params/insert-type') ?>
                 <div class="card-header">
                     <span class="card-title h5"> Création d'un type dotation</span>
                 </div>
-                <div class="card-body">
-                    <div class="row mb-2">
+                <div class="card-body card-body-type">
+                    <div class="row mb-2 w-100 g-0">
                         <div class="col">
                             <label class="form-label" for="dotation-type">Type de dotation<span class="text-danger">*</span></label>
                             <input class="form-control" type="text" name="dotation_type" id="dotation-type" value="<?= old('dotation-type')?>" required>
@@ -272,6 +272,16 @@
         }
     });
 
+    //FONCTIONS POUR APPELER LES FONCTIONS DE SUPPRESSION
+    //Pour RANK
+    $(document).on('click','.btn-delete-rank', function(){
+        deleteRank($(this).data('id'));
+    })
+    //Pour TYPE
+    $(document).on('click','.btn-delete-type', function(){
+        deleteType($(this).data('id'));
+    })
+
     //MODAL RANK
     //Définition de la modal Rank
     const myModalRank = new bootstrap.Modal('#modalRank');
@@ -377,6 +387,113 @@
             }
         })
     }
+
+    //FONCTIONS DE SUPPRESSION
+    //RANK
+    function deleteRank(id) {
+        Swal.fire({
+            title: `Êtes-vous sûr ?`,
+            text: `Voulez-vous vraiment supprimer ce rang ?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#28a745",
+            cancelButtonColor: "#6c757d",
+            confirmButtonText: `Oui !`,
+            cancelButtonText: "Annuler",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '<?= base_url('/admin/sponsors-params/delete-rank/') ?>' + id,
+                    type: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    data: {
+                        [csrfName]: csrfHash
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Succès !',
+                                text: response.message,
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                            refreshTableRank();
+                        } else {
+                            Swal.fire({
+                                title: 'Erreur !',
+                                text: 'Une erreur est survenue',
+                                icon: 'error'
+                            });
+                        }
+                    }
+                })
+            }
+        });
+    }
+
+    //TYPE
+    function deleteType(id) {
+        Swal.fire({
+            title: `Êtes-vous sûr ?`,
+            text: `Voulez-vous vraiment supprimer ce type de dotation ?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#28a745",
+            cancelButtonColor: "#6c757d",
+            confirmButtonText: `Oui !`,
+            cancelButtonText: "Annuler",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '<?= base_url('/admin/sponsors-params/delete-type/') ?>'+id,
+                    type: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    data: {
+                        [csrfName]: csrfHash
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Succès !',
+                                text: response.message,
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                            refreshTableType();
+                        } else {
+                            Swal.fire({
+                                title: 'Erreur !',
+                                text: 'Une erreur est survenue',
+                                icon: 'error'
+                            });
+                        }
+                    }
+                })
+            }
+        });
+    }
+
 </script>
+
+<style>
+    /* fonction pour que la taille des card de création soient égales sauf en affichage mobile   */
+    @media (min-width: 768px) {
+        .card-body-rank, .card-body-type {
+            height: 12rem;
+        }
+
+        .card-body-type {
+            display: flex;
+            align-items: center;
+    }
+</style>
 
 <?php $this->endSection() ?>

@@ -121,4 +121,45 @@ class SponsorsParams extends AdminController
             ]);
         }
     }
+
+    public function deleteRank($id) {
+        try {
+            if($this->sponsorRankModel->delete($id)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Le rang a bien été supprimé'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $this->sponsorRankModel->errors(),
+                ]);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+    public function deleteType($id) {
+        try {
+            if($this->dotationTypeModel->delete($id)){
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Le type a bien été supprimé'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $this->dotationTypeModel->errors(),
+                ]);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
 }
