@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\DataTableTrait;
 use CodeIgniter\Model;
 
 class DotationTypeModel extends Model
 {
+    use DataTableTrait;
+
     protected $table            = 'dotation_type';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
@@ -24,4 +27,14 @@ class DotationTypeModel extends Model
             'max_length' => 'Le type ne doit pas excéder 50 caractères'
         ]
     ];
+
+    public function getDataTableConfig() {
+        return [
+            'searchable_fields' => [
+                'id',
+                'type'],
+            'joins' => [],
+            'select' => 'id,type',
+        ];
+    }
 }

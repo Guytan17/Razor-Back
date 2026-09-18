@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use App\Traits\DataTableTrait;
 
 class SponsorRankModel extends Model
 {
+    use DataTableTrait;
+
     protected $table            = 'sponsor_rank';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
@@ -29,4 +32,15 @@ class SponsorRankModel extends Model
             'max_length' => 'Le label ne doit pas excéder 50 caractères'
          ]
     ];
+
+    public function getDataTableConfig() {
+        return [
+            'searchable_fields' => [
+                'id',
+                'rank',
+                'label'],
+            'joins' => [],
+            'select' => 'id,rank,label',
+        ];
+    }
 }

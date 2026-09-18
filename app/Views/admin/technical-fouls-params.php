@@ -159,8 +159,8 @@
     let tableType;
     let tableClassification;
 
-    //GESTION INDEX DES TYPES
     $(document).ready(function() {
+        //GESTION INDEX DES TYPES
         tableType = $('#typesTable').DataTable({
             processing: true,
             serverSide: true,
@@ -210,7 +210,7 @@
             lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Tous"]]
         })
 
-        // Fonction pour actualiser la table
+        // Fonction pour actualiser la table des types
         window.refreshTableType = function () {
             tableType.ajax.reload(null, false); // false pour garder la pagination
         }
@@ -265,7 +265,7 @@
             lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Tous"]]
         })
 
-        // Fonction pour actualiser la table
+        // Fonction pour actualiser la table des classifications
         window.refreshTableClassification = function () {
             tableClassification.ajax.reload(null, false); // false pour garder la pagination
         }
