@@ -55,6 +55,36 @@
             </div>
             <!-- END : ZONE INDEX RANK -->
         </div>
+        <!-- START : MODAL POUR LES MODIFICATIONS -->
+        <div class="modal" id="modalRank" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Modifier le rang d'importance des sponsors</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row mb-2">
+                            <div class="col">
+                                <label class="form-label" for="modalRankInput">Rang</label>
+                                <input class="form-control" id="modalRankInput" type="text">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="form-label" for="modalRankLabelInput">Label <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" name="modalRankLabelInput" id="modalRankLabelInput" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button onclick="saveRank()" type="button" class="btn btn-primary">Sauvegarder</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END : MODAL POUR LES MODIFICATIONS -->
     <!-- END : ZONE RANK-SPONSOR -->
 
     <!-- START : ZONE DOTATION-TYPE -->
@@ -101,6 +131,30 @@
             </div>
             <!-- END : ZONE INDEX TYPES DE DOTATION -->
         </div>
+        <!-- START : MODAL POUR LES MODIFICATIONS -->
+        <div class="modal" id="modalType" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Modifier le type de dotation</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row mb-2">
+                            <div class="col">
+                                <label class="form-label" for="modalTypeInput">Type</label>
+                                <input class="form-control" id="modalTypeInput" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button onclick="saveType()" type="button" class="btn btn-primary">Sauvegarder</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END : MODAL POUR LES MODIFICATIONS -->
     <!-- END : ZONE DOTATION-TYPE -->
     </div>
 </div>
@@ -189,7 +243,7 @@
                                     class="btn btn-sm btn-warning btn-edit-type"
                                     title="Modifier"
                                     data-id='${row.id}'
-                                    data-type='${escapeHtml(row.type)}'
+                                    data-type='${escapeHtml(row.type)}'>
                                         <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="btn btn-sm btn-danger btn-delete-type"
@@ -216,6 +270,35 @@
         window.refreshTableType = function () {
             tableType.ajax.reload(null, false); // false pour garder la pagination
         }
+    });
+
+    //MODAL RANK
+    //Définition de la modal Rank
+    const myModalRank = new bootstrap.Modal('#modalRank');
+
+    //Fonction pour ouvrir la modal avec les données préremplies
+    $(document).on('click','.btn-edit-rank', function() {
+        const btn = $(this);
+
+        $('#modalRankInput').val(btn.data('rank'));
+        $('#modalRankInput').data('id',btn.data('id'));
+        $('#modalRankLabelInput').val(btn.data('label'));
+
+        myModalRank.show();
+    });
+
+    //MODAL TYPE
+    //Définition de la modal Type
+    const myModalType = new bootstrap.Modal('#modalType');
+
+    //Fonction pour ouvrir la modal avec les données préremplies
+    $(document).on('click','.btn-edit-type', function() {
+        const btn = $(this);
+
+        $('#modalTypeInput').val(btn.data('type'));
+        $('#modalTypeInput').data('id',btn.data('id'));
+
+        myModalType.show();
     });
 
 
