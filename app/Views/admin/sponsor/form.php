@@ -53,9 +53,7 @@
                                         <div class="col">
                                             <label class="form-label" for="rank"> Niveau d'importance <span class="text-danger">*</span></label>
                                             <select class="form-select" name="rank" id="rank" required>
-                                                <?php for ($i = 1; $i <= 9; $i++): ?>
-                                                    <option value="<?= $i ?>" <?=old('rank') === $i ? 'selected' : '';?>>Rang <?= $i ?></option>
-                                                <?php endfor; ?>
+
                                             </select>
                                         </div>
                                 </div>
@@ -106,6 +104,18 @@
         </div>
     </div>
 
+<script>
+    var baseUrl = "<?=base_url();?>";
+
+    $(document).ready(function() {
+        //Initialisation du select2 du rang du sponsor
+        initAjaxSelect2(`#rank`, {url:'/admin/sponsors-params/search-rank', searchFields: 'rank,label',additionalFields:'label', placeholder:'Rechercher un rang d\'importance'});
+
+        //Initialisation du select2 du type de dotation
+        initAjaxSelect2(`#type_dotation`, {url:'/admin/sponsors-params/search-type', searchFields: 'type', placeholder:'Rechercher un type de dotation'});
+    });
+
+</script>
 <style>
     #logoPreview {
         max-height: 320px;

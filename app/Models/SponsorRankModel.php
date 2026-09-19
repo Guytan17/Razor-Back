@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\Select2Searchable;
 use CodeIgniter\Model;
 use App\Traits\DataTableTrait;
 
 class SponsorRankModel extends Model
 {
     use DataTableTrait;
+    use Select2Searchable;
 
     protected $table            = 'sponsor_rank';
     protected $primaryKey       = 'id';
@@ -43,4 +45,8 @@ class SponsorRankModel extends Model
             'select' => 'id,rank,label',
         ];
     }
+
+    protected $select2SearchFields = ['rank','label'];
+    protected $select2DisplayField = 'rank';
+    protected $select2AdditionalFields = ['label'];
 }

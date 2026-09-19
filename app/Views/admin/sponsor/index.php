@@ -26,8 +26,11 @@
     <div class="row">
         <div class="col">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header d-flex">
                     <span class="card-title h5">Liste des sponsors</span>
+                    <a href="<?= base_url('/admin/sponsor/form')?>" class="btn btn-sm btn-primary ms-auto p-1 mx-1">
+                        <i class="fas fa-plus"></i> Créer un sponsor
+                    </a>
                 </div>
                 <div class="card-body overflow-auto">
                     <table class="table table-striped" id="sponsorsTable">

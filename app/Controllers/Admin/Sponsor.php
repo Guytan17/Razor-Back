@@ -52,8 +52,12 @@ class Sponsor extends AdminController
             $dataSponsor = [
                 'name' => $this->request->getPost('name'),
                 'rank' => $this->request->getPost('rank'),
+                'slogan' => $this->request->getPost('slogan'),
+                'type_dotation' => $this->request->getPost('type_dotation'),
+                'amount_dotation' => $this->request->getPost('amount_dotation'),
                 'specifications' => $this->request->getPost('specifications'),
             ];
+
             $logo = $this->request->getFile('logo');
 
             if($this->sponsorModel->insert($dataSponsor)){
