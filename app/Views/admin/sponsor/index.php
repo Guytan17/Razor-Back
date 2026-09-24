@@ -41,6 +41,7 @@
                             <th>Logo</th>
                             <th>Nom du sponsor</th>
                             <th>Niveau d'importance</th>
+                            <th>Saison</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -107,11 +108,12 @@
                         }
                     }
                 },
-                {data: 'name'},
+                {data: 'sponsor_name'},
                 {
                     className: 'dt-left',
                     data: 'rank_label'
                 },
+                {data: 'season_name'},
             ],
             language: {
                 url: baseUrl + 'assets/js/datatable/datatable-2.3.5-fr-FR.json',

@@ -57,23 +57,34 @@ class SponsorModel extends Model
             'searchable_fields' => [
                 'sponsor.id',
                 'sponsor.name',
-                'sponsor.id_rank',
+                'season_sponsor.id_rank',
                 'sponsor_rank.label',
-                'sponsor.specifications',
+                'season_sponsor.specifications',
+                'season.name',
             ],
             'joins' => [
                 [
+                  'table' => 'season_sponsor',
+                  'condition' => 'sponsor.id = season_sponsor.id_sponsor',
+                  'type' => 'left'
+                ],
+                [
                     'table' => 'sponsor_rank',
-                    'condition' => 'sponsor.id_rank = sponsor_rank.id',
+                    'condition' => 'season_sponsor.id_rank = sponsor_rank.id',
                     'type' => 'left'
                 ],
+                [
+                    'table' => 'season',
+                    'condition' => 'season.id = season_sponsor.id_season',
+                    'type' => 'left'
+                    ],
                 [
                     'table' => 'media',
                     'condition' => 'sponsor.id = media.entity_id AND media.entity_type = \'sponsor\'',
                     'type' => 'left'
                 ],
             ],
-            'select' => 'sponsor.id as id, name, id_rank, specifications, sponsor_rank.rank as rank, sponsor_rank.label as rank_label, media.file_path as logo_url,media.id as logo_id'
+            'select' => 'sponsor.id as id, sponsor.name as sponsor_name, id_rank, specifications, sponsor_rank.rank as rank, sponsor_rank.label as rank_label,season.name as season_name, media.file_path as logo_url,media.id as logo_id'
         ];
     }
 
