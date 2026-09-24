@@ -5,6 +5,8 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Models\ContactModel;
 use App\Models\MediaModel;
+use App\Models\SeasonModel;
+use App\Models\SeasonSponsorModel;
 use App\Models\SponsorModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -13,11 +15,15 @@ class Sponsor extends AdminController
     protected $sponsorModel;
     protected $mediaModel;
     protected $contactModel;
+    protected $seasonModel;
+    protected $seasonSponsorModel;
 
     public function __construct() {
         $this->sponsorModel = new SponsorModel();
         $this->mediaModel = new MediaModel();
         $this->contactModel = new ContactModel();
+        $this->seasonModel = new SeasonModel();
+        $this->seasonSponsorModel = new SeasonSponsorModel();
     }
     public function index()
     {
@@ -31,6 +37,7 @@ class Sponsor extends AdminController
 
     public function form($id=null) {
         $this->addBreadcrumb('Liste des sponsors', 'admin/sponsor');
+        $seasons = $this->seasonModel->OrderBy('start_date','desc')->findAll();
         if($id != null) {
             $title = 'Modifier un sponsor';
             $this->addBreadcrumb('Modifier un sponsor');
@@ -43,6 +50,7 @@ class Sponsor extends AdminController
         $data = [
             'title' => $title,
             'sponsor' => $sponsor ?? null,
+            'seasons' => $seasons ?? null,
         ];
         return $this->render('admin/sponsor/form', $data);
     }
@@ -54,12 +62,9 @@ class Sponsor extends AdminController
             $sponsor = [
                 'id' => $id,
                 'name' => $this->request->getPost('name'),
-                'id_rank' => $this->request->getPost('rank'),
                 'slogan' => $this->request->getPost('slogan'),
-                'id_dotation_type' => $this->request->getPost('dotation_type'),
-                'dotation_amount' => $this->request->getPost('dotation_amount'),
-                'specifications' => $this->request->getPost('specifications'),
             ];
+            $sponsors_seasons = $this->request->getPost('seasons[]');
 
             //logo
             $logo = $this->request->getFile('logo');
@@ -88,7 +93,7 @@ class Sponsor extends AdminController
                 $id = $this->sponsorModel->getInsertID();
             }
 
-            //Gestion du logo
+            //GESTION DU LOGO
             //Si logo supprimé mais pas remplacé
             $deleteLogo = $this->request->getPost('delete-logo');
             if(!empty($deleteLogo && !isset($logo))){
@@ -107,6 +112,25 @@ class Sponsor extends AdminController
                 }
             }
 
+            //GESTION DES SAISONS DE SPONSORING
+            if(isset($sponsors_seasons)){
+                foreach($sponsors_seasons as $sponsor_season){
+                    $dataSponsorSeason = [
+                        'id_sponsor' => $id,
+                        'id_season' => $sponsor_season['id_season'],
+                        'id_rank' => $sponsor_season['rank'],
+                        'id_dotation_type' => $sponsor_season['dotation_type'],
+                        'dotation_amount' => $sponsor_season['dotation_amount'],
+                        'specifications' => $sponsor_season['specifications'],
+                    ];
+
+                    if(!$this->seasonSponsorModel->insert($dataSponsorSeason)){
+                        return redirect()->back()->withInput()->with('error',implode('<br>',$this->seasonSponsorModel->errors()));
+                    }
+                }
+            }
+
+            //GESTION DES CONTACTS
             //Gestion suppression des contacts
             if(isset($removedContacts)) {
                 foreach($removedContacts as $removedContact) {

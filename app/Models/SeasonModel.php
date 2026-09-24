@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use App\Traits\DataTableTrait;
+use App\Traits\Select2Searchable;
 use CodeIgniter\Model;
 
 class SeasonModel extends Model
 {
     use DataTableTrait;
+    use Select2Searchable;
 
     protected $table            = 'season';
     protected $primaryKey       = 'id';
@@ -55,4 +57,7 @@ class SeasonModel extends Model
             'select'=> 'season.id, season.name, season.start_date, season.end_date',
         ];
     }
+
+    protected $searchable_fields = ['name','start_date','end_date'];
+    protected $displayField = 'name';
 }

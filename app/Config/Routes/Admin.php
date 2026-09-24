@@ -157,6 +157,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('insert', 'Season::insertSeason'); //Sauvegarde création
         $routes->post('update/(:num)', 'Season::updateSeason/$1');//Sauvegarde édition
         $routes->post('delete/(:num)', 'Season::deleteSeason/$1'); //Suppression d'une saison
+        $routes->get('search', 'Season::searchSeason');
     });
 
     //Routes pour la gestion des services
