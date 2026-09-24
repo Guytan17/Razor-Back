@@ -31,12 +31,12 @@ class Sponsor extends Migration
                 'null'=>false,
                 'unique'=>true,
             ],
-            'rank'=>[
+            'id_rank'=>[
                 'type'=>'INT',
                 'constraint'=>9,
                 'null'=>true,
             ],
-            'dotation_type'=>[
+            'id_dotation_type'=>[
                 'type'=>'INT',
                 'constraint'=>9,
                 'null'=>false,

@@ -19,15 +19,16 @@ class SponsorModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['name', 'slug', 'rank','type_dotation','amount_dotation','specifications'];
+    protected $allowedFields    = ['name', 'slug','slogan', 'id_rank','id_dotation_type','dotation_amount','specifications'];
 
     // Validation
     protected $validationRules      = [
         'name' => 'required|max_length[255]',
         'slug' => 'max_length[255]',
-        'rank' => 'integer',
-        'type_dotation' => 'required|integer',
-        'amount_dotation' => 'required|integer',
+        'slogan' => 'max_length[150]',
+        'id_rank' => 'integer',
+        'id_dotation_type' => 'required|integer',
+        'dotation_amount' => 'required|integer',
         'specifications' => 'permit_empty',
     ];
     protected $validationMessages   = [
@@ -38,14 +39,17 @@ class SponsorModel extends Model
         'slug' => [
             'max_length' => 'Le slug du sponsor ne peut pas excéder 255 caractères'
         ],
-        'rank' => [
-            'integer' => 'Le rang doit être un chiffre'
+        [
+          'slogan' => 'Le slogan de doit pas excéder 150 caractères'
         ],
-        'type_dotation' => [
-            'required' => 'Le type de dotation est obligatoire',
-            'integer' => 'Le type de dotation doit être un entier'
+        'id_rank' => [
+            'integer' => 'L\'ID du rang doit être un chiffre'
         ],
-        'amount_dotation' => [
+        'id_dotation_type' => [
+            'required' => 'L\'ID du type de dotation est obligatoire',
+            'integer' => 'L\'ID du type de dotation doit être un entier'
+        ],
+        'dotation_amount' => [
             'required' => 'Le montant de la dotation est obligatoire',
             'integer' => 'Le montant de la dotation doit être un entier'
         ]
@@ -59,23 +63,32 @@ class SponsorModel extends Model
             'searchable_fields' => [
                 'sponsor.id',
                 'sponsor.name',
-                'sponsor.rank',
+                'sponsor.id_rank',
+                'sponsor_rank.label',
                 'sponsor.specifications',
             ],
             'joins' => [
+                [
+                    'table' => 'sponsor_rank',
+                    'condition' => 'sponsor.id_rank = sponsor_rank.id',
+                    'type' => 'left'
+                ],
                 [
                     'table' => 'media',
                     'condition' => 'sponsor.id = media.entity_id AND media.entity_type = \'sponsor\'',
                     'type' => 'left'
                 ],
             ],
-            'select' => 'sponsor.id as id, name, rank, specifications,media.file_path as logo_url,media.id as logo_id'
+            'select' => 'sponsor.id as id, name, id_rank, specifications, sponsor_rank.rank as rank, sponsor_rank.label as rank_label, media.file_path as logo_url,media.id as logo_id'
         ];
     }
 
     public function getFullSponsor($idSponsor): array{
-        $this->select('sponsor.*, media.id AS media_id');
+        $this->select('sponsor.*, sponsor_rank.rank as rank_number, sponsor_rank.label as rank_label, dotation_type.type as dotation_type, media.id AS media_id');
+        $this->join( 'sponsor_rank', 'sponsor_rank.id = sponsor.id_rank', 'left' );
+        $this->join( 'dotation_type', 'dotation_type.id = sponsor.id_dotation_type', 'left' );
         $this->join('media', 'media.entity_id = '.$idSponsor.' and media.entity_type = \'sponsor\'','left');
+        $this->where('sponsor.id', $idSponsor);
         return $this->first();
     }
 }
