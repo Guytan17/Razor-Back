@@ -47,64 +47,46 @@ class Sponsor extends AdminController
         return $this->render('admin/sponsor/form', $data);
     }
 
-    public function insertSponsor(){
+    public function saveSponsor($id = null){
         try {
-            $dataSponsor = [
+            //RÉCUPÉRATION DES DONNÉES
+            //sponsor
+            $sponsor = [
+                'id' => $id,
                 'name' => $this->request->getPost('name'),
-                'rank' => $this->request->getPost('rank'),
+                'id_rank' => $this->request->getPost('rank'),
                 'slogan' => $this->request->getPost('slogan'),
-                'type_dotation' => $this->request->getPost('type_dotation'),
-                'amount_dotation' => $this->request->getPost('amount_dotation'),
+                'id_dotation_type' => $this->request->getPost('dotation_type'),
+                'dotation_amount' => $this->request->getPost('dotation_type'),
                 'specifications' => $this->request->getPost('specifications'),
             ];
 
+            //logo
             $logo = $this->request->getFile('logo');
 
-            if($this->sponsorModel->insert($dataSponsor)){
-                $this->success('Sponsor créé avec succès');
-                $id = $this->sponsorModel->getInsertID();
-            } else {
+            // contact
+            $contacts = $this->request->getPost('contacts');
+            $removedContacts = $this->request->getPost('removed-contacts') ?? [];
+
+            //préparation de la variable pour savoir si c'est une création
+            $newSponsor = empty($sponsor['id']);
+
+            //Si je n'ai pas de sponsor et que je ne suis pas en mode création
+            if(!$sponsor && !$newSponsor) {
+                $this->error('Sponsor introuvable');
+                return $this->redirect('/admin/sponsor');
+            }
+
+            //Enregistrement en BDD
+            if(!$this->sponsorModel->save($sponsor)){
                 return redirect()->back()->withInput()->with('error',implode('<br>',$this->sponsorModel->errors()));
+
             }
 
-            if($logo->isvalid()){
-                //Gestion du logo
-                $dataLogo = [
-                    'entity_id' => $id,
-                    'entity_type' => 'sponsor',
-                    'title' => 'Logo de ' . $dataSponsor['name'],
-                    'alt' => 'Logo de ' . $dataSponsor['name'],
-                ];
-
-                $uploadResultLogo = upload_file($logo,'logos/sponsor/'.$id, $logo->getName(),$dataLogo,false);
-
-                if(is_array($uploadResultLogo) && isset($uploadResultLogo['status']) && $uploadResultLogo['status'] == 'error'){
-                    $this->error("Erreur lors de l'upload du logo :".$uploadResultLogo['message']);
-                }
+            //on récupère l'ID créé si c'est un nouveau sponsor
+            if ($newSponsor) {
+                $id = $this->sponsorModel->getInsertID();
             }
-
-            return $this->redirect('admin/sponsor');
-        } catch (\Exception $e) {
-            $this->error($e->getMessage());
-            return redirect()->back()->withInput();
-        }
-    }
-
-    public function updateSponsor($id){
-        try {
-
-            //récupération des données
-            $dataSponsor = [
-                'name' => $this->request->getPost('name'),
-                'rank' => $this->request->getPost('rank'),
-                'specifications' => $this->request->getPost('specifications'),
-            ];
-            //récupération de l'image
-            $logo = $this->request->getFile('logo');
-            log_message('debug', 'print_r du logo :'. (print_r($logo,true)));
-            //si les specifications sont supprimées, on les force en null
-            $dataSponsor['specifications'] = empty($dataSponsor['specifications']) ? null : $dataSponsor['specifications'];
-
 
             //Gestion du logo
             //Si logo supprimé mais pas remplacé
@@ -116,8 +98,8 @@ class Sponsor extends AdminController
                 $dataLogo = [
                     'entity_id' => $id,
                     'entity_type' => 'sponsor',
-                    'title' => 'Logo de ' . $dataSponsor['name'],
-                    'alt' => 'Logo de ' . $dataSponsor['name'],
+                    'title' => 'Logo de ' . $sponsor['name'],
+                    'alt' => 'Logo de ' . $sponsor['name'],
                 ];
                 $uploadResultLogo = upload_file($logo,'logos/sponsor/'.$id, $logo->getName(),$dataLogo,false);
                 if(is_array($uploadResultLogo) && isset($uploadResultLogo['status']) && $uploadResultLogo['status'] == 'error'){
@@ -125,22 +107,42 @@ class Sponsor extends AdminController
                 }
             }
 
-            if($this->sponsorModel->update($id,$dataSponsor)){
-                return $this->response->setJSON([
-                    'success' => true,
-                    'message' => 'Sponsor modifié avec succès'
-                ]);
-            } else {
-                return $this->response->setJSON([
-                    'success' => false,
-                    'message' => $this->sponsorModel->errors()
-                ]);
+            //Gestion suppression des contacts
+            if(isset($removedContacts)) {
+                foreach($removedContacts as $removedContact) {
+                    $this->contactModel->where('id',$removedContact)->delete();
+                }
             }
-        } catch (\Exception $e){
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => $e->getMessage()
-            ]);
+
+            //Gestion ajout et mise à jour des contacts
+            if(isset($contacts)) {
+                foreach($contacts as $contact) {
+                    $dataContact = [
+                        'id' => $contact['id'] ?? null,
+                        'entity_type' => 'member',
+                        'entity_id' => $sponsor['id'],
+                        'phone_number' => $contact['phone_number'],
+                        'mail' => $contact['mail'],
+                        'details' => $contact['details']
+                    ];
+                    if(!$this->contactModel->save($dataContact)){
+                        return redirect()->back()->withInput()->with('error',implode('<br>',$this->contactModel->errors()));
+                    }
+                }
+            }
+
+            // Gestion des messages de validation
+            if($newSponsor){
+                $this->success('Sponsor créé avec succès');
+            } else {
+                $this->success('Sponsor modifié avec succès');
+            }
+
+            return $this->redirect('admin/sponsor');
+
+        } catch(\Exception $e) {
+            $this->error($e->getMessage());
+            return redirect()->back()->withInput();
         }
     }
 
