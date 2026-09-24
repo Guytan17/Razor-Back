@@ -31,29 +31,24 @@ class Sponsor extends Migration
                 'null'=>false,
                 'unique'=>true,
             ],
-            'id_rank'=>[
-                'type'=>'INT',
-                'constraint'=>9,
-                'null'=>true,
-            ],
-            'id_dotation_type'=>[
-                'type'=>'INT',
-                'constraint'=>9,
-                'null'=>false,
-            ],
-            'dotation_amount'=>[
-                'type'=>'INT',
-                'constraint'=>9,
-                'null'=>false,
-            ],
-            'specifications'=>[
+            'comments'=>[
                 'type'=>'TEXT',
                 'null'=>true,
+            ],
+            'created_at'=>[
+                'type' => 'DATETIME',
+                'null' => false,
+            ],
+            'updated_at'=>[
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'deleted_at'=>[
+                'type' => 'DATETIME',
+                'null' => true,
             ]
         ]);
         $this->forge->addKey('id',true);
-        $this->forge->addForeignKey('rank','rank_sponsor','id','CASCADE','RESTRICT');
-        $this->forge->addForeignKey('dotation_type','type_dotation','id','CASCADE','RESTRICT');
         $this->forge->createTable('sponsor',true);
     }
 

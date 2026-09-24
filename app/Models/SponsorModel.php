@@ -19,17 +19,21 @@ class SponsorModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['name', 'slug','slogan', 'id_rank','id_dotation_type','dotation_amount','specifications'];
+    protected $allowedFields    = ['name', 'slug','slogan','comments','created_at','updated_at','deleted_at'];
+
+    // Dates
+    protected $useTimestamps = true;
+    protected $dateFormat    = 'datetime';
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
+    protected $deletedField  = 'deleted_at';
 
     // Validation
     protected $validationRules      = [
         'name' => 'required|max_length[255]',
         'slug' => 'max_length[255]',
         'slogan' => 'max_length[150]',
-        'id_rank' => 'integer',
-        'id_dotation_type' => 'required|integer',
-        'dotation_amount' => 'required|integer',
-        'specifications' => 'permit_empty',
+        'comments' => 'permit_empty',
     ];
     protected $validationMessages   = [
         'name' => [
@@ -42,17 +46,7 @@ class SponsorModel extends Model
         [
           'slogan' => 'Le slogan de doit pas excéder 150 caractères'
         ],
-        'id_rank' => [
-            'integer' => 'L\'ID du rang doit être un chiffre'
-        ],
-        'id_dotation_type' => [
-            'required' => 'L\'ID du type de dotation est obligatoire',
-            'integer' => 'L\'ID du type de dotation doit être un entier'
-        ],
-        'dotation_amount' => [
-            'required' => 'Le montant de la dotation est obligatoire',
-            'integer' => 'Le montant de la dotation doit être un entier'
-        ]
+
     ];
 
     protected $beforeInsert   = ['generateUniqueSlugName'];

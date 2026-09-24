@@ -45,7 +45,7 @@ class TechnicalFoul extends Migration
         $this->forge->addForeignKey('id_member', 'member', 'id', 'RESTRICT', 'RESTRICT');
         $this->forge->addForeignKey('id_classification', 'classification', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->addForeignKey('id_type', 'type', 'id', 'CASCADE', 'RESTRICT');
-        $this->forge->createTable('technical_foul');
+        $this->forge->createTable('technical_foul',true);
     }
 
     public function down()

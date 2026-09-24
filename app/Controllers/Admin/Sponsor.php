@@ -57,7 +57,7 @@ class Sponsor extends AdminController
                 'id_rank' => $this->request->getPost('rank'),
                 'slogan' => $this->request->getPost('slogan'),
                 'id_dotation_type' => $this->request->getPost('dotation_type'),
-                'dotation_amount' => $this->request->getPost('dotation_type'),
+                'dotation_amount' => $this->request->getPost('dotation_amount'),
                 'specifications' => $this->request->getPost('specifications'),
             ];
 
