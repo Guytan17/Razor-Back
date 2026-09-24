@@ -26,7 +26,7 @@
         <div class="row">
             <div class="col">
                 <div class="card">
-                    <?= form_open_multipart('admin/sponsor/insert') ?>
+                    <?= form_open_multipart('admin/sponsor/save'.(isset($sponsor) ? '/'.$sponsor['id'] : '' )) ?>
                     <div class="card-header">
                         <?php if (isset($sponsor) && $sponsor): ?>
                             <span class="card-title h3">Modification de <?=$sponsor['name'] ?></span>
@@ -47,13 +47,15 @@
                                     <!-- NOM DU SPONSOR -->
                                     <div class="col">
                                         <label class="form-label" for="name">Nom du sponsor <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="text" name="name" id="name" value="<?=old('name'); ?>" required>
+                                        <input class="form-control" type="text" name="name" id="name" value="<?=old('name',esc($sponsor['name'] ?? '')); ?>" required>
                                     </div>
                                     <!-- IMPORTANCE DU SPONSOR -->
                                         <div class="col">
                                             <label class="form-label" for="rank"> Niveau d'importance <span class="text-danger">*</span></label>
                                             <select class="form-select" name="rank" id="rank" required>
-
+                                                <?php if(isset($sponsor['id_rank'])): ?>
+                                                <option value="<?= $sponsor['id_rank'] ?>" selected><?= $sponsor['rank_label'] ?></option>
+                                                <?php endif; ?>
                                             </select>
                                         </div>
                                 </div>
@@ -61,23 +63,28 @@
                                 <div class="row mb-3">
                                     <div class="col">
                                         <label class="form-label" for="slogan">Slogan du sponsor</label>
-                                        <input class="form-control" type="text" name="slogan" id="slogan" value="<?=old('slogan'); ?>">
+                                        <input class="form-control" type="text" name="slogan" id="slogan" value="<?=old('slogan', esc($sponsor['slogan'] ?? '')); ?>">
                                     </div>
                                 </div>
                                 <!-- DOTATION -->
                                 <div class="row mb-3">
                                     <!-- TYPE DOTATION -->
                                     <div class="col-6">
-                                        <label class="form-label" for="type_dotation">Type de dotation <span class="text-danger">*</span></label>
-                                        <select class="form-select" name="type_dotation" id="type_dotation" required>
-
+                                        <label class="form-label" for="dotation_type">Type de dotation <span class="text-danger">*</span></label>
+                                        <select class="form-select" name="dotation_type" id="dotation_type" required>
+                                            <?php if(isset($sponsor['id_dotation_type'])): ?>
+                                                <option value="<?= $sponsor['id_dotation_type'] ?>" selected><?= $sponsor['dotation_type'] ?></option>
+                                            <?php endif; ?>
                                         </select>
                                     </div>
                                     <!-- MONTANT DOTATION -->
                                     <div class="col-6">
-                                        <label class="form-label" for="amount_dotation">Montant de dotation <span class="text-danger">*</span></label>
+                                        <label class="form-label" for="dotation_amount">Montant de dotation <span class="text-danger">*</span></label>
                                         <div class="input-group">
-                                            <input class="form-control" type="number" name="amount_dotation" id="amount_dotation" min="0" required>
+                                            <input class="form-control" type="number" name="dotation_amount" id="dotation_amount" min="0" value="<?=old('dotation_amount', esc
+                                            ($sponsor['dotation_amount'] ??
+                                                    '')); ?>"
+                                                   required>
                                             <span class="input-group-text">€</span>
                                         </div>
 
@@ -89,14 +96,15 @@
                                 <div class="row mb-3">
                                     <div class="col">
                                         <label class="form-label" for="specifications">Caractéristiques et instructions</label>
-                                        <textarea class="form-control" name="specifications" id="specifications" rows="3"><?= old('specifications'); ?></textarea>
+                                        <textarea class="form-control" name="specifications" id="specifications" rows="3"><?= old('specifications',esc($sponsor['specifications'] ?? ''));
+                                        ?></textarea>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="card-footer text-end">
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Créer le sponsor</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Valider</button>
                     </div>
                     <?= form_close() ; ?>
                 </div>
@@ -109,10 +117,10 @@
 
     $(document).ready(function() {
         //Initialisation du select2 du rang du sponsor
-        initAjaxSelect2(`#rank`, {url:'/admin/sponsors-params/search-rank', searchFields: 'rank,label',additionalFields:'label', placeholder:'Rechercher un rang d\'importance'});
+        initAjaxSelect2(`#rank`, {url:'/admin/sponsors-params/search-rank', searchFields: 'rank,label',separator:' - ', placeholder:'Rechercher un rang d\'importance'});
 
         //Initialisation du select2 du type de dotation
-        initAjaxSelect2(`#type_dotation`, {url:'/admin/sponsors-params/search-type', searchFields: 'type', placeholder:'Rechercher un type de dotation'});
+        initAjaxSelect2(`#dotation_type`, {url:'/admin/sponsors-params/search-type', searchFields: 'type', placeholder:'Rechercher un type de dotation'});
     });
 
 </script>

@@ -110,7 +110,7 @@
                 {data: 'name'},
                 {
                     className: 'dt-left',
-                    data: 'rank'
+                    data: 'rank_label'
                 },
             ],
             language: {

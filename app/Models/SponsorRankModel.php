@@ -47,6 +47,5 @@ class SponsorRankModel extends Model
     }
 
     protected $select2SearchFields = ['rank','label'];
-    protected $select2DisplayField = 'rank';
-    protected $select2AdditionalFields = ['label'];
+    protected $select2DisplayField = 'label,rank';
 }
