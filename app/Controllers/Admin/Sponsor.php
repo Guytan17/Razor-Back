@@ -43,6 +43,7 @@ class Sponsor extends AdminController
             $this->addBreadcrumb('Modifier un sponsor');
             $sponsor = $this->sponsorModel->getFullSponsor($id);
             $sponsor['contacts'] = $this->contactModel->getContactsById($id,'club');
+            $sponsor['seasons'] = $this->seasonSponsorModel->getSeasonsBySponsor($id);
         } else {
             $title = 'Ajouter un club';
             $this->addBreadcrumb('Ajouter un club');
@@ -63,8 +64,9 @@ class Sponsor extends AdminController
                 'id' => $id,
                 'name' => $this->request->getPost('name'),
                 'slogan' => $this->request->getPost('slogan'),
+                'comments' => $this->request->getPost('comments'),
             ];
-            $sponsors_seasons = $this->request->getPost('seasons[]');
+            $sponsors_seasons = $this->request->getPost('season[]');
 
             //logo
             $logo = $this->request->getFile('logo');

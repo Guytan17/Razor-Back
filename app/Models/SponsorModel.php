@@ -89,10 +89,7 @@ class SponsorModel extends Model
     }
 
     public function getFullSponsor($idSponsor): array{
-        $this->select('sponsor.*, season_sponsor.*, sponsor_rank.rank as rank_number, sponsor_rank.label as rank_label, dotation_type.type as dotation_type, media.id AS media_id');
-        $this->join('season_sponsor', 'sponsor.id = season_sponsor.id_sponsor');
-        $this->join( 'sponsor_rank', 'sponsor_rank.id = sponsor.id_rank', 'left' );
-        $this->join( 'dotation_type', 'dotation_type.id = sponsor.id_dotation_type', 'left' );
+        $this->select('sponsor.*, media.id AS media_id');
         $this->join('media', 'media.entity_id = '.$idSponsor.' and media.entity_type = \'sponsor\'','left');
         $this->where('sponsor.id', $idSponsor);
         return $this->first();

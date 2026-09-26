@@ -83,8 +83,8 @@
                         <div id="zone-season-sponsor">
                             <?php
                             $cptSeason = 0;
-                            if($sponsor) {
-                            foreach($sponsor_seasons as $sponsor_season) :
+                            if($sponsor && isset($sponsor['seasons'])){
+                            foreach($sponsor['seasons'] as $sponsor_season) :
                                 $cptSeason++ ?>
                             <!-- START : LIGNES CONCERNANT LES SAISONS -->
                             <div class="row mb-3">
@@ -95,8 +95,8 @@
                                             <label class="form-label" for="season">Saison <span class="text-danger">*</span></label>
                                             <div class="input-group">
                                                 <select class="form-select" name="season[<?=$cptSeason ?>][id_season]" id="id-season" required>
-                                                    <?php if(isset($sponsor['id_season'])): ?>
-                                                        <option value="<?= $sponsor['id_season'] ?>" selected><?= $sponsor['season_name'] ?></option>
+                                                    <?php if(isset($sponsor_season['id_season'])): ?>
+                                                        <option value="<?= $sponsor_season['id_season'] ?>" selected><?= $sponsor_season['season_name'] ?></option>
                                                     <?php endif; ?>
                                                 </select>
                                             </div>
@@ -106,8 +106,8 @@
                                             <label class="form-label" for="rank"> Niveau d'importance <span class="text-danger">*</span></label>
                                             <div class="input-group">
                                                 <select class="form-select" name="season[<?=$cptSeason ?>][rank]" id="rank" required>
-                                                    <?php if(isset($sponsor['id_rank'])): ?>
-                                                        <option value="<?= $sponsor['id_rank'] ?>" selected><?= $sponsor['rank_label'] ?></option>
+                                                    <?php if(isset($sponsor_season['id_rank'])): ?>
+                                                        <option value="<?= $sponsor_season['id_rank'] ?>" selected><?= $sponsor_season['rank_label'] ?></option>
                                                     <?php endif; ?>
                                                 </select>
                                             </div>
@@ -120,8 +120,8 @@
                                             <label class="form-label" for="dotation_type">Type de dotation <span class="text-danger">*</span></label>
                                             <div class="input-group ">
                                                 <select class="form-select" name="season[<?=$cptSeason ?>][dotation_type]" id="dotation_type" required>
-                                                    <?php if(isset($sponsor['id_dotation_type'])): ?>
-                                                        <option value="<?= $sponsor['id_dotation_type'] ?>" selected><?= $sponsor['dotation_type'] ?></option>
+                                                    <?php if(isset($sponsor_season['id_dotation_type'])): ?>
+                                                        <option value="<?= $sponsor_season['id_dotation_type'] ?>" selected><?= $sponsor_season['dotation_type'] ?></option>
                                                     <?php endif; ?>
                                                 </select>
                                             </div>
@@ -132,7 +132,7 @@
                                             <label class="form-label" for="dotation_amount">Montant de dotation <span class="text-danger">*</span></label>
                                             <div class="input-group">
                                                 <input class="form-control" type="number" name="season[<?=$cptSeason ?>][dotation_amount]" id="dotation_amount" min="0" value="<?=old('dotation_amount', esc
-                                                ($sponsor['dotation_amount'] ??
+                                                ($sponsor_season['dotation_amount'] ??
                                                         '')); ?>"
                                                        required>
                                                 <span class="input-group-text">€</span>
@@ -145,7 +145,7 @@
                                     <div class="row mb-3">
                                         <div class="col">
                                             <label class="form-label" for="specifications">Spécifications sur la saison</label>
-                                            <textarea class="form-control" name="season[<?=$cptSeason ?>][specifications]" id="specifications" rows="5"><?= old('specifications',esc($sponsor['specifications'] ?? ''));
+                                            <textarea class="form-control" name="season[<?=$cptSeason ?>][specifications]" id="specifications" rows="5"><?= old('specifications',esc($sponsor_season['specifications'] ?? ''));
                                                 ?></textarea>
                                         </div>
                                     </div>
