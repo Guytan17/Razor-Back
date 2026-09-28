@@ -87,68 +87,75 @@
                             foreach($sponsor['seasons'] as $sponsor_season) :
                                 $cptSeason++ ?>
                             <!-- START : LIGNES CONCERNANT LES SAISONS -->
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <div class="row mb-3">
-                                        <!-- SAISON -->
-                                        <div class="col">
-                                            <label class="form-label" for="season">Saison <span class="text-danger">*</span></label>
-                                            <div class="input-group">
-                                                <select class="form-select" name="season[<?=$cptSeason ?>][id_season]" id="id-season" required>
-                                                    <?php if(isset($sponsor_season['id_season'])): ?>
-                                                        <option value="<?= $sponsor_season['id_season'] ?>" selected><?= $sponsor_season['season_name'] ?></option>
-                                                    <?php endif; ?>
-                                                </select>
+                            <div class="row mb-3 row-season-sponsor">
+                                <div class="col-11">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="row mb-3">
+                                                <!-- SAISON -->
+                                                <div class="col">
+                                                    <label class="form-label" for="id-season-<?=$cptSeason ?>">Saison <span class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <select class="form-select" name="season[<?=$cptSeason ?>][id_season]" id="id-season-<?=$cptSeason ?>" required>
+                                                            <?php if(isset($sponsor_season['id_season'])): ?>
+                                                                <option value="<?= $sponsor_season['id_season'] ?>" selected><?= $sponsor_season['season_name'] ?></option>
+                                                            <?php endif; ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <!-- IMPORTANCE DU SPONSOR -->
+                                                <div class="col">
+                                                    <label class="form-label" for="rank-<?=$cptSeason ?>"> Niveau d'importance <span class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <select class="form-select" name="season[<?=$cptSeason ?>][rank]" id="rank-<?=$cptSeason ?>" required>
+                                                            <?php if(isset($sponsor_season['id_rank'])): ?>
+                                                                <option value="<?= $sponsor_season['id_rank'] ?>" selected><?= $sponsor_season['rank_label'] ?></option>
+                                                            <?php endif; ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <!-- IMPORTANCE DU SPONSOR -->
-                                        <div class="col">
-                                            <label class="form-label" for="rank"> Niveau d'importance <span class="text-danger">*</span></label>
-                                            <div class="input-group">
-                                                <select class="form-select" name="season[<?=$cptSeason ?>][rank]" id="rank" required>
-                                                    <?php if(isset($sponsor_season['id_rank'])): ?>
-                                                        <option value="<?= $sponsor_season['id_rank'] ?>" selected><?= $sponsor_season['rank_label'] ?></option>
-                                                    <?php endif; ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- DOTATION -->
-                                    <div class="row mb-3">
-                                        <!-- TYPE DOTATION -->
-                                        <div class="col-6">
-                                            <label class="form-label" for="dotation_type">Type de dotation <span class="text-danger">*</span></label>
-                                            <div class="input-group ">
-                                                <select class="form-select" name="season[<?=$cptSeason ?>][dotation_type]" id="dotation_type" required>
-                                                    <?php if(isset($sponsor_season['id_dotation_type'])): ?>
-                                                        <option value="<?= $sponsor_season['id_dotation_type'] ?>" selected><?= $sponsor_season['dotation_type'] ?></option>
-                                                    <?php endif; ?>
-                                                </select>
-                                            </div>
+                                            <!-- DOTATION -->
+                                            <div class="row mb-3">
+                                                <!-- TYPE DOTATION -->
+                                                <div class="col-6">
+                                                    <label class="form-label" for="dotation_type-<?=$cptSeason ?>">Type de dotation <span class="text-danger">*</span></label>
+                                                    <div class="input-group ">
+                                                        <select class="form-select" name="season[<?=$cptSeason ?>][dotation_type]" id="dotation_type-<?=$cptSeason ?>" required>
+                                                            <?php if(isset($sponsor_season['id_dotation_type'])): ?>
+                                                                <option value="<?= $sponsor_season['id_dotation_type'] ?>" selected><?= $sponsor_season['dotation_type'] ?></option>
+                                                            <?php endif; ?>
+                                                        </select>
+                                                    </div>
 
+                                                </div>
+                                                <!-- MONTANT DOTATION -->
+                                                <div class="col-6">
+                                                    <label class="form-label" for="dotation_amount-<?=$cptSeason ?>">Montant de dotation <span class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <input class="form-control" type="number" name="season[<?=$cptSeason ?>][dotation_amount]" id="dotation_amount-<?=$cptSeason ?>" min="0" value="<?=old('dotation_amount', esc
+                                                        ($sponsor_season['dotation_amount'] ??
+                                                                '')); ?>"
+                                                               required>
+                                                        <span class="input-group-text">€</span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <!-- MONTANT DOTATION -->
-                                        <div class="col-6">
-                                            <label class="form-label" for="dotation_amount">Montant de dotation <span class="text-danger">*</span></label>
-                                            <div class="input-group">
-                                                <input class="form-control" type="number" name="season[<?=$cptSeason ?>][dotation_amount]" id="dotation_amount" min="0" value="<?=old('dotation_amount', esc
-                                                ($sponsor_season['dotation_amount'] ??
-                                                        '')); ?>"
-                                                       required>
-                                                <span class="input-group-text">€</span>
+                                        <div class="col-md-6">
+                                            <!-- SPECIFICATIONS CONCERNANT LE SPONSOR POUR LA SAISON -->
+                                            <div class="row mb-3">
+                                                <div class="col">
+                                                    <label class="form-label" for="specifications-<?=$cptSeason ?>">Spécifications sur la saison</label>
+                                                    <textarea class="form-control" name="season[<?=$cptSeason ?>][specifications]" id="specifications-<?=$cptSeason ?>" rows="5"><?= old('specifications',esc($sponsor_season['specifications'] ?? ''));
+                                                        ?></textarea>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <!-- SPECIFICATIONS CONCERNANT LE SPONSOR POUR LA SAISON -->
-                                    <div class="row mb-3">
-                                        <div class="col">
-                                            <label class="form-label" for="specifications">Spécifications sur la saison</label>
-                                            <textarea class="form-control" name="season[<?=$cptSeason ?>][specifications]" id="specifications" rows="5"><?= old('specifications',esc($sponsor_season['specifications'] ?? ''));
-                                                ?></textarea>
-                                        </div>
-                                    </div>
+                                <div class="col-1 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-trash-alt text-danger btn-delete-season fs-2"></i>
                                 </div>
                             </div>
                             <!-- END : LIGNES CONCERNANT LES SAISONS -->
@@ -171,67 +178,88 @@
     let cptSeason = ('#zone-season-sponsor').length;
 
     $(document).ready(function() {
+
+        //Boucles pour initialiser les select2 sur les fautes techniques déjà existantes
+        for (i=1 ; i<=cptSeason; i++) {
+            //Initialisation du select2 de la saison
+            initAjaxSelect2(`#id-season-${i}`, {url:'/admin/season/search', searchFields: 'name,start_date,end_date', placeholder:'Rechercher une saison'});
+
+            //Initialisation du select2 du rang du sponsor
+            initAjaxSelect2(`#rank-${i}`, {url:'/admin/sponsors-params/search-rank', searchFields: 'rank,label',separator:' - ', placeholder:'Rechercher un rang d\'importance'});
+
+            //Initialisation du select2 du type de dotation
+            initAjaxSelect2(`#dotation_type-${i}`, {url:'/admin/sponsors-params/search-type', searchFields: 'type', placeholder:'Rechercher un type de dotation'});
+        }
+
+
         //GESTION DES SAISONS DE SPONSORING
-        //Fonction pour faire apparaître une ligne de saison
+        //Fonction pour ajouter une saison
         $('#add-season').on('click', function(){
             cptSeason++;
             let row = `
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <div class="row mb-3">
-                        <!-- SAISON -->
-                        <div class="col">
-                            <label class="form-label" for="season">Saison <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <select class="form-select" name="season[${cptSeason}][id_season]" id="id-season-${cptSeason}" required>
+            <div class="row mb-3 row-season-sponsor">
+                <div class="col-11">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row mb-3">
+                                <!-- SAISON -->
+                                <div class="col">
+                                    <label class="form-label" for="season">Saison <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <select class="form-select" name="season[${cptSeason}][id_season]" id="id-season-${cptSeason}" required>
 
-                                </select>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- IMPORTANCE DU SPONSOR -->
+                                <div class="col">
+                                    <label class="form-label" for="rank"> Niveau d'importance <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <select class="form-select" name="season[${cptSeason}][rank]" id="rank-${cptSeason}" required>
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- DOTATION -->
+                            <div class="row mb-3">
+                                <!-- TYPE DOTATION -->
+                                <div class="col-6">
+                                    <label class="form-label" for="dotation_type">Type de dotation <span class="text-danger">*</span></label>
+                                    <div class="input-group ">
+                                        <select class="form-select" name="season[${cptSeason}][dotation_type]" id="dotation_type-${cptSeason}" required>
+
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <!-- MONTANT DOTATION -->
+                                <div class="col-6">
+                                    <label class="form-label" for="dotation_amount">Montant de dotation <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <input class="form-control" type="number" name="season[${cptSeason}][dotation_amount]" id="dotation_amount-${cptSeason}" min="0" required>
+                                        <span class="input-group-text">€</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <!-- IMPORTANCE DU SPONSOR -->
-                        <div class="col">
-                            <label class="form-label" for="rank"> Niveau d'importance <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <select class="form-select" name="season[${cptSeason}][rank]" id="rank-${cptSeason}" required>
-
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- DOTATION -->
-                    <div class="row mb-3">
-                        <!-- TYPE DOTATION -->
-                        <div class="col-6">
-                            <label class="form-label" for="dotation_type">Type de dotation <span class="text-danger">*</span></label>
-                            <div class="input-group ">
-                                <select class="form-select" name="season[${cptSeason}][dotation_type]" id="dotation_type-${cptSeason}" required>
-
-                                </select>
-                            </div>
-
-                        </div>
-                        <!-- MONTANT DOTATION -->
-                        <div class="col-6">
-                            <label class="form-label" for="dotation_amount">Montant de dotation <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <input class="form-control" type="number" name="season[${cptSeason}][dotation_amount]" id="dotation_amount-${cptSeason}" min="0" required>
-                                <span class="input-group-text">€</span>
+                        <div class="col-md-6">
+                            <!-- SPECIFICATIONS CONCERNANT LE SPONSOR POUR LA SAISON -->
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label class="form-label" for="specifications">Spécifications sur la saison</label>
+                                    <textarea class="form-control" name="season[${cptSeason}][specifications]" id="specifications-${cptSeason}" rows="5"></textarea>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <!-- SPECIFICATIONS CONCERNANT LE SPONSOR POUR LA SAISON -->
-                    <div class="row mb-3">
-                        <div class="col">
-                            <label class="form-label" for="specifications">Spécifications sur la saison</label>
-                            <textarea class="form-control" name="season[${cptSeason}][specifications]" id="specifications-${cptSeason}" rows="5"></textarea>
-                        </div>
-                    </div>
+                <div class="col-1 d-flex align-items-center justify-content-center">
+                    <i class="fas fa-trash-alt text-danger btn-delete-season fs-2"></i>
                 </div>
             </div>
             `;
-            $('#zone-season-sponsor').append(row);
+            $('#zone-season-sponsor').prepend(row);
 
             //Initialisation des select2
             //Initialisation du select2 de la saison
@@ -242,6 +270,12 @@
 
             //Initialisation du select2 du type de dotation
             initAjaxSelect2(`#dotation_type-${cptSeason}`, {url:'/admin/sponsors-params/search-type', searchFields: 'type', placeholder:'Rechercher un type de dotation'});
+        })
+
+        //Fonction pour supprimer une saison
+        $(document).on('click', '.btn-delete-season', function(){
+            cptSeason--;
+            $(this).closest('.row-season-sponsor').remove();
         })
     });
 
@@ -262,6 +296,11 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    .btn-delete-season:hover {
+        scale:1.20;
+        cursor: pointer;
     }
 </style>
 

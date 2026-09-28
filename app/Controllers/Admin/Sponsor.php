@@ -80,7 +80,6 @@ class Sponsor extends AdminController
             //Saisons du sponsor - création de la variable pour savoir si la saison existe déjà pour ce sponsor
             $existingSeasonsSponsor = array_column($this->seasonSponsorModel->getSeasonsBySponsor($id),'id_season');
 
-
             //préparation de la variable pour savoir si c'est une création
             $newSponsor = empty($sponsor['id']);
 
@@ -122,6 +121,15 @@ class Sponsor extends AdminController
 
             //GESTION DES SAISONS DE SPONSORING
             if(isset($sponsors_seasons)){
+                //Création clé des saisons du formulaire pour gérer la suppression
+                $keySponsorsSeasons = array_column($sponsors_seasons,'id_season');
+                //Suppression des saisons qui ne sont plus dans le formulaire
+                $seasonsToDelete = array_diff($existingSeasonsSponsor,$keySponsorsSeasons);
+                foreach($seasonsToDelete as $seasonToDelete){
+                    $this->seasonSponsorModel->delete($seasonToDelete);
+                }
+
+                //Ajout/modification des saisons présentes dans le formulaire
                 foreach($sponsors_seasons as $sponsor_season){
                     $dataSponsorSeason = [
                         'id_sponsor' => $id,
@@ -132,9 +140,15 @@ class Sponsor extends AdminController
                         'specifications' => $sponsor_season['specifications'],
                     ];
 
-
+                    //Ajout des nouvelles saisons
                     if(!in_array($dataSponsorSeason['id_season'],$existingSeasonsSponsor)){
                         if(!$this->seasonSponsorModel->insert($dataSponsorSeason)){
+                            return redirect()->back()->withInput()->with('error',implode('<br>',$this->seasonSponsorModel->errors()));
+                        }
+                    }
+                    //Modification des saisons existantes
+                    else {
+                        if(!$this->seasonSponsorModel->where('id_sponsor',$dataSponsorSeason['id_sponsor'])->where('id_season',$dataSponsorSeason['id_season'])->update(null,$dataSponsorSeason)){
                             return redirect()->back()->withInput()->with('error',implode('<br>',$this->seasonSponsorModel->errors()));
                         }
                     }
