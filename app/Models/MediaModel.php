@@ -32,7 +32,7 @@ class MediaModel extends Model
     protected $validationRules = [
         'file_path'   => 'required',
         'entity_id'   => 'required|numeric',
-        'entity_type' => 'required|in_list[user,sponsor,club,settings]',
+        'entity_type' => 'required|in_list[user,sponsor_logo,sponsor_image,club,settings]',
     ];
 
     protected $validationMessages = [

@@ -90,7 +90,7 @@ class SponsorModel extends Model
 
     public function getFullSponsor($idSponsor): array{
         $this->select('sponsor.*, media.id AS media_id');
-        $this->join('media', 'media.entity_id = '.$idSponsor.' and media.entity_type = \'sponsor\'','left');
+        $this->join('media', 'media.entity_id = '.$idSponsor.' and media.entity_type = \'sponsor_logo\'','left');
         $this->where('sponsor.id', $idSponsor);
         return $this->first();
     }

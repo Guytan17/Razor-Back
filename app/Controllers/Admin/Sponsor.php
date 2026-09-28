@@ -76,6 +76,10 @@ class Sponsor extends AdminController
             $contacts = $this->request->getPost('contacts');
             $removedContacts = $this->request->getPost('removed-contacts') ?? [];
 
+            //Images
+            $sponsorImages = $this->request->getFiles()['sponsor_images'];
+            $deletedImg = $this->request->getPost('deleted-img');
+
             //RÉCUPÉRATION DES DONNÉES EXISTANTES (BDD)
             //Saisons du sponsor - création de la variable pour savoir si la saison existe déjà pour ce sponsor
             $existingSeasonsSponsor = array_column($this->seasonSponsorModel->getSeasonsBySponsor($id),'id_season');
@@ -112,7 +116,7 @@ class Sponsor extends AdminController
             if($logo->isvalid()){
                 $dataLogo = [
                     'entity_id' => $id,
-                    'entity_type' => 'sponsor',
+                    'entity_type' => 'sponsor_logo',
                     'title' => 'Logo de ' . $sponsor['name'],
                     'alt' => 'Logo de ' . $sponsor['name'],
                 ];
@@ -179,6 +183,35 @@ class Sponsor extends AdminController
                     ];
                     if(!$this->contactModel->save($dataContact)){
                         return redirect()->back()->withInput()->with('error',implode('<br>',$this->contactModel->errors()));
+                    }
+                }
+            }
+
+            //Suppression éventuelle des images
+            if(isset($deletedImg)) {
+                foreach ($deletedImg as $img) {
+                    $this->mediaModel->deleteMedia($img);
+                }
+            }
+
+            // Upload des images si présentes
+            if($sponsorImages) {
+                foreach($sponsorImages as $sponsorImg)
+                {
+                    $result = upload_file(
+                        $sponsorImg,
+                        'sponsor/images/'.$sponsor['id'],
+                        $sponsorImg->getName(),
+                        [
+                            'entity_id' => $id,
+                            'entity_type' => 'sponsor_image',
+                            'title' => 'Image de '.$sponsor['name'],
+                            'alt' => 'Image de '.$sponsor['name'],
+                        ],
+                        true
+                    );
+                    if (is_array($result) && isset($result['status']) && $result['status'] === 'error') {
+                        $this->error("Erreur lors de l'upload d'une image : " . $result['message']);
                     }
                 }
             }

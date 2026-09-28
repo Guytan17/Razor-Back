@@ -54,11 +54,12 @@
                                 </div>
                             </div>
                             <?php endif; ?>
-                            <!-- IMAGE DU SPONSOR -->
+                            <!-- LOGO DU SPONSOR -->
                             <div class="col text-center">
                                 <img class="img-thumbnail mb-3" src="<?= (isset($sponsor['media_id'])) ? get_media_url( $sponsor['media_id'],'medium', base_url('/assets/img/default.png')) : '/assets/img/default.png'
-                                ; ?>" title="image du sponsor" alt="image du sponsor " id="logoPreview">
+                                ; ?>" title="logo du sponsor" alt="logo du sponsor " id="logoPreview">
                                 <input class="form-control" type="file" name="logo" id="logo">
+                                <span class="fst-italic fw-normal">Formats acceptés: .jpg, .png, .gif, .webp (maximum 2MB)</span>
                             </div>
                             <div class="col-md-6">
                                 <div class="row mb-3">
@@ -215,6 +216,43 @@
                                 <!-- END : INPUT HTML POUR STOCKER LES ID DES CONTACTS SUPPRIMES -->
                             </div>
                             <!-- END : ZONE POUR AJOUTER UN CONTACT -->
+                            <!-- START : IMAGES -->
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-header h5 text-center">
+                                            Images du sponsor
+                                        </div>
+                                        <div class="card-body">
+                                            <input class="form-control" type="file" name="sponsor_images[]" id="images" placeholder="Ajouter des images" multiple>
+                                            <span class="fst-italic fw-normal">Formats acceptés: .jpg, .png, .gif, .webp (maximum 2MB)</span>
+                                            <div class="row row-cols-2 row-cols-md-4 row-cols-xl-6 my-3">
+                                                <?php $sponsorImages = isset($sponsor) ? model('MediaModel')->where('entity_id', $sponsor['id'])->where('entity_type', 'sponsor_image')->findAll() : null;
+                                                if (!empty($sponsorImages)) {
+                                                    foreach($sponsorImages as $image) {?>
+                                                        <div class="col mb-3">
+                                                            <div class="position-relative img-hover">
+                                                                <div class="position-absolute img-thumbnail" style="height:100%;width:100%;background-color:rgb(0,0,0,0.3);display:none;">
+                                                                    <div class="d-flex justify-content-around align-items-center" style="height:100%;width:100%;">
+                                                                        <a href="" class="btn btn-danger text-light delete-img" data-id="<?=$image->id?>">
+                                                                            <i class="fas fa-trash-alt">Supprimer</i>
+                                                                        </a>
+                                                                        <a href="<?= $image->file_path ?>" data-lightbox="sponsor-images" class="btn btn-success text-light visualize-img">
+                                                                            <i class="fas fa-eye"></i>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                                <img class="img-thumbnail image" src="<?=get_media_url(intval($image->id),'medium','/assets/img/default.png');?>">
+                                                            </div>
+                                                        </div>
+                                                    <?php }
+                                                } ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END : IMAGES -->
                         </div>
                     </div>
                     <div class="card-footer text-end">
@@ -360,9 +398,22 @@
         `;
             $('#zone-removed-contacts').append(inputRemovedContacts);
         })
+
+        //Suppression des images du sponsor
+        //Apparition des boutons de gestion d'une image à son survol
+        $('.img-hover, .logo-hover').on('mouseenter mouseleave', function () {
+            $(this).find('.position-absolute').fadeToggle(50);
+        });
+
+        // Action du clic sur le bouton de suppression d'une image
+        $('.delete-img').on('click', function(e){
+            e.preventDefault();
+            let id = $(this).data('id');
+            let $col = $(this).closest('.col');
+            $col.hide();
+            $col.append(`<input type="hidden" name="deleted-img[]" value="${id}" >`)
+        });
     });
-
-
 </script>
 <style>
     #logoPreview {
