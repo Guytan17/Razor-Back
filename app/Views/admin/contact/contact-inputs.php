@@ -1,7 +1,7 @@
 <?php
 $contact = $contact ?? [];
 ?>
-<div class="row row-contact">
+<div class="row mb-3 row-contact bg-secondary-subtle rounded">
     <span class="fw-semibold text-decoration-underline"> Contact n° <?=$nbContacts?></span>
     <div class="col-md-6 mb-3">
         <div class="row">

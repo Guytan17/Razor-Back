@@ -42,7 +42,7 @@ class Sponsor extends AdminController
             $title = 'Modifier un sponsor';
             $this->addBreadcrumb('Modifier un sponsor');
             $sponsor = $this->sponsorModel->getFullSponsor($id);
-            $sponsor['contacts'] = $this->contactModel->getContactsById($id,'club');
+            $sponsor['contacts'] = $this->contactModel->getContactsById($id,'sponsor');
             $sponsor['seasons'] = $this->seasonSponsorModel->getSeasonsBySponsor($id);
         } else {
             $title = 'Ajouter un club';
@@ -168,7 +168,7 @@ class Sponsor extends AdminController
                 foreach($contacts as $contact) {
                     $dataContact = [
                         'id' => $contact['id'] ?? null,
-                        'entity_type' => 'member',
+                        'entity_type' => 'sponsor',
                         'entity_id' => $sponsor['id'],
                         'phone_number' => $contact['phone_number'],
                         'mail' => $contact['mail'],

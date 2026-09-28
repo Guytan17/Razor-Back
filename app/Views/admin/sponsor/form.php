@@ -68,13 +68,13 @@
                                 <!-- BOUTONS D'AJOUT D'UNE SAISON ET D'UN CONTACT -->
                                 <div class="row mb-3 row-buttons">
                                     <div class="col">
-                                        <span class="btn btn-secondary" id="add-contact">
-                                            <i class="fas fa-plus"></i> Ajouter un contact
+                                        <span class="btn btn-primary" id="add-season">
+                                            <i class="fas fa-plus"></i> Ajouter une saison
                                         </span>
                                     </div>
                                     <div class="col">
-                                        <span class="btn btn-primary" id="add-season">
-                                            <i class="fas fa-plus"></i> Ajouter une saison
+                                        <span class="btn btn-secondary" id="add-contact">
+                                            <i class="fas fa-plus"></i> Ajouter un contact
                                         </span>
                                     </div>
                                 </div>
@@ -162,6 +162,41 @@
                             <?php endforeach;
                             }
                             ?>
+
+                            <!-- START : ZONE POUR AJOUTER UN CONTACT -->
+                            <div id="zone-contact">
+                                <?php if(isset($sponsor['contacts'])){
+                                    $nbContacts = 0;
+                                    foreach ($sponsor['contacts'] as $contact) {
+                                        $nbContacts++; ?>
+
+                                        <!-- START : LIGNE CONTACTS AVEC LES INPUTS -->
+                                        <?= $this->setData([
+                                                'contact'=>$contact,
+                                                'nbContacts'=>$nbContacts
+                                        ])->include('admin/contact/contact-inputs',null,false)
+                                        ?>
+                                        <!-- END : LIGNE CONTACTS AVEC LES INPUTS -->
+
+                                    <?php } ?>
+                                <?php } ?>
+
+                                <!-- START : ZONE POUR LES NOUVEAUX CONTACTS-->
+                                <template id="contact-template">
+                                    <?= $this->setData([
+                                            'nbContacts'=>'__NB_CONTACTS__',
+                                    ])->include('admin/contact/contact-inputs')
+                                    ?>
+                                </template>
+                                <!-- END : ZONE POUR LES NOUVEAUX CONTACTS-->
+
+                                <!-- START : INPUT HTML POUR STOCKER LES ID DES CONTACTS SUPPRIMES -->
+                                <div id="zone-removed-contacts">
+
+                                </div>
+                                <!-- END : INPUT HTML POUR STOCKER LES ID DES CONTACTS SUPPRIMES -->
+                            </div>
+                            <!-- END : ZONE POUR AJOUTER UN CONTACT -->
                         </div>
                     </div>
                     <div class="card-footer text-end">
@@ -176,6 +211,7 @@
 <script>
     var baseUrl = "<?=base_url();?>";
     let cptSeason = ('#zone-season-sponsor').length;
+    let nbContacts = $('#zone-contact .row-contact').length ;
 
     $(document).ready(function() {
 
@@ -277,6 +313,26 @@
             cptSeason--;
             $(this).closest('.row-season-sponsor').remove();
         })
+
+        //Gestion de l'ajout d'un contact
+        $('#add-contact').on('click',function(){
+            nbContacts ++;
+            let row = $('#contact-template').html();
+            row = row.replaceAll('__NB_CONTACTS__', nbContacts);
+            $('#zone-contact').append(row);
+        })
+
+        //Gestion de la suppression d'un contact
+        $('#zone-contact').on('click', '.delete-contact-button' ,function(){
+            let rowContact = $(this).closest('.row-contact');
+            let idRemovedContact = rowContact.find('.contact-id-input').val();
+            nbContacts --;
+            rowContact.remove();
+            let inputRemovedContacts = `
+        <input type="hidden" name="removed-contacts[]" value="${idRemovedContact}">
+        `;
+            $('#zone-removed-contacts').append(inputRemovedContacts);
+        })
     });
 
 
@@ -298,7 +354,7 @@
         align-items: center;
     }
 
-    .btn-delete-season:hover {
+    .btn-delete-season:hover, .delete-contact-button:hover{
         scale:1.20;
         cursor: pointer;
     }
