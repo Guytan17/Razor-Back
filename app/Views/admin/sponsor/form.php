@@ -36,8 +36,24 @@
                     </div>
                     <div class="card-body">
                         <div class="row mb-3">
+                            <!-- INPUTS POUR SUPPRIMER ET VISUALISER LA MEA -->
+                            <div class="col-auto d-flex flex-column justify-content-center">
+                                <div id="input-group-mea">
+                                    <div class="my-3">
+                                        <a href="" class="btn btn-danger text-light" id="delete-mea" data-id="">
+                                            <i class="fas fa-trash-alt">Supprimer</i>
+                                        </a>
+                                    </div>
+                                    <div class="my-3">
+                                        <a href="<?= (isset($sponsor['media_id'])) ? get_media_url( $sponsor['media_id'],'full', base_url('/assets/img/default.png')) : base_url('/assets/img/default.png') ?>"
+                                           data-lightbox="sponsor-logo" class="btn btn-success text-light visualize-img">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                             <!-- IMAGE DU SPONSOR -->
-                            <div class="col-md-6 text-center">
+                            <div class="col text-center">
                                 <img class="img-thumbnail mb-3" src="<?= (isset($sponsor['media_id'])) ? get_media_url( $sponsor['media_id'],'medium', base_url('/assets/img/default.png')) : '/assets/img/default.png'
                                 ; ?>" title="image du sponsor" alt="image du sponsor " id="logoPreview">
                                 <input class="form-control" type="file" name="logo" id="logo">
