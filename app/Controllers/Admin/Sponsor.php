@@ -59,6 +59,7 @@ class Sponsor extends AdminController
     public function saveSponsor($id = null){
         try {
             //RÉCUPÉRATION DES DONNÉES
+            //FORMULAIRE
             //sponsor
             $sponsor = [
                 'id' => $id,
@@ -74,6 +75,11 @@ class Sponsor extends AdminController
             // contact
             $contacts = $this->request->getPost('contacts');
             $removedContacts = $this->request->getPost('removed-contacts') ?? [];
+
+            //RÉCUPÉRATION DES DONNÉES EXISTANTES (BDD)
+            //Saisons du sponsor - création de la variable pour savoir si la saison existe déjà pour ce sponsor
+            $existingSeasonsSponsor = array_column($this->seasonSponsorModel->getSeasonsBySponsor($id),'id_season');
+
 
             //préparation de la variable pour savoir si c'est une création
             $newSponsor = empty($sponsor['id']);
@@ -126,8 +132,11 @@ class Sponsor extends AdminController
                         'specifications' => $sponsor_season['specifications'],
                     ];
 
-                    if(!$this->seasonSponsorModel->insert($dataSponsorSeason)){
-                        return redirect()->back()->withInput()->with('error',implode('<br>',$this->seasonSponsorModel->errors()));
+
+                    if(!in_array($dataSponsorSeason['id_season'],$existingSeasonsSponsor)){
+                        if(!$this->seasonSponsorModel->insert($dataSponsorSeason)){
+                            return redirect()->back()->withInput()->with('error',implode('<br>',$this->seasonSponsorModel->errors()));
+                        }
                     }
                 }
             }
