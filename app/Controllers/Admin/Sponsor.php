@@ -101,11 +101,14 @@ class Sponsor extends AdminController
             }
 
             //GESTION DU LOGO
-            //Si logo supprimé mais pas remplacé
+            //Si logo supprimé mais pas remplacé, on le supprime
             $deleteLogo = $this->request->getPost('delete-logo');
-            if(!empty($deleteLogo && !isset($logo))){
+
+            if(!empty($deleteLogo && $logo != null)){
                 $this->mediaModel->delete($deleteLogo);
             }
+
+            //Ajout/modification du logo
             if($logo->isvalid()){
                 $dataLogo = [
                     'entity_id' => $id,

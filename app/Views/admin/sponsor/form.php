@@ -37,10 +37,11 @@
                     <div class="card-body">
                         <div class="row mb-3">
                             <!-- INPUTS POUR SUPPRIMER ET VISUALISER LA MEA -->
+                            <?php if (isset($sponsor) && $sponsor['media_id'] != null): ?>
                             <div class="col-auto d-flex flex-column justify-content-center">
-                                <div id="input-group-mea">
+                                <div id="input-group-logo">
                                     <div class="my-3">
-                                        <a href="" class="btn btn-danger text-light" id="delete-mea" data-id="">
+                                        <a href="" class="btn btn-danger text-light" id="delete-logo" data-id="<?= $sponsor['media_id'] ?? null ?>">
                                             <i class="fas fa-trash-alt">Supprimer</i>
                                         </a>
                                     </div>
@@ -52,6 +53,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <?php endif; ?>
                             <!-- IMAGE DU SPONSOR -->
                             <div class="col text-center">
                                 <img class="img-thumbnail mb-3" src="<?= (isset($sponsor['media_id'])) ? get_media_url( $sponsor['media_id'],'medium', base_url('/assets/img/default.png')) : '/assets/img/default.png'
@@ -103,7 +105,7 @@
                             foreach($sponsor['seasons'] as $sponsor_season) :
                                 $cptSeason++ ?>
                             <!-- START : LIGNES CONCERNANT LES SAISONS -->
-                            <div class="row mb-3 row-season-sponsor">
+                            <div class="row mb-3 row-season-sponsor bg-primary-subtle rounded">
                                 <div class="col-11">
                                     <div class="row">
                                         <div class="col-md-6">
@@ -231,7 +233,7 @@
 
     $(document).ready(function() {
 
-        //Boucles pour initialiser les select2 sur les fautes techniques déjà existantes
+        //Boucles pour initialiser les select2 pour les saisons de sponsoring
         for (i=1 ; i<=cptSeason; i++) {
             //Initialisation du select2 de la saison
             initAjaxSelect2(`#id-season-${i}`, {url:'/admin/season/search', searchFields: 'name,start_date,end_date', placeholder:'Rechercher une saison'});
@@ -243,13 +245,22 @@
             initAjaxSelect2(`#dotation_type-${i}`, {url:'/admin/sponsors-params/search-type', searchFields: 'type', placeholder:'Rechercher un type de dotation'});
         }
 
+        //Suppression du logo du sponsor
+        //Action du clic sur le bouton de suppression de la MEA
+        $('#delete-logo').on('click', function(e){
+            e.preventDefault();
+            let idLogo =$(this).data('id');
+            $('#logo').append(`<input type="hidden" name="delete-logo" value="${idLogo}" >`)
+            $('#logoPreview').attr('src',"<?=base_url('/assets/img/default.png') ?>");
+            $('#input-group-logo').hide();
+        })
 
         //GESTION DES SAISONS DE SPONSORING
         //Fonction pour ajouter une saison
         $('#add-season').on('click', function(){
             cptSeason++;
             let row = `
-            <div class="row mb-3 row-season-sponsor">
+            <div class="row mb-3 row-season-sponsor bg-primary-subtle rounded">
                 <div class="col-11">
                     <div class="row">
                         <div class="col-md-6">
