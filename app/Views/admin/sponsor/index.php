@@ -131,7 +131,8 @@
                 },
                 {
                     className: 'dt-left',
-                    data: 'rank_label'
+                    data: 'rank_label',
+                    name: 'sponsor_rank.label'
                 },
                 {
                     data: 'seasons_name',

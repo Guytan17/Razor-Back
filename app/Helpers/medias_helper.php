@@ -35,7 +35,7 @@ if (!function_exists('upload_file')) {
             return ['status' => 'error', 'message' => 'Type de fichier non accepté.'];
         }
 
-        if ($file->getSizeByUnit('kb') > $maxSize) {
+        if (($file->getSize() / 1024) > $maxSize) {
             return ['status' => 'error', 'message' => 'Fichier trop volumineux.'];
         }
 

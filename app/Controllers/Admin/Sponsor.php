@@ -195,6 +195,7 @@ class Sponsor extends AdminController
             }
 
             // Upload des images si présentes
+
             if($sponsorImages) {
                 foreach($sponsorImages as $sponsorImg)
                 {
@@ -208,10 +209,12 @@ class Sponsor extends AdminController
                             'title' => 'Image de '.$sponsor['name'],
                             'alt' => 'Image de '.$sponsor['name'],
                         ],
-                        true
+                        true,
                     );
+
                     if (is_array($result) && isset($result['status']) && $result['status'] === 'error') {
-                        $this->error("Erreur lors de l'upload d'une image : " . $result['message']);
+                        $error = "Erreur lors de l'upload d'une image : " . $result['message'];
+                        return redirect()->back()->withInput()->with('error',$error);
                     }
                 }
             }
