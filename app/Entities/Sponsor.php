@@ -36,7 +36,7 @@ class Sponsor extends Entity
     /**
      * Récupère le logo du sponsor (entité Media)
      *
-     * @return object|bool[]|float[]|int[]|null[]|object[]|string[] L'instance Media du logo ou null
+     * @return object|bool[]|float[]|int[]|null[]|object[]|string[] L'instance Media du logo dans le bon format ou null
      */
     public function getLogo(): array|object
     {

@@ -236,7 +236,7 @@ class Member extends AdminController
 
         $member = $this->memberModel->withDeleted()->find($idMember);
 
-        //Test pour savoir si le club existe
+        //Test pour savoir si le membre existe
         if(!$member) {
             return $this->response->setJSON([
                 'success' => false,

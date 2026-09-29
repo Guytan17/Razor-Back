@@ -79,17 +79,34 @@
                     orderable: false,
                     width: '100px',
                     render: function (data, type, row) {
+                        const isActive = row.deleted_at === null;
+                        const toggleButton = isActive
+                            ?
+                            `
+                                    <button
+                                        class="btn btn-sm btn-success btn-toggleActive-sponsor"
+                                        title="Désactiver"
+                                        data-id="${row.id}">
+                                            <i class="fas fa-toggle-on"></i>
+                                    </button>
+                                `
+                            :
+                            `
+                                <button
+                                        class="btn btn-sm btn-danger btn-toggleActive-sponsor"
+                                        title="Activer"
+                                        data-id="${row.id}">
+                                            <i class="fas fa-toggle-off"></i>
+                                    </button>
+                                `
                         return `
-                            <div class="btn-group" role="group">
-                                <a class="btn btn-sm btn-warning btn-edit-sponsor" title="Modifier"
-                                  href="${baseUrl}/admin/sponsor/form/${row.id}">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <button class="btn btn-sm btn-danger btn-delete-sponsor" title="Supprimer">
-                                        <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </div>
-                        `
+                                <div class="btn-group" role="group">
+                                    <a  href="${baseUrl}/admin/sponsor/form/${row.id}" class="btn btn-sm btn-warning btn-edit-sponsor" title="Modifier">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                   ${toggleButton}
+                                </div>
+                            `
                             ;
                     }
                 },
@@ -128,6 +145,59 @@
             table.ajax.reload(null, false); // false pour garder la pagination
         };
     });
+
+    //Fonction pour appeler la fonction de désactivation/activation
+    $(document).on('click','.btn-toggleActive-sponsor', function(){
+        toggleActive($(this).data('id'));
+    })
+
+    function toggleActive(sponsorId) {
+        // Effectuer la requête AJAX
+        $.ajax({
+            url: '<?= base_url('admin/sponsor/switch-active/') ?>' + sponsorId,
+            type: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            data: {
+                [csrfName]: csrfHash
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    // Recharger le DataTable pour voir le changement
+                    $('#sponsorsTable').DataTable().ajax.reload(null, false);
+
+                    // Notification toast
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: response.message,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Erreur !',
+                        text: response.message,
+                        icon: 'error',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    title: 'Erreur !',
+                    text: 'Une erreur est survenue.',
+                    icon: 'error',
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    }
 </script>
 
 <style>

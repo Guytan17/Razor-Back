@@ -89,7 +89,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->get('form/(:num)', 'Sponsor::form/$1');// accès au formulaire d'édition
         $routes->post('save', 'Sponsor::saveSponsor'); //sauvegarde création
         $routes->post('save/(:num)', 'Sponsor::saveSponsor/$1'); //sauvegarde édition
-        $routes->post('delete/(:num)', 'Sponsor::deleteSponsor/$1'); // suppression sponsor
+        $routes->post('switch-active/(:num)', 'Sponsor::switchActiveSponsor/$1'); //(dés)activation du sponsor
     });
 
     //Routes pour les fautes techniques

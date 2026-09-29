@@ -88,7 +88,9 @@ class SponsorModel extends Model
             'select' => '
             sponsor.id as id,
             sponsor.name as sponsor_name,
-            id_rank, specifications,
+            sponsor.deleted_at,
+            id_rank, 
+            specifications,
             sponsor_rank.rank as rank,
             sponsor_rank.label as rank_label,
             GROUP_CONCAT(season.name SEPARATOR " / ") as seasons_name,
@@ -102,5 +104,11 @@ class SponsorModel extends Model
         $this->join('media', 'media.entity_id = '.$idSponsor.' and media.entity_type = \'sponsor_logo\'','left');
         $this->where('sponsor.id', $idSponsor);
         return $this->first();
+    }
+
+    public function reactiveSponsor($id){
+        return $this->builder()
+            ->where('id', $id)
+            ->update(['deleted_at' => null, 'updated_at' => date('Y-m-d H:i:s')]);
     }
 }

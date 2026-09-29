@@ -231,24 +231,38 @@ class Sponsor extends AdminController
         }
     }
 
-    public function deleteSponsor($id) {
-        try {
-            if($this->sponsorModel->delete($id)){
+    public function switchActiveSponsor($idSponsor){
+
+        $sponsor = $this->sponsorModel->withDeleted()->find($idSponsor);
+
+        //Test pour savoir si le sponsor existe
+        if(!$sponsor) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Sponsor introuvable'
+            ]);
+        }
+
+        // Si le sponsor est actif, on le désactive
+        if(empty($sponsor->deleted_at)) {
+            $this->sponsorModel->delete($idSponsor);
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Sponsor désactivé',
+            ]);
+        } else {
+            //S'il est inactif, on le réactive
+            if($this->sponsorModel->reactiveSponsor($idSponsor)){
                 return $this->response->setJSON([
                     'success' => true,
-                    'message' => 'Le sponsor a bien été supprimé'
+                    'message' => 'Sponsor activé',
                 ]);
             } else {
                 return $this->response->setJSON([
                     'success' => false,
-                    'message' => $this->sponsorModel->errors(),
+                    'message' => 'Erreur lors de l\'activation',
                 ]);
             }
-        } catch (\Exception $e) {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ]);
         }
     }
 }
