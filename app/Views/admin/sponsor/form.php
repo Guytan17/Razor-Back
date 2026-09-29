@@ -26,10 +26,10 @@
         <div class="row">
             <div class="col">
                 <div class="card">
-                    <?= form_open_multipart('admin/sponsor/save'.(isset($sponsor) ? '/'.$sponsor['id'] : '' )) ?>
+                    <?= form_open_multipart('admin/sponsor/save'.(isset($sponsor) ? '/'.$sponsor->id : '' )) ?>
                     <div class="card-header">
                         <?php if (isset($sponsor) && $sponsor): ?>
-                            <span class="card-title h3">Modification de <?=$sponsor['name'] ?></span>
+                            <span class="card-title h3">Modification de <?=$sponsor->name ?></span>
                         <?php else: ?>
                             <span class="card-title h3">Création d'un sponsor</span>
                         <?php endif; ?>
@@ -37,16 +37,17 @@
                     <div class="card-body">
                         <div class="row mb-3">
                             <!-- INPUTS POUR SUPPRIMER ET VISUALISER LA MEA -->
-                            <?php if (isset($sponsor) && $sponsor['media_id'] != null): ?>
+                            <?php $sponsorLogo = isset($sponsor) ? $sponsor->getLogo() : null;
+                                if(isset($sponsorLogo)) :?>
                             <div class="col-auto d-flex flex-column justify-content-center">
                                 <div id="input-group-logo">
                                     <div class="my-3">
-                                        <a href="" class="btn btn-danger text-light" id="delete-logo" data-id="<?= $sponsor['media_id'] ?? null ?>">
+                                        <a href="" class="btn btn-danger text-light" id="delete-logo" data-id="<?= $sponsor->logo_id ?>">
                                             <i class="fas fa-trash-alt">Supprimer</i>
                                         </a>
                                     </div>
                                     <div class="my-3">
-                                        <a href="<?= (isset($sponsor['media_id'])) ? get_media_url( $sponsor['media_id'],'full', base_url('/assets/img/default.png')) : base_url('/assets/img/default.png') ?>"
+                                        <a href="<?= $sponsorLogo->file_path ?>"
                                            data-lightbox="sponsor-logo" class="btn btn-success text-light visualize-img">
                                             <i class="fas fa-eye"></i>
                                         </a>
@@ -56,8 +57,7 @@
                             <?php endif; ?>
                             <!-- LOGO DU SPONSOR -->
                             <div class="col text-center">
-                                <img class="img-thumbnail mb-3" src="<?= (isset($sponsor['media_id'])) ? get_media_url( $sponsor['media_id'],'medium', base_url('/assets/img/default.png')) : '/assets/img/default.png'
-                                ; ?>" title="logo du sponsor" alt="logo du sponsor " id="logoPreview">
+                                <img class="img-thumbnail mb-3" src="<?= (isset($sponsor->logo_id)) ? get_media_url( $sponsor->logo_id,'medium', base_url('/assets/img/default.png')) : '/assets/img/default.png'; ?>" title="logo du sponsor" alt="logo du sponsor " id="logoPreview">
                                 <input class="form-control" type="file" name="logo" id="logo">
                                 <span class="fst-italic fw-normal">Formats acceptés: .jpg, .png, .gif, .webp (maximum 2MB)</span>
                             </div>
@@ -66,21 +66,21 @@
                                     <!-- NOM DU SPONSOR -->
                                     <div class="col">
                                         <label class="form-label" for="name">Nom<span class="text-danger">*</span></label>
-                                        <input class="form-control" type="text" name="name" id="name" value="<?=old('name',esc($sponsor['name'] ?? '')); ?>" required>
+                                        <input class="form-control" type="text" name="name" id="name" value="<?=old('name',esc($sponsor->name ?? '')); ?>" required>
                                     </div>
                                 </div>
                                 <!-- SLOGAN DU SPONSOR -->
                                 <div class="row mb-3">
                                     <div class="col">
                                         <label class="form-label" for="slogan">Slogan</label>
-                                        <input class="form-control" type="text" name="slogan" id="slogan" value="<?=old('slogan', esc($sponsor['slogan'] ?? '')); ?>">
+                                        <input class="form-control" type="text" name="slogan" id="slogan" value="<?=old('slogan', esc($sponsor->slogan ?? '')); ?>">
                                     </div>
                                 </div>
                                 <!-- COMMENTAIRES CONCERNANT LE SPONSOR -->
                                 <div class="row mb-3">
                                     <div class="col">
                                         <label class="form-label" for="comments">Commentaires</label>
-                                        <textarea class="form-control" name="comments" id="comments" rows="3"><?= old('comments',esc($sponsor['comments'] ?? ''));
+                                        <textarea class="form-control" name="comments" id="comments" rows="3"><?= old('comments',esc($sponsor->comments ?? ''));
                                             ?></textarea>
                                     </div>
                                 </div>
@@ -102,8 +102,8 @@
                         <div id="zone-season-sponsor">
                             <?php
                             $cptSeason = 0;
-                            if($sponsor && isset($sponsor['seasons'])){
-                            foreach($sponsor['seasons'] as $sponsor_season) :
+                            if($sponsor && isset($sponsor->seasons)){
+                            foreach($sponsor->seasons as $sponsor_season) :
                                 $cptSeason++ ?>
                             <!-- START : LIGNES CONCERNANT LES SAISONS -->
                             <div class="row mb-3 row-season-sponsor bg-primary-subtle rounded">
@@ -184,9 +184,9 @@
 
                             <!-- START : ZONE POUR AJOUTER UN CONTACT -->
                             <div id="zone-contact">
-                                <?php if(isset($sponsor['contacts'])){
+                                <?php if(isset($sponsor->contacts)){
                                     $nbContacts = 0;
-                                    foreach ($sponsor['contacts'] as $contact) {
+                                    foreach ($sponsor->contacts as $contact) {
                                         $nbContacts++; ?>
 
                                         <!-- START : LIGNE CONTACTS AVEC LES INPUTS -->
@@ -227,7 +227,7 @@
                                             <input class="form-control" type="file" name="sponsor_images[]" id="images" placeholder="Ajouter des images" multiple>
                                             <span class="fst-italic fw-normal">Formats acceptés: .jpg, .png, .gif, .webp (maximum 2MB)</span>
                                             <div class="row row-cols-2 row-cols-md-4 row-cols-xl-6 my-3">
-                                                <?php $sponsorImages = isset($sponsor) ? model('MediaModel')->where('entity_id', $sponsor['id'])->where('entity_type', 'sponsor_image')->findAll() : null;
+                                                <?php $sponsorImages = isset($sponsor) ? model('MediaModel')->where('entity_id', $sponsor->id)->where('entity_type', 'sponsor_image')->findAll() : null;
                                                 if (!empty($sponsorImages)) {
                                                     foreach($sponsorImages as $image) {?>
                                                         <div class="col mb-3">

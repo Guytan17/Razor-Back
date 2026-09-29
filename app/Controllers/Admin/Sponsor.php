@@ -42,8 +42,8 @@ class Sponsor extends AdminController
             $title = 'Modifier un sponsor';
             $this->addBreadcrumb('Modifier un sponsor');
             $sponsor = $this->sponsorModel->getFullSponsor($id);
-            $sponsor['contacts'] = $this->contactModel->getContactsById($id,'sponsor');
-            $sponsor['seasons'] = $this->seasonSponsorModel->getSeasonsBySponsor($id);
+            $sponsor->contacts = $this->contactModel->getContactsById($id,'sponsor');
+            $sponsor->seasons = $this->seasonSponsorModel->getSeasonsBySponsor($id);
         } else {
             $title = 'Ajouter un club';
             $this->addBreadcrumb('Ajouter un club');

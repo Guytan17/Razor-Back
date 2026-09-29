@@ -6,6 +6,7 @@ use App\Traits\DataTableTrait;
 use App\Traits\Select2Searchable;
 use App\Traits\SlugTrait;
 use CodeIgniter\Model;
+use App\Entities\Sponsor;
 
 class SponsorModel extends Model
 {
@@ -16,8 +17,8 @@ class SponsorModel extends Model
     protected $table            = 'sponsor';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
+    protected $returnType       = Sponsor::class;
+    protected $useSoftDeletes   = true;
     protected $protectFields    = true;
     protected $allowedFields    = ['name', 'slug','slogan','comments','created_at','updated_at','deleted_at'];
 
@@ -96,8 +97,8 @@ class SponsorModel extends Model
         ];
     }
 
-    public function getFullSponsor($idSponsor): array{
-        $this->select('sponsor.*, media.id AS media_id');
+    public function getFullSponsor($idSponsor){
+        $this->select('sponsor.*, media.id AS logo_id');
         $this->join('media', 'media.entity_id = '.$idSponsor.' and media.entity_type = \'sponsor_logo\'','left');
         $this->where('sponsor.id', $idSponsor);
         return $this->first();
