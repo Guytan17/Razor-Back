@@ -60,7 +60,7 @@ class SponsorModel extends Model
                 'season_sponsor.id_rank',
                 'sponsor_rank.label',
                 'season_sponsor.specifications',
-                'season.name',
+                'seasons_name',
             ],
             'joins' => [
                 [
@@ -80,11 +80,19 @@ class SponsorModel extends Model
                     ],
                 [
                     'table' => 'media',
-                    'condition' => 'sponsor.id = media.entity_id AND media.entity_type = \'sponsor\'',
+                    'condition' => 'sponsor.id = media.entity_id AND media.entity_type = \'sponsor_logo\'',
                     'type' => 'left'
                 ],
             ],
-            'select' => 'sponsor.id as id, sponsor.name as sponsor_name, id_rank, specifications, sponsor_rank.rank as rank, sponsor_rank.label as rank_label,season.name as season_name, media.file_path as logo_url,media.id as logo_id'
+            'select' => '
+            sponsor.id as id,
+            sponsor.name as sponsor_name,
+            id_rank, specifications,
+            sponsor_rank.rank as rank,
+            sponsor_rank.label as rank_label,
+            GROUP_CONCAT(season.name SEPARATOR " / ") as seasons_name,
+            media.file_path as logo_url,
+            media.id as logo_id'
         ];
     }
 

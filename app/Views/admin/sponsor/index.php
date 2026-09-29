@@ -41,7 +41,7 @@
                             <th>Logo</th>
                             <th>Nom du sponsor</th>
                             <th>Niveau d'importance</th>
-                            <th>Saison</th>
+                            <th>Saison(s)</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -113,7 +113,7 @@
                     className: 'dt-left',
                     data: 'rank_label'
                 },
-                {data: 'season_name'},
+                {data: 'seasons_name'},
             ],
             language: {
                 url: baseUrl + 'assets/js/datatable/datatable-2.3.5-fr-FR.json',
