@@ -39,7 +39,10 @@ class DataTable extends BaseController
             // Informations sur le tri envoyées par DataTables
             $orderColumnIndex = $this->request->getPost('order')[0]['column'] ?? 0;
             $orderDirection = $this->request->getPost('order')[0]['dir'] ?? 'asc';
-            $orderColumnName = $this->request->getPost('columns')[$orderColumnIndex]['data'] ?? 'id';
+            $orderColumn = $this->request->getPost('columns')[$orderColumnIndex] ?? [];
+            $orderColumnName = !empty($orderColumn['name']) ?
+                $orderColumn['name'] :
+                $orderColumn['data'] ?? 'id';
 
             // Obtenez les données triées et filtrées
             $data = $model->getPaginated($start, $length, $searchValue, $orderColumnName, $orderDirection);

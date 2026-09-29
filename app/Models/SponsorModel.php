@@ -57,7 +57,7 @@ class SponsorModel extends Model
         return [
             'searchable_fields' => [
                 'sponsor.id',
-                'sponsor.name',
+                'sponsor_name',
                 'season_sponsor.id_rank',
                 'sponsor_rank.label',
                 'season_sponsor.specifications',
@@ -85,6 +85,7 @@ class SponsorModel extends Model
                     'type' => 'left'
                 ],
             ],
+            'groupBy' => 'sponsor.id',
             'select' => '
             sponsor.id as id,
             sponsor.name as sponsor_name,

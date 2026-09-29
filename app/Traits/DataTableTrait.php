@@ -16,7 +16,21 @@ trait DataTableTrait
             'with_deleted' => false, // Inclure les enregistrements soft deleted
             'where' => [],
             'groupBy' => null,
+            'orderBy' => null,
         ];
+    }
+
+    /**
+     * Récupère une valeur de config avec une valeur par défaut
+     *
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    private function getConfigValue(string $key, $default = null)
+    {
+        $config = $this->getDataTableConfig();
+        return $config[$key] ?? $default;
     }
 
     /**
@@ -24,7 +38,7 @@ trait DataTableTrait
      */
     protected function applyJoins($builder, ?array $joins = null): void
     {
-        $joins = $joins ?? $this->getDataTableConfig()['joins'];
+        $joins = $joins ?? $this->getConfigValue('joins',[]);
 
         foreach ($joins as $join) {
             $builder->join(
@@ -118,6 +132,11 @@ trait DataTableTrait
         // Applique le GROUP BY
         if(!empty($config['groupBy'])) {
             $builder->groupBy($config['groupBy']);
+        }
+
+        //Applique le ORDER BY
+        if(!empty($config['orderBy'])) {
+            $builder->orderBy($config['orderBy']);
         }
 
         return $builder;

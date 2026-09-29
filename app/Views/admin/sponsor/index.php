@@ -125,12 +125,18 @@
                         }
                     }
                 },
-                {data: 'sponsor_name'},
+                {
+                    data: 'sponsor_name',
+                    name: 'sponsor.name'
+                },
                 {
                     className: 'dt-left',
                     data: 'rank_label'
                 },
-                {data: 'seasons_name'},
+                {
+                    data: 'seasons_name',
+                    name: 'season.name'
+                },
             ],
             language: {
                 url: baseUrl + 'assets/js/datatable/datatable-2.3.5-fr-FR.json',
