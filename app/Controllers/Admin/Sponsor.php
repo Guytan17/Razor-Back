@@ -195,26 +195,29 @@ class Sponsor extends AdminController
             }
 
             // Upload des images si présentes
-
-            if($sponsorImages) {
+            if($sponsorImages != null) {
                 foreach($sponsorImages as $sponsorImg)
                 {
-                    $result = upload_file(
-                        $sponsorImg,
-                        'sponsor/images/'.$sponsor['id'],
-                        $sponsorImg->getName(),
-                        [
-                            'entity_id' => $id,
-                            'entity_type' => 'sponsor_image',
-                            'title' => 'Image de '.$sponsor['name'],
-                            'alt' => 'Image de '.$sponsor['name'],
-                        ],
-                        true,
-                    );
+                    //Permet de tester si ce sont biens de nouvelles images et qu'elles sont valides, que ce ne sont pas les images déjà existantes
+                    if($sponsorImg->isvalid()){
+                        $sponsorImgName = $sponsorImg->getName();
+                        $result = upload_file(
+                            $sponsorImg,
+                            'sponsor/images/'.$sponsor['id'],
+                            $sponsorImgName,
+                            [
+                                'entity_id' => $id,
+                                'entity_type' => 'sponsor_image',
+                                'title' => 'Image de '.$sponsor['name'],
+                                'alt' => 'Image de '.$sponsor['name'],
+                            ],
+                            true,
+                        );
 
-                    if (is_array($result) && isset($result['status']) && $result['status'] === 'error') {
-                        $error = "Erreur lors de l'upload d'une image : " . $result['message'];
-                        return redirect()->back()->withInput()->with('error',$error);
+                        if (is_array($result) && isset($result['status']) && $result['status'] === 'error') {
+                            $error = "Erreur lors de l'upload de l'image ".$sponsorImgName . " : " . $result['message'];
+                            return redirect()->back()->withInput()->with('error',$error);
+                        }
                     }
                 }
             }
