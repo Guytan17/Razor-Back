@@ -47,8 +47,7 @@
                                         </a>
                                     </div>
                                     <div class="my-3">
-                                        <a href="<?= $sponsorLogo->file_path ?>"
-                                           data-lightbox="sponsor-logo" class="btn btn-success text-light visualize-img">
+                                        <a href="<?= $sponsorLogo->file_path ?>" data-lightbox="sponsor-logo" id="visualize-button-logo" class="btn btn-success text-light visualize-img">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </div>
@@ -226,7 +225,7 @@
                                         <div class="card-body">
                                             <input class="form-control" type="file" name="sponsor_images[]" id="images" placeholder="Ajouter des images" multiple>
                                             <span class="fst-italic fw-normal">Formats acceptés: .jpg, .png, .gif, .webp (maximum 2MB)</span>
-                                            <div class="row row-cols-2 row-cols-md-4 row-cols-xl-6 my-3">
+                                            <div class="row row-cols-2 row-cols-md-4 row-cols-xl-6 my-3" id="zone-images">
                                                 <?php $sponsorImages = isset($sponsor) ? model('MediaModel')->where('entity_id', $sponsor->id)->where('entity_type', 'sponsor_image')->findAll() : null;
                                                 if (!empty($sponsorImages)) {
                                                     foreach($sponsorImages as $image) {?>
@@ -271,6 +270,39 @@
 
     $(document).ready(function() {
 
+        //GESTION DU LOGO
+        //Gestion de la prévisualisation
+        //définition des variables
+        const inputLogo = $('#logo');
+        const logoPreview = $('#logoPreview');
+        const visualizeLogo = $('#visualize-button-logo');
+
+        //création de la fonction avec l'évènement déclencheur
+        inputLogo.on('change', function () {
+            //création variable qui récupère le fichier uploadé
+            const file = this.files[0];
+            // définition de son URL
+            const fileUrl = URL.createObjectURL(file);
+            //apparition du fichier uploadé sur le zone prévue pour le logo
+            logoPreview.attr('src',fileUrl);
+            //changement du lien pour pouvoir l'ouvrir avec lightbox
+            visualizeLogo.attr('href',fileUrl);
+            //réapparition des boutons de suppression et de visualisation s'ils étaient cachés
+            $('#input-group-logo').show();
+        });
+
+        //Suppression du logo du sponsor
+        //Action du clic sur le bouton de suppression de la MEA
+        $('#delete-logo').on('click', function(e){
+            e.preventDefault();
+            let idLogo =$(this).data('id');
+            $('#logo').append(`<input type="hidden" name="delete-logo" value="${idLogo}" >`)
+            $('#logoPreview').attr('src',"<?=base_url('/assets/img/default.png') ?>");
+            $('#input-group-logo').hide();
+            $(inputLogo).val('');
+        })
+
+        //GESTION DES SAISONS DE SPONSORING
         //Boucles pour initialiser les select2 pour les saisons de sponsoring
         for (i=1 ; i<=cptSeason; i++) {
             //Initialisation du select2 de la saison
@@ -283,17 +315,6 @@
             initAjaxSelect2(`#dotation_type-${i}`, {url:'/admin/sponsors-params/search-type', searchFields: 'type', placeholder:'Rechercher un type de dotation'});
         }
 
-        //Suppression du logo du sponsor
-        //Action du clic sur le bouton de suppression de la MEA
-        $('#delete-logo').on('click', function(e){
-            e.preventDefault();
-            let idLogo =$(this).data('id');
-            $('#logo').append(`<input type="hidden" name="delete-logo" value="${idLogo}" >`)
-            $('#logoPreview').attr('src',"<?=base_url('/assets/img/default.png') ?>");
-            $('#input-group-logo').hide();
-        })
-
-        //GESTION DES SAISONS DE SPONSORING
         //Fonction pour ajouter une saison
         $('#add-season').on('click', function(){
             cptSeason++;
@@ -399,19 +420,54 @@
             $('#zone-removed-contacts').append(inputRemovedContacts);
         })
 
-        //Suppression des images du sponsor
+        //GESTION DES IMAGES
+        //Gestion de la prévisualisation des images
+        //définition des variables
+        const inputImages = $('#images');
+
+        //création de la fonction avec l'évènement déclencheur
+        inputImages.on('change', function () {
+            const filesImg = this.files;
+            $.each(filesImg,function (index,fileImg){
+                let fileUrl = URL.createObjectURL(fileImg);
+                let colImg = `
+                    <div class="col mb-3">
+                        <div class="position-relative img-hover">
+                            <div class="position-absolute img-thumbnail" style="height:100%;width:100%;background-color:rgb(0,0,0,0.3);display:none;">
+                                <div class="d-flex justify-content-around align-items-center" style="height:100%;width:100%;">
+                                    <a href="" class="btn btn-danger text-light delete-img">
+                                        <i class="fas fa-trash-alt">Supprimer</i>
+                                    </a>
+                                    <a href="${fileUrl}" data-lightbox="sponsor-images" class="btn btn-success text-light visualize-img">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <img class="img-thumbnail image" src="${fileUrl}">
+                        </div>
+                    </div>
+                    `;
+                $('#zone-images').append(colImg);
+            });
+        });
+
         //Apparition des boutons de gestion d'une image à son survol
-        $('.img-hover, .logo-hover').on('mouseenter mouseleave', function () {
+        $('#zone-images').on('mouseenter mouseleave','.img-hover', function () {
             $(this).find('.position-absolute').fadeToggle(50);
         });
 
         // Action du clic sur le bouton de suppression d'une image
-        $('.delete-img').on('click', function(e){
+        $('#zone-images').on('click','.delete-img', function(e){
             e.preventDefault();
             let id = $(this).data('id');
+            console.log(id);
             let $col = $(this).closest('.col');
-            $col.hide();
-            $col.append(`<input type="hidden" name="deleted-img[]" value="${id}" >`)
+            if(id){
+                $col.append(`<input type="hidden" name="deleted-img[]" value="${id}" >`)
+                $col.hide();
+            } else {
+                $col.remove();
+            }
         });
     });
 </script>
@@ -435,6 +491,11 @@
     .btn-delete-season:hover, .delete-contact-button:hover{
         scale:1.20;
         cursor: pointer;
+    }
+
+    .image{
+        aspect-ratio: 1;
+        object-fit: cover;
     }
 </style>
 
