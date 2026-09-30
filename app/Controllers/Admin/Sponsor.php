@@ -216,9 +216,11 @@ class Sponsor extends AdminController
 
                         if (is_array($result) && isset($result['status']) && $result['status'] === 'error') {
                             $error = "Erreur lors de l'upload de l'image ".$sponsorImgName . " : " . $result['message'];
-                            return redirect()->back()->withInput()->with('error',$error);
                         }
                     }
+                }
+                if(isset($error) && $error != null){
+                    return redirect()->back()->withInput()->with('error',$error);
                 }
             }
 
