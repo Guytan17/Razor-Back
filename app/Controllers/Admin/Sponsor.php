@@ -68,6 +68,7 @@ class Sponsor extends AdminController
                 'comments' => $this->request->getPost('comments'),
             ];
             $sponsors_seasons = $this->request->getPost('season[]');
+            $removedSeasonsSponsor = $this->request->getPost('removed-seasons-sponsor[]');
 
             //logo
             $logo = $this->request->getFile('logo');
@@ -82,7 +83,7 @@ class Sponsor extends AdminController
 
             //RÉCUPÉRATION DES DONNÉES EXISTANTES (BDD)
             //Saisons du sponsor - création de la variable pour savoir si la saison existe déjà pour ce sponsor
-            $existingSeasonsSponsor = array_column($this->seasonSponsorModel->getSeasonsBySponsor($id),'id_season');
+            $existingSeasonsSponsor = array_column($this->seasonSponsorModel->getSeasonsBySponsor($id),'id');
 
             //préparation de la variable pour savoir si c'est une création
             $newSponsor = empty($sponsor['id']);
@@ -127,18 +128,18 @@ class Sponsor extends AdminController
             }
 
             //GESTION DES SAISONS DE SPONSORING
-            if(isset($sponsors_seasons)){
-                //Création clé des saisons du formulaire pour gérer la suppression
-                $keySponsorsSeasons = array_column($sponsors_seasons,'id_season');
-                //Suppression des saisons qui ne sont plus dans le formulaire
-                $seasonsToDelete = array_diff($existingSeasonsSponsor,$keySponsorsSeasons);
-                foreach($seasonsToDelete as $seasonToDelete){
-                    $this->seasonSponsorModel->delete($seasonToDelete);
+            //Suppression des saisons de sponsoring s'il y en a
+            if(isset($removedSeasonsSponsor)){
+                foreach($removedSeasonsSponsor as $removedSeasonSponsor){
+                    $this->seasonSponsorModel->delete($removedSeasonSponsor);
                 }
+            }
 
+            if(isset($sponsors_seasons)){
                 //Ajout/modification des saisons présentes dans le formulaire
                 foreach($sponsors_seasons as $sponsor_season){
                     $dataSponsorSeason = [
+                        'id' => null,
                         'id_sponsor' => $id,
                         'id_season' => $sponsor_season['id_season'],
                         'id_rank' => $sponsor_season['rank'],
@@ -149,7 +150,7 @@ class Sponsor extends AdminController
 
                     //Ajout des nouvelles saisons
                     if(!in_array($dataSponsorSeason['id_season'],$existingSeasonsSponsor)){
-                        if(!$this->seasonSponsorModel->insert($dataSponsorSeason)){
+                        if(!$this->seasonSponsorModel->insert($dataSponsorSeason,true)){
                             return redirect()->back()->withInput()->with('error',implode('<br>',$this->seasonSponsorModel->errors()));
                         }
                     }

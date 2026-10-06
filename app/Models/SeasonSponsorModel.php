@@ -7,8 +7,8 @@ use CodeIgniter\Model;
 class SeasonSponsorModel extends Model
 {
     protected $table            = 'season_sponsor';
-    protected $primaryKey       = 'id_season';
-    protected $useAutoIncrement = false;
+    protected $primaryKey       = 'id';
+    protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;

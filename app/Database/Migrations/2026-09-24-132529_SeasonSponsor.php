@@ -9,6 +9,11 @@ class SeasonSponsor extends Migration
     public function up()
     {
         $this->forge->addField([
+            'id' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'auto_increment' => true,
+            ],
             'id_season'=> [
                 'type'=>'INT',
                 'constraint'=>11,
@@ -39,7 +44,7 @@ class SeasonSponsor extends Migration
                 'null'=>true,
             ],
         ]);
-        $this->forge->addKey(['id_season','id_sponsor'],true);
+        $this->forge->addKey(['id'],true);
         $this->forge->addForeignKey('id_season','season','id','CASCADE','RESTRICT');
         $this->forge->addForeignKey('id_sponsor','sponsor','id','CASCADE','RESTRICT');
         $this->forge->addForeignKey('id_rank','sponsor_rank','id','CASCADE','RESTRICT');

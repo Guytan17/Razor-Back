@@ -98,18 +98,22 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- START : LIGNES CONCERNANT LES SAISONS -->
                         <div id="zone-season-sponsor">
                             <?php
                             $cptSeason = 0;
                             if($sponsor && isset($sponsor->seasons)){
                             foreach($sponsor->seasons as $sponsor_season) :
                                 $cptSeason++ ?>
-                            <!-- START : LIGNES CONCERNANT LES SAISONS -->
                             <div class="row mb-3 row-season-sponsor bg-primary-subtle rounded">
                                 <div class="col-11">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="row mb-3">
+                                                <input class="season-sponsor-id-input" type="hidden" name="id-season-sponsor-<?=$cptSeason ?>[id]" id="id-season-sponsor-<?=$cptSeason ?>" value="<?=
+                                                old
+                                                ('id-season-sponsor-.'
+                                                .$cptSeason.'.id',esc($sponsor_season['id']??''))?>"
                                                 <!-- SAISON -->
                                                 <div class="col">
                                                     <label class="form-label" for="id-season-<?=$cptSeason ?>">Saison <span class="text-danger">*</span></label>
@@ -176,46 +180,50 @@
                                     <i class="fas fa-trash-alt text-danger btn-delete-season fs-2"></i>
                                 </div>
                             </div>
-                            <!-- END : LIGNES CONCERNANT LES SAISONS -->
                             <?php endforeach;
                             }
                             ?>
+                            <div id="zone-removed-season-sponsor">
 
-                            <!-- START : ZONE POUR AJOUTER UN CONTACT -->
-                            <div id="zone-contact">
-                                <?php if(isset($sponsor->contacts)){
-                                    $nbContacts = 0;
-                                    foreach ($sponsor->contacts as $contact) {
-                                        $nbContacts++; ?>
-
-                                        <!-- START : LIGNE CONTACTS AVEC LES INPUTS -->
-                                        <?= $this->setData([
-                                                'contact'=>$contact,
-                                                'nbContacts'=>$nbContacts
-                                        ])->include('admin/contact/contact-inputs',null,false)
-                                        ?>
-                                        <!-- END : LIGNE CONTACTS AVEC LES INPUTS -->
-
-                                    <?php } ?>
-                                <?php } ?>
-
-                                <!-- START : ZONE POUR LES NOUVEAUX CONTACTS-->
-                                <template id="contact-template">
-                                    <?= $this->setData([
-                                            'nbContacts'=>'__NB_CONTACTS__',
-                                    ])->include('admin/contact/contact-inputs')
-                                    ?>
-                                </template>
-                                <!-- END : ZONE POUR LES NOUVEAUX CONTACTS-->
-
-                                <!-- START : INPUT HTML POUR STOCKER LES ID DES CONTACTS SUPPRIMES -->
-                                <div id="zone-removed-contacts">
-
-                                </div>
-                                <!-- END : INPUT HTML POUR STOCKER LES ID DES CONTACTS SUPPRIMES -->
                             </div>
-                            <!-- END : ZONE POUR AJOUTER UN CONTACT -->
-                            <!-- START : IMAGES -->
+                        </div>
+                        <!-- END : LIGNES CONCERNANT LES SAISONS -->
+                        <!-- START : ZONE POUR AJOUTER UN CONTACT -->
+                        <div id="zone-contact">
+                            <?php if(isset($sponsor->contacts)){
+                                $nbContacts = 0;
+                                foreach ($sponsor->contacts as $contact) {
+                                    $nbContacts++; ?>
+
+                                    <!-- START : LIGNE CONTACTS AVEC LES INPUTS -->
+                                    <?= $this->setData([
+                                            'contact'=>$contact,
+                                            'nbContacts'=>$nbContacts
+                                    ])->include('admin/contact/contact-inputs',null,false)
+                                    ?>
+                                    <!-- END : LIGNE CONTACTS AVEC LES INPUTS -->
+
+                                <?php } ?>
+                            <?php } ?>
+
+                            <!-- START : ZONE POUR LES NOUVEAUX CONTACTS-->
+                            <template id="contact-template">
+                                <?= $this->setData([
+                                        'nbContacts'=>'__NB_CONTACTS__',
+                                ])->include('admin/contact/contact-inputs')
+                                ?>
+                            </template>
+                            <!-- END : ZONE POUR LES NOUVEAUX CONTACTS-->
+
+                            <!-- START : INPUT HTML POUR STOCKER LES ID DES CONTACTS SUPPRIMES -->
+                            <div id="zone-removed-contacts">
+
+                            </div>
+                            <!-- END : INPUT HTML POUR STOCKER LES ID DES CONTACTS SUPPRIMES -->
+                        </div>
+                        <!-- END : ZONE POUR AJOUTER UN CONTACT -->
+                        <!-- START : IMAGES -->
+                        <div id="zone-images">
                             <div class="row mb-3">
                                 <div class="col">
                                     <div class="card">
@@ -251,8 +259,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- END : IMAGES -->
                         </div>
+                        <!-- END : IMAGES -->
                     </div>
                     <div class="card-footer text-end">
                         <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Valider</button>
@@ -397,7 +405,14 @@
         //Fonction pour supprimer une saison
         $(document).on('click', '.btn-delete-season', function(){
             cptSeason--;
+            let rowSeasonSponsor = $(this).closest('.row-season-sponsor')
+            let idRemovedSeasonSponsor = rowSeasonSponsor.find('.season-sponsor-id-input').val();
+            console.log(idRemovedSeasonSponsor);
             $(this).closest('.row-season-sponsor').remove();
+            let inputRemovedSeasonSponsor = `
+            <input type="hidden" name="removed-seasons-sponsor[]" value="${idRemovedSeasonSponsor}">
+            `;
+            $('#zone-removed-season-sponsor').append(inputRemovedSeasonSponsor);
         })
 
         //Gestion de l'ajout d'un contact
@@ -415,8 +430,8 @@
             nbContacts --;
             rowContact.remove();
             let inputRemovedContacts = `
-        <input type="hidden" name="removed-contacts[]" value="${idRemovedContact}">
-        `;
+            <input type="hidden" name="removed-contacts[]" value="${idRemovedContact}">
+            `;
             $('#zone-removed-contacts').append(inputRemovedContacts);
         })
 
