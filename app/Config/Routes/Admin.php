@@ -87,9 +87,9 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->get('/', 'Sponsor::index');
         $routes->get('form', 'Sponsor::form');//accès au formulaire de création
         $routes->get('form/(:num)', 'Sponsor::form/$1');// accès au formulaire d'édition
-        $routes->post('insert', 'Sponsor::insertSponsor'); //sauvegarde création
-        $routes->post('update/(:num)', 'Sponsor::updateSponsor/$1'); //sauvegarde édition
-        $routes->post('delete/(:num)', 'Sponsor::deleteSponsor/$1'); // suppression sponsor
+        $routes->post('save', 'Sponsor::saveSponsor'); //sauvegarde création
+        $routes->post('save/(:num)', 'Sponsor::saveSponsor/$1'); //sauvegarde édition
+        $routes->post('switch-active/(:num)', 'Sponsor::switchActiveSponsor/$1'); //(dés)activation du sponsor
     });
 
     //Routes pour les fautes techniques
@@ -157,6 +157,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin','filter' => 'gro
         $routes->post('insert', 'Season::insertSeason'); //Sauvegarde création
         $routes->post('update/(:num)', 'Season::updateSeason/$1');//Sauvegarde édition
         $routes->post('delete/(:num)', 'Season::deleteSeason/$1'); //Suppression d'une saison
+        $routes->get('search', 'Season::searchSeason');
     });
 
     //Routes pour la gestion des services

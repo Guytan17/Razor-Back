@@ -26,8 +26,11 @@
     <div class="row">
         <div class="col">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header d-flex">
                     <span class="card-title h5">Liste des sponsors</span>
+                    <a href="<?= base_url('/admin/sponsor/form')?>" class="btn btn-sm btn-primary ms-auto p-1 mx-1">
+                        <i class="fas fa-plus"></i> Créer un sponsor
+                    </a>
                 </div>
                 <div class="card-body overflow-auto">
                     <table class="table table-striped" id="sponsorsTable">
@@ -38,6 +41,7 @@
                             <th>Logo</th>
                             <th>Nom du sponsor</th>
                             <th>Niveau d'importance</th>
+                            <th>Saison(s)</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -75,17 +79,34 @@
                     orderable: false,
                     width: '100px',
                     render: function (data, type, row) {
+                        const isActive = row.deleted_at === null;
+                        const toggleButton = isActive
+                            ?
+                            `
+                                    <button
+                                        class="btn btn-sm btn-success btn-toggleActive-sponsor"
+                                        title="Désactiver"
+                                        data-id="${row.id}">
+                                            <i class="fas fa-toggle-on"></i>
+                                    </button>
+                                `
+                            :
+                            `
+                                <button
+                                        class="btn btn-sm btn-danger btn-toggleActive-sponsor"
+                                        title="Activer"
+                                        data-id="${row.id}">
+                                            <i class="fas fa-toggle-off"></i>
+                                    </button>
+                                `
                         return `
-                            <div class="btn-group" role="group">
-                                <a class="btn btn-sm btn-warning btn-edit-sponsor" title="Modifier"
-                                  href="${baseUrl}/admin/sponsor/form/${row.id}">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <button class="btn btn-sm btn-danger btn-delete-sponsor" title="Supprimer">
-                                        <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </div>
-                        `
+                                <div class="btn-group" role="group">
+                                    <a  href="${baseUrl}/admin/sponsor/form/${row.id}" class="btn btn-sm btn-warning btn-edit-sponsor" title="Modifier">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                   ${toggleButton}
+                                </div>
+                            `
                             ;
                     }
                 },
@@ -104,10 +125,18 @@
                         }
                     }
                 },
-                {data: 'name'},
+                {
+                    data: 'sponsor_name',
+                    name: 'sponsor.name'
+                },
                 {
                     className: 'dt-left',
-                    data: 'rank'
+                    data: 'rank_label',
+                    name: 'sponsor_rank.label'
+                },
+                {
+                    data: 'seasons_name',
+                    name: 'season.name'
                 },
             ],
             language: {
@@ -123,6 +152,59 @@
             table.ajax.reload(null, false); // false pour garder la pagination
         };
     });
+
+    //Fonction pour appeler la fonction de désactivation/activation
+    $(document).on('click','.btn-toggleActive-sponsor', function(){
+        toggleActive($(this).data('id'));
+    })
+
+    function toggleActive(sponsorId) {
+        // Effectuer la requête AJAX
+        $.ajax({
+            url: '<?= base_url('admin/sponsor/switch-active/') ?>' + sponsorId,
+            type: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            data: {
+                [csrfName]: csrfHash
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    // Recharger le DataTable pour voir le changement
+                    $('#sponsorsTable').DataTable().ajax.reload(null, false);
+
+                    // Notification toast
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: response.message,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Erreur !',
+                        text: response.message,
+                        icon: 'error',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    title: 'Erreur !',
+                    text: 'Une erreur est survenue.',
+                    icon: 'error',
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    }
 </script>
 
 <style>

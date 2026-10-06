@@ -6,6 +6,7 @@ use App\Traits\DataTableTrait;
 use App\Traits\Select2Searchable;
 use App\Traits\SlugTrait;
 use CodeIgniter\Model;
+use App\Entities\Sponsor;
 
 class SponsorModel extends Model
 {
@@ -16,19 +17,24 @@ class SponsorModel extends Model
     protected $table            = 'sponsor';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
+    protected $returnType       = Sponsor::class;
+    protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['name', 'slug', 'rank','dotation_type','dotation_amount','specifications'];
+    protected $allowedFields    = ['name', 'slug','slogan','comments','created_at','updated_at','deleted_at'];
+
+    // Dates
+    protected $useTimestamps = true;
+    protected $dateFormat    = 'datetime';
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
+    protected $deletedField  = 'deleted_at';
 
     // Validation
     protected $validationRules      = [
         'name' => 'required|max_length[255]',
         'slug' => 'max_length[255]',
-        'rank' => 'integer',
-        'dotation_type' => 'required|max_length[255]',
-        'dotation_amount' => 'required|integer',
-        'specifications' => 'permit_empty',
+        'slogan' => 'max_length[150]',
+        'comments' => 'permit_empty',
     ];
     protected $validationMessages   = [
         'name' => [
@@ -38,17 +44,10 @@ class SponsorModel extends Model
         'slug' => [
             'max_length' => 'Le slug du sponsor ne peut pas excéder 255 caractères'
         ],
-        'rank' => [
-            'integer' => 'Le rang doit être un chiffre'
+        [
+          'slogan' => 'Le slogan de doit pas excéder 150 caractères'
         ],
-        'dotation_type' => [
-            'required' => 'Le type de dotation est obligatoire',
-            'max_length' => 'Le type de dotation ne peut pas excéder 255 caractères'
-        ],
-        'dotation_amount' => [
-            'required' => 'Le montant de la dotation est obligatoire',
-            'integer' => 'Le montant de la dotation doit être un entier'
-        ]
+
     ];
 
     protected $beforeInsert   = ['generateUniqueSlugName'];
@@ -58,24 +57,59 @@ class SponsorModel extends Model
         return [
             'searchable_fields' => [
                 'sponsor.id',
-                'sponsor.name',
-                'sponsor.rank',
-                'sponsor.specifications',
+                'sponsor_name',
+                'season_sponsor.id_rank',
+                'sponsor_rank.label',
+                'season_sponsor.specifications',
+                'seasons_name',
             ],
             'joins' => [
                 [
+                  'table' => 'season_sponsor',
+                  'condition' => 'sponsor.id = season_sponsor.id_sponsor',
+                  'type' => 'left'
+                ],
+                [
+                    'table' => 'sponsor_rank',
+                    'condition' => 'season_sponsor.id_rank = sponsor_rank.id',
+                    'type' => 'left'
+                ],
+                [
+                    'table' => 'season',
+                    'condition' => 'season.id = season_sponsor.id_season',
+                    'type' => 'left'
+                    ],
+                [
                     'table' => 'media',
-                    'condition' => 'sponsor.id = media.entity_id AND media.entity_type = \'sponsor\'',
+                    'condition' => 'sponsor.id = media.entity_id AND media.entity_type = \'sponsor_logo\'',
                     'type' => 'left'
                 ],
             ],
-            'select' => 'sponsor.id as id, name, rank, specifications,media.file_path as logo_url,media.id as logo_id'
+            'groupBy' => 'sponsor.id',
+            'select' => '
+            sponsor.id as id,
+            sponsor.name as sponsor_name,
+            sponsor.deleted_at,
+            id_rank, 
+            specifications,
+            sponsor_rank.rank as rank,
+            sponsor_rank.label as rank_label,
+            GROUP_CONCAT(season.name SEPARATOR " / ") as seasons_name,
+            media.file_path as logo_url,
+            media.id as logo_id'
         ];
     }
 
-    public function getFullSponsor($idSponsor): array{
-        $this->select('sponsor.*, media.id AS media_id');
-        $this->join('media', 'media.entity_id = '.$idSponsor.' and media.entity_type = \'sponsor\'','left');
+    public function getFullSponsor($idSponsor){
+        $this->select('sponsor.*, media.id AS logo_id');
+        $this->join('media', 'media.entity_id = '.$idSponsor.' and media.entity_type = \'sponsor_logo\'','left');
+        $this->where('sponsor.id', $idSponsor);
         return $this->first();
+    }
+
+    public function reactiveSponsor($id){
+        return $this->builder()
+            ->where('id', $id)
+            ->update(['deleted_at' => null, 'updated_at' => date('Y-m-d H:i:s')]);
     }
 }

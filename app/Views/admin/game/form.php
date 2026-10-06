@@ -767,8 +767,6 @@
         //Gestion de la suppression d'un service
         $(document).on('click', '.btn-delete-service', function(){
             nbServices--;
-            let idService = $(this).data('id-service');
-            let idMember = $(this).data('id-member');
             $(this).closest('.card-service').remove();
         })
     })

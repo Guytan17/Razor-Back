@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use App\Traits\DataTableTrait;
+use App\Traits\Select2Searchable;
 use CodeIgniter\Model;
 
 class DotationTypeModel extends Model
 {
     use DataTableTrait;
+    use Select2Searchable;
 
     protected $table            = 'dotation_type';
     protected $primaryKey       = 'id';
@@ -37,4 +39,7 @@ class DotationTypeModel extends Model
             'select' => 'id,type',
         ];
     }
+
+    protected $select2SearchFields = ['type'];
+    protected $select2DisplayField = 'type';
 }

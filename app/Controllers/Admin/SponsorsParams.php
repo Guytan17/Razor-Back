@@ -162,4 +162,43 @@ class SponsorsParams extends AdminController
             ]);
         }
     }
+
+    public function searchRank(){
+        $request = $this->request;
+
+        //Vérification Ajax
+        if(!$request->isAJAX()) {
+            return $this->response->setJSON(['error'=> 'Requête non autorisée']);
+        }
+
+        //Paramètres de recherche
+        $search = $request->getget('search') ?? '';
+        $page = (int) $request->getget('page') ?? 1;
+        $limit = 25;
+
+        //Utilisation de la méthode du Model (via le trait)
+        $result = $this->sponsorRankModel->quickSearchForSelect2($search, $page, $limit, 'rank', 'ASC');
+
+        //Réponse JSON
+        return $this->response->setJSON($result);
+    }
+    public function searchType(){
+            $request = $this->request;
+
+            //Vérification Ajax
+            if(!$request->isAJAX()) {
+                return $this->response->setJSON(['error'=> 'Requête non autorisée']);
+            }
+
+            //Paramètres de recherche
+            $search = $request->getget('search') ?? '';
+            $page = (int) $request->getget('page') ?? 1;
+            $limit = 25;
+
+            //Utilisation de la méthode du Model (via le trait)
+            $result = $this->dotationTypeModel->quickSearchForSelect2($search, $page, $limit, 'type', 'ASC');
+
+            //Réponse JSON
+            return $this->response->setJSON($result);
+        }
 }
